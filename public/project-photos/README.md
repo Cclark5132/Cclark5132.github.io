@@ -38,10 +38,11 @@ Only upload images that Culligan has approved for public release. Remove confide
 
 | Exact filename | Where it appears | Recommended image |
 | --- | --- | --- |
-| `automotive-cover.jpg` | Homepage, project card, and first gallery image | Strong photograph showing the Cherokee, Comanche, or both |
-| `automotive-finished-vehicles.jpg` | Gallery image 2 | Finished vehicles in working condition |
-| `automotive-engine-bay.jpg` | Gallery image 3 | Engine-bay repair or mechanical detail |
-| `automotive-fabrication.jpg` | Gallery image 4 | Welding, machining, or structural fabrication |
+| `automotive-cherokee-finished.webp` | Homepage, project card, and gallery image 1 | Finished 2001 Jeep Cherokee |
+| `automotive-comanche-finished.webp` | Gallery image 2 | Charles with the finished 1987 Jeep Comanche |
+| `automotive-garage-teardown.webp` | Gallery image 3 | Engine, transmission, axle, and suspension teardown |
+| `automotive-engine-install.webp` | Gallery image 4 | Engine rebuild and swap installation |
+| `automotive-engine-bay-wiring.webp` | Gallery image 5 | Engine-bay assembly and wiring-harness work |
 
 ## Telescoping Accessibility Crutch
 
