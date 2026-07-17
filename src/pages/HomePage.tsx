@@ -6,7 +6,7 @@ import { ProjectCard } from "../components/ProjectCard";
 import { ProjectMedia } from "../components/ProjectMedia";
 import { Reveal } from "../components/Reveal";
 import { SectionHeading } from "../components/SectionHeading";
-import { education, experiences, profile, projects, skillGroups } from "../data/portfolio";
+import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
 
 const quickFacts = [
   { value: "Virginia Tech", label: "Mechanical Engineering" },
@@ -180,18 +180,25 @@ export function HomePage() {
             <Reveal className="compact-card md:col-span-2">
               <div className="flex items-center gap-3">
                 <span className="icon-badge"><GraduationCap size={20} /></span>
-                <h3>Education</h3>
+                <h3>Education + credentials</h3>
               </div>
-              <div className="mt-6 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div className="mt-6 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-xl font-semibold text-charcoal">{education.school}</p>
                   <p className="mt-1 text-sm leading-6 text-steel">{education.degree}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="tag">GPA 3.84</span>
-                  <span className="tag">Dean's List</span>
-                  <span className="tag">Graduating 2028</span>
+                  {education.details.map((detail) => <span className="tag" key={detail}>{detail}</span>)}
+                  <span className="tag">{education.graduation}</span>
                 </div>
+              </div>
+              <div className="mt-6 grid gap-3 border-t border-black/10 pt-5 sm:grid-cols-3">
+                {credentials.map((credential) => (
+                  <div key={credential.title}>
+                    <p className="text-sm font-semibold leading-5 text-charcoal">{credential.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-steel">{credential.issuer} · {credential.date}</p>
+                  </div>
+                ))}
               </div>
             </Reveal>
           </div>

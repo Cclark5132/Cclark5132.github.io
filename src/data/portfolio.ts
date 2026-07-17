@@ -73,19 +73,19 @@ export const projects: Project[] = [
     role: "Founder and President",
     duration: "May 2025 - Present",
     location: "Blacksburg, Virginia",
-    summary: "I founded and lead an eight-member team designing, fabricating, and testing pulse jet engines. Our steel, propane-fueled design moved from SolidWorks to a live bench test and produced approximately 70 pounds-force of peak static thrust.",
+    summary: "I founded and lead an eight-member team designing, fabricating, and testing pulse jet engines. Our steel, propane-fueled design moved from SolidWorks to a live bench test and produced approximately 300 newtons of peak static thrust.",
     challenge: "Create a functional pulse jet program from the ground up: organize the team, develop a manufacturable engine, build a safe test system, and replace assumptions with reliable thrust, temperature, and fuel-efficiency measurements.",
     process: [
       { title: "Define", description: "Set propulsion goals, team roles, operating constraints, and a safe validation plan." },
       { title: "Model", description: "Developed the steel, propane-fueled engine geometry and assembly in SolidWorks." },
       { title: "Fabricate", description: "Converted the design into a buildable system through hands-on metal fabrication and team coordination." },
       { title: "Instrument", description: "Created a dedicated bench for thrust, temperature, and fuel-efficiency readings." },
-      { title: "Test", description: "Ran controlled bench tests and recorded approximately 70 lbf peak static thrust." },
+      { title: "Test", description: "Ran controlled bench tests and recorded approximately 300 N of peak static thrust." },
     ],
     results: [
       "Founded and now leads an eight-member engine design team.",
       "Designed and fabricated a functioning steel, propane-fueled pulse jet.",
-      "Measured approximately 70 lbf of peak static thrust during bench testing.",
+      "Measured approximately 300 N of peak static thrust during bench testing.",
       "Built an instrumented test bench for repeatable performance measurements.",
     ],
     future: [
@@ -94,7 +94,7 @@ export const projects: Project[] = [
       "Use test evidence to guide the next geometry iteration.",
     ],
     metrics: [
-      { value: "~70 lbf", label: "Peak static thrust", detail: "Bench-tested" },
+      { value: "~300 N", label: "Peak static thrust", detail: "About 67 lbf, bench-tested" },
       { value: "8", label: "Team members", detail: "Founded and led" },
       { value: "3", label: "Measured outputs", detail: "Thrust / temperature / fuel" },
     ],
@@ -126,35 +126,35 @@ export const projects: Project[] = [
     slug: "culligan",
     title: "Culligan Product Design Work",
     eyebrow: "Product Design / FEA / Injection Molding",
-    subtitle: "Compact products, validated structures, funded concepts.",
+    subtitle: "Molded components, improved flow, funded training.",
     role: "Mechanical Engineering Design Intern",
     duration: "May 2026 - August 2026",
     location: "Rosemont, Illinois",
-    summary: "At Culligan International, I worked across product architecture, molded-component design, structural validation, training concepts, and production drawing packages for residential and commercial water-treatment products.",
-    challenge: "Improve product usability and manufacturability while working within real commercial constraints, existing product systems, structural load requirements, and appropriate confidentiality limits.",
+    summary: "At Culligan International, I used SolidWorks and FEA to design, develop, and build water-treatment components, including an injection-molded float system, commercial mounting brackets, and a portable field-training prototype.",
+    challenge: "Develop practical components and training tools for residential and commercial water-treatment systems while working within real product constraints and appropriate confidentiality limits.",
     process: [
-      { title: "Discover", description: "Translated product, field-training, and commercial assembly needs into engineering requirements." },
-      { title: "Design", description: "Created injection-molded components and space-efficient product concepts in SolidWorks." },
-      { title: "Analyze", description: "Performed SolidWorks FEA on commercial mounting brackets to verify load performance." },
-      { title: "Communicate", description: "Developed presentation materials and technical drawing sets for decision-makers and manufacturing." },
+      { title: "Discover", description: "Translated residential product, commercial hydraulic, and field-training needs into engineering requirements." },
+      { title: "Design", description: "Designed an injection-molded float system and commercial mounting brackets in SolidWorks." },
+      { title: "Analyze", description: "Used SolidWorks and FEA throughout the development of water-treatment components." },
+      { title: "Communicate", description: "Presented a portable training prototype and drafted five commercial product drawing sets." },
     ],
     results: [
-      "Reduced the footprint of a residential product by 60%.",
-      "Developed a field-training suitcase concept that secured $75,000 in company funding.",
-      "Created technical engineering drawings for five commercial water-softener products and assemblies.",
-      "Used SolidWorks FEA to verify commercial mounting-bracket performance under load.",
+      "Designed a new float system with injection-molded parts for a residential water softener.",
+      "Developed mounting brackets to improve water pressure in a commercial hydraulic system.",
+      "Created and presented a portable field-training prototype that secured $75,000 in funding.",
+      "Drafted technical engineering drawings for five commercial water softeners and assemblies.",
     ],
     future: ["Selected project details and visuals are intentionally limited due to confidentiality."],
     metrics: [
-      { value: "60%", label: "Footprint reduction", detail: "Residential product" },
-      { value: "$75K", label: "Concept funding", detail: "Field-training system" },
+      { value: "$75K", label: "Funding secured", detail: "Field-training prototype" },
       { value: "5", label: "Drawing sets", detail: "Commercial products" },
+      { value: "3", label: "Product areas", detail: "Residential / commercial / training" },
     ],
-    skills: ["SolidWorks", "Injection molding", "Finite element analysis", "Engineering drawings", "Concept development"],
+    skills: ["SolidWorks", "Injection molding", "Finite element analysis", "Engineering drawings", "Prototype development"],
     coverImage: { type: "image", src: "/projects/culligan/confidential-cover-placeholder.webp", label: "Confidential Product Design - Add Approved Diagram", alt: "Confidential project placeholder for Culligan product design work", caption: "Use only imagery approved for public release", aspect: "landscape" },
     gallery: [
-      { type: "cad", src: "/projects/culligan/footprint-diagram-placeholder.webp", label: "Add Approved 60% Footprint Reduction Diagram", alt: "Placeholder diagram comparing product footprint before and after redesign", aspect: "landscape" },
-      { type: "image", src: "/projects/culligan/fea-placeholder.webp", label: "Add Sanitized FEA Visualization", alt: "Placeholder for an approved finite element analysis visualization", aspect: "landscape" },
+      { type: "cad", src: "/projects/culligan/footprint-diagram-placeholder.webp", label: "Add Approved Float-System Diagram", alt: "Placeholder for an approved diagram of the residential water-softener float system", aspect: "landscape" },
+      { type: "image", src: "/projects/culligan/fea-placeholder.webp", label: "Add Sanitized Bracket or FEA Visualization", alt: "Placeholder for an approved mounting-bracket or finite element analysis visualization", aspect: "landscape" },
       { type: "image", src: "/projects/culligan/training-concept-placeholder.webp", label: "Add Approved Training Concept Diagram", alt: "Placeholder for the funded field-training suitcase concept", aspect: "landscape" },
     ],
     videos: [],
@@ -170,26 +170,25 @@ export const projects: Project[] = [
     role: "Independent Project",
     duration: "August 2020 - Present",
     location: "Libertyville, Illinois",
-    summary: "I rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche, applying six years of automotive coursework and hands-on experience to diagnostics, repair, welding, machining, and budget-conscious decision-making.",
-    challenge: "Bring two aging vehicles back to reliable working condition while managing unknown failure modes, repair sequencing, parts tradeoffs, and a defined project budget.",
+    summary: "I rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche, using welding, machining, and diagnostic problem-solving to return both vehicles to working condition.",
+    challenge: "Bring two aging vehicles back to working condition by diagnosing mechanical and structural problems, planning repairs, and applying hands-on fabrication skills.",
     process: [
       { title: "Diagnose", description: "Worked from symptoms and inspection findings to isolate mechanical and structural problems." },
-      { title: "Plan", description: "Sequenced repairs around safety, dependencies, parts availability, and budget." },
+      { title: "Plan", description: "Sequenced repairs around safety, system dependencies, and parts availability." },
       { title: "Restore", description: "Applied welding, machining, repair, and assembly skills across both vehicles." },
       { title: "Verify", description: "Tested repaired systems and used new evidence to resolve remaining issues." },
     ],
     results: [
       "Rebuilt and restored a 2001 Jeep Cherokee.",
       "Rebuilt and restored a 1987 Jeep Comanche.",
-      "Completed restoration work within a defined budget.",
-      "Developed durable hands-on judgment through six years of automotive study and practice.",
+      "Applied welding, machining, and diagnostic problem-solving throughout both restorations.",
     ],
     future: ["Document system-by-system restoration decisions.", "Add a complete walk-around and detailed before/after gallery."],
     metrics: [
       { value: "2", label: "Vehicles restored", detail: "Cherokee + Comanche" },
-      { value: "6 yrs", label: "Automotive coursework", detail: "Applied hands-on" },
+      { value: "2020", label: "Project began", detail: "Independent restoration work" },
     ],
-    skills: ["MIG welding", "Stick welding", "Machining", "Automotive diagnostics", "Budget management"],
+    skills: ["MIG welding", "Stick welding", "Machining", "Automotive diagnostics"],
     coverImage: { type: "image", src: "/projects/automotive/jeep-before-placeholder.webp", label: "Add Before-and-After Restoration Photos", alt: "Placeholder for before and after Jeep restoration photography", caption: "Recommended: matched-angle 16:10 WebP images", aspect: "landscape" },
     gallery: [
       { type: "image", src: "/projects/automotive/jeep-after-placeholder.webp", label: "Add Finished Vehicle Photograph", alt: "Placeholder for finished Jeep restoration photography", aspect: "landscape" },
@@ -243,8 +242,8 @@ export const experiences = [
     role: "Mechanical Engineering Design Intern",
     location: "Rosemont, Illinois",
     duration: "May 2026 - August 2026",
-    summary: "Contributed across molded-product design, commercial structural validation, field-training concept development, and manufacturing-ready communication.",
-    highlights: ["60% residential product footprint reduction", "$75,000 secured for a field-training concept", "Five commercial product and assembly drawing sets"],
+    summary: "Designed molded components and commercial mounting brackets, developed a funded field-training prototype, and drafted production drawing sets.",
+    highlights: ["Designed an injection-molded residential float system", "$75,000 secured for a field-training prototype", "Five commercial water-softener drawing sets"],
   },
   {
     company: "Pulse Jet Design Team",
@@ -253,7 +252,7 @@ export const experiences = [
     location: "Blacksburg, Virginia",
     duration: "May 2025 - Present",
     summary: "Founded and lead an eight-member team that designs, fabricates, instruments, and tests pulse jet engines.",
-    highlights: ["Designed and tested a steel pulse jet producing approximately 70 lbf peak static thrust", "Built an instrumented bench for thrust, temperature, and fuel-efficiency measurements"],
+    highlights: ["Designed and tested a steel pulse jet producing approximately 300 N of peak static thrust", "Built an instrumented bench for thrust, temperature, and fuel-efficiency measurements"],
   },
   {
     company: "Automotive Restoration",
@@ -261,8 +260,8 @@ export const experiences = [
     role: "Independent Project",
     location: "Libertyville, Illinois",
     duration: "August 2020 - Present",
-    summary: "Restored two aging vehicles through diagnostics, welding, machining, repair planning, and budget management.",
-    highlights: ["Rebuilt a 2001 Jeep Cherokee and 1987 Jeep Comanche", "Applied six years of automotive coursework and hands-on fabrication experience"],
+    summary: "Restored two aging vehicles through diagnostics, welding, machining, and repair planning.",
+    highlights: ["Rebuilt a 2001 Jeep Cherokee and 1987 Jeep Comanche", "Used welding, machining, and diagnostic problem-solving"],
   },
   {
     company: "Virginia Tech Engineering Education Department",
@@ -277,8 +276,8 @@ export const experiences = [
 
 export const skillGroups = [
   { title: "CAD + analysis", skills: ["SolidWorks", "Certified SolidWorks Professional", "Finite Element Analysis", "Engineering drawings", "MATLAB"] },
-  { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation", "Concept development", "Prototype testing"] },
-  { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Automotive diagnostics", "Forklift certification"] },
+  { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
+  { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
 
 export const education = {
@@ -290,9 +289,9 @@ export const education = {
 };
 
 export const credentials = [
-  { title: "Certified SolidWorks Professional", issuer: "Dassault Systemes", date: "July 2026" },
+  { title: "Certified SolidWorks Professional (CSWP)", issuer: "Dassault Systèmes", date: "July 2026" },
   { title: "Finite Element Analysis Certification", issuer: "GoEngineer", date: "July 2026" },
-  { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023", detail: "Led and raised more than $3,500 for a community-service project." },
+  { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023" },
 ];
 
 export const processSteps = [
