@@ -8,7 +8,7 @@ export function Footer() {
       <div className="site-container flex flex-col gap-5 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="font-semibold text-white">Charles T. Clark</p>
-          <p className="mt-1">Mechanical Engineer / {new Date().getFullYear()}</p>
+          <p className="mt-1">{profile.title} / {new Date().getFullYear()}</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <a className="footer-link" href={`mailto:${profile.email}`}><Mail size={16} />{profile.email}</a>

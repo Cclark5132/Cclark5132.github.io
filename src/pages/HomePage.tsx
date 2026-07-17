@@ -28,16 +28,16 @@ export function HomePage() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const description = "Charles T. Clark is a Virginia Tech mechanical engineering student with experience in product design, SolidWorks, FEA, fabrication, and test engineering.";
-    document.title = "Charles T. Clark | Mechanical Engineer";
+    const description = "Charles T. Clark is a Third-Year Mechanical Engineering Student at Virginia Tech with experience in product design, SolidWorks, FEA, fabrication, and test engineering.";
+    document.title = `${profile.name} | ${profile.title}`;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", "https://charlesclark.me/");
-    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
+    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Third-Year Mechanical Engineering Student portfolio featuring selected work, experience, and technical skills.");
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", "https://charlesclark.me/");
     document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Third-Year Mechanical Engineering Student portfolio featuring selected work, experience, and technical skills.");
     document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
 
     const section = searchParams.get("section");
@@ -77,7 +77,7 @@ export function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.08 }}
             >
-              Mechanical Engineer
+              {profile.title}
             </motion.p>
             <motion.h1
               className="mt-4 max-w-4xl text-balance text-[clamp(3.6rem,8vw,7.2rem)] font-semibold leading-[0.88] tracking-[-0.07em] text-white"

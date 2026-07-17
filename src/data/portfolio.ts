@@ -41,7 +41,7 @@ export interface Project {
 
 export const profile = {
   name: "Charles T. Clark",
-  title: "Mechanical Engineer",
+  title: "Third-Year Mechanical Engineering Student",
   email: "charlesclark@vt.edu",
   phone: "(224) 358-5132",
   phoneLink: "+12243585132",
