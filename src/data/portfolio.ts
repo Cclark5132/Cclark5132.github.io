@@ -239,6 +239,7 @@ export const projects: Project[] = [
 export const experiences = [
   {
     company: "Culligan International",
+    projectSlug: "culligan",
     role: "Mechanical Engineering Design Intern",
     location: "Rosemont, Illinois",
     duration: "May 2026 - August 2026",
@@ -247,6 +248,7 @@ export const experiences = [
   },
   {
     company: "Pulse Jet Design Team",
+    projectSlug: "pulse-jet",
     role: "Founder and President",
     location: "Blacksburg, Virginia",
     duration: "May 2025 - Present",
@@ -255,6 +257,7 @@ export const experiences = [
   },
   {
     company: "Automotive Restoration",
+    projectSlug: "automotive-restoration",
     role: "Independent Project",
     location: "Libertyville, Illinois",
     duration: "August 2020 - Present",
@@ -263,6 +266,7 @@ export const experiences = [
   },
   {
     company: "Virginia Tech Engineering Education Department",
+    projectSlug: "telescoping-crutch",
     role: "Accessibility Design Project Leader",
     location: "Blacksburg, Virginia",
     duration: "August 2024 - May 2025",

@@ -429,6 +429,47 @@ a {
   gap: 1.35rem;
 }
 
+.experience-link {
+  display: flex;
+  min-height: 14.5rem;
+  flex-direction: column;
+  border: 1px solid rgba(37, 40, 42, 0.12);
+  border-left: 3px solid #861f41;
+  border-radius: 0.75rem;
+  background: #eceae7;
+  padding: 1rem;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.experience-link:hover {
+  transform: translateY(-3px);
+  border-color: rgba(134, 31, 65, 0.35);
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(37, 40, 42, 0.1);
+}
+
+.experience-link-arrow {
+  flex-shrink: 0;
+  color: #861f41;
+  transition: transform 180ms ease;
+}
+
+.experience-link:hover .experience-link-arrow {
+  transform: translate(2px, -2px);
+}
+
+.experience-link-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  color: #861f41;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
 .compact-card {
   border: 1px solid rgba(37, 40, 42, 0.14);
   border-radius: 1rem;

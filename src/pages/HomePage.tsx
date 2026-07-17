@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowRight, Download, GraduationCap, Mail, MapPin, Phone, Wrench } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Mail, MapPin, Phone, Wrench } from "lucide-react";
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ProjectCard } from "../components/ProjectCard";
 import { ProjectMedia } from "../components/ProjectMedia";
 import { Reveal } from "../components/Reveal";
@@ -158,12 +158,21 @@ export function HomePage() {
               </div>
               <div className="experience-grid mt-6">
                 {experiences.map((experience) => (
-                  <article className="border-l-2 border-cyan pl-4" key={experience.company}>
-                    <p className="technical-label text-orange">{experience.duration}</p>
+                  <Link
+                    className="experience-link group"
+                    to={`/projects/${experience.projectSlug}`}
+                    key={experience.company}
+                    aria-label={`View ${experience.company} case study`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="technical-label text-orange">{experience.duration}</p>
+                      <ArrowUpRight className="experience-link-arrow" size={19} aria-hidden="true" />
+                    </div>
                     <h4 className="mt-2 text-lg font-semibold text-charcoal">{experience.company}</h4>
                     <p className="mt-1 text-sm text-steel">{experience.role}</p>
                     <p className="mt-3 text-sm font-medium leading-6 text-charcoal">{experience.highlights[0]}</p>
-                  </article>
+                    <span className="experience-link-label">View case study <ArrowRight size={15} /></span>
+                  </Link>
                 ))}
               </div>
             </Reveal>
