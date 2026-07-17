@@ -93,7 +93,7 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.16, duration: 0.45 }}
             >
-              I turn mechanical ideas into tested, buildable systems through CAD, analysis, prototyping, and hands-on fabrication.
+              Third year mechanical engineering student seeking Co-op for Spring 2027 and Internship for Summer 2027.
             </motion.p>
             <motion.div
               className="mt-8 flex flex-wrap gap-3"
