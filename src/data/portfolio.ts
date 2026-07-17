@@ -328,7 +328,7 @@ export const experiences = [
     location: "Rosemont, Illinois",
     duration: "May 2026 - August 2026",
     summary: "Designed molded components and commercial mounting brackets, developed a funded field-training prototype, and drafted production drawing sets.",
-    highlights: ["Designed an injection-molded residential float system", "$75,000 secured for a field-training prototype", "Five commercial water-softener drawing sets"],
+    highlights: ["Used SolidWorks and FEA extensively to design, develop, and build water-treatment components", "$75,000 secured for a field-training prototype", "Five commercial water-softener drawing sets"],
   },
   {
     company: "Pulse Jet Design Team",
@@ -355,12 +355,12 @@ export const experiences = [
     location: "Blacksburg, Virginia",
     duration: "August 2024 - May 2025",
     summary: "Led a rapid-prototyping team through the design of a telescoping accessibility crutch, combining CAD development with deadlines, demonstrations, and structured progress reporting.",
-    highlights: ["66% storage-space reduction", "SolidWorks and rapid prototyping", "Team meetings, deadlines, and project coordination"],
+    highlights: ["Led a team to design and prototype a telescoping crutch, reducing storage space by 66%", "SolidWorks and rapid prototyping", "Team meetings, deadlines, and project coordination"],
   },
 ];
 
 export const skillGroups = [
-  { title: "CAD + analysis", skills: ["SolidWorks", "Certified SolidWorks Professional", "Finite Element Analysis", "Engineering drawings", "MATLAB"] },
+  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings", "MATLAB"] },
   { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
   { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
@@ -368,7 +368,7 @@ export const skillGroups = [
 export const education = {
   school: "Virginia Tech",
   degree: "Bachelor of Science in Mechanical Engineering",
-  graduation: "Expected May 2028",
+  graduation: "Expected Graduation: May 2028",
   details: ["GPA: 3.84", "Dean's List every semester", "Mechanical Engineering Undergraduate Student Ambassador", "Raymond & Shirley Lynn Merit Scholarship recipient"],
   coursework: ["Dynamics", "Thermodynamics", "Differential Equations", "Mechanics of Bodies", "Electrical Theory"],
 };

@@ -140,7 +140,7 @@ export function HomePage() {
             index="01"
             eyebrow="Selected work"
             title="Four projects. Clear outcomes."
-            description="Choose a project for the problem, process, and result."
+            description="Click to learn more about my projects."
           />
           <div className="projects-grid">
             {projects.map((project, index) => <ProjectCard project={project} featured={index === 0} key={project.slug} />)}
@@ -225,7 +225,6 @@ export function HomePage() {
             index="03"
             eyebrow="Technical skills"
             title="From CAD to fabrication."
-            description="The complete toolkit I use to model, analyze, prototype, build, and test."
           />
           <div className="grid gap-5 lg:grid-cols-3">
             {skillGroups.map((group, index) => (
@@ -246,7 +245,7 @@ export function HomePage() {
           <Reveal className="contact-panel">
             <div>
               <p className="technical-label text-orange">04 / Contact</p>
-              <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">Let's talk engineering.</h2>
+              <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">Contact me.</h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-white/75">
                 Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.
               </p>
