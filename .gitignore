@@ -1,0 +1,16 @@
+/node_modules
+/.pnpm-store
+/dist
+/coverage
+/tmp
+.env
+.env.*
+!.env.example
+.vite
+.wrangler
+.DS_Store
+Thumbs.db
+npm-debug.log*
+.pnpm-debug.log*
+*.local
+*.tsbuildinfo

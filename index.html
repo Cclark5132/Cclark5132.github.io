@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Charles T. Clark | Mechanical Engineering Portfolio</title>
+    <meta name="description" content="Mechanical engineering portfolio featuring product design, SolidWorks, FEA, pulse jet development, automotive restoration, rapid prototyping, and hands-on fabrication." />
+    <link rel="canonical" href="https://charlesclark.me" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Charles T. Clark Engineering Portfolio" />
+    <meta property="og:title" content="Charles T. Clark | Mechanical Engineering Portfolio" />
+    <meta property="og:description" content="Design. Analyze. Build. Test. Explore mechanical engineering work by Charles T. Clark." />
+    <meta property="og:url" content="https://charlesclark.me" />
+    <meta property="og:image" content="https://charlesclark.me/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Charles T. Clark | Mechanical Engineering Portfolio" />
+    <meta name="twitter:description" content="Design. Analyze. Build. Test. Mechanical engineering work by Charles T. Clark." />
+    <meta name="twitter:image" content="https://charlesclark.me/og.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Charles T. Clark",
+        "url": "https://charlesclark.me",
+        "email": "mailto:charlesclark@vt.edu",
+        "homeLocation": { "@type": "Place", "name": "Chicago, Illinois" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Virginia Tech" },
+        "knowsAbout": ["Mechanical engineering", "SolidWorks", "Finite element analysis", "Product design", "Manufacturing", "Fabrication"]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div id="root"></div>
+    <script>
+      // GitHub Pages SPA fallback: public/404.html returns the requested route here.
+      const route = new URLSearchParams(window.location.search).get("route");
+      if (route) window.history.replaceState(null, "", route);
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
