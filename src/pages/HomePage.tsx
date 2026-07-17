@@ -9,10 +9,10 @@ import { SectionHeading } from "../components/SectionHeading";
 import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
 
 const quickFacts = [
-  { value: "Virginia Tech", label: "Mechanical Engineering" },
-  { value: "3.84", label: "GPA" },
-  { value: "May 2028", label: "Expected graduation" },
-  { value: "Chicago, IL", label: "Open to relocation" },
+  { value: "SolidWorks", label: "CSWP certified" },
+  { value: "FEA", label: "Analysis + validation" },
+  { value: "Rapid prototyping", label: "Product development" },
+  { value: "MIG + Stick", label: "Welding + fabrication" },
 ];
 
 export function HomePage() {
