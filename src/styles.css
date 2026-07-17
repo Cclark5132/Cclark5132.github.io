@@ -679,7 +679,26 @@ a {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.detail-card {
+.star-heading {
+  margin-bottom: 1.25rem;
+}
+
+.star-heading h2 {
+  margin-top: 0.45rem;
+  color: #fff;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.star-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.star-card {
+  position: relative;
+  overflow: hidden;
   border: 1px solid rgba(37, 40, 42, 0.14);
   border-radius: 1rem;
   background: #fff;
@@ -687,10 +706,119 @@ a {
   box-shadow: 0 10px 30px rgba(37, 40, 42, 0.04);
 }
 
-.process-mini {
+.star-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #861f41, #e87722);
+  content: "";
+}
+
+.star-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.star-letter {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: #861f41;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  box-shadow: 0 7px 18px rgba(134, 31, 65, 0.18);
+}
+
+.star-card-heading h3 {
+  margin-top: 0.2rem;
+  color: #25282a;
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.star-body {
+  margin-top: 1.15rem;
+  color: #4f5559;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.star-action-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.star-action-list li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
   border-radius: 0.75rem;
   background: #f5f3f1;
-  padding: 1rem;
+  padding: 0.85rem;
+}
+
+.star-action-index {
+  color: #e87722;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.6rem;
+}
+
+.star-action-list strong,
+.star-action-list li div > span {
+  display: block;
+}
+
+.star-action-list strong {
+  color: #25282a;
+  font-size: 0.9rem;
+}
+
+.star-action-list li div > span {
+  margin-top: 0.25rem;
+  color: #4f5559;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.star-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.star-result-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.star-result-list li {
+  display: flex;
+  gap: 0.75rem;
+  color: #25282a;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.star-result-list svg {
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+  color: #007f86;
 }
 
 .project-gallery {
@@ -948,11 +1076,15 @@ a {
 
   .quick-card,
   .compact-card,
-  .detail-card {
+  .star-card {
     padding: 1.8rem;
   }
 
   .compact-background-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .star-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

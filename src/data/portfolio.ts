@@ -69,8 +69,8 @@ export const projects: Project[] = [
     role: "Founder and President",
     duration: "May 2025 - Present",
     location: "Blacksburg, Virginia",
-    summary: "I founded and lead an eight-member team designing, fabricating, and testing pulse jet engines. Our steel, propane-fueled design moved from SolidWorks to a live bench test and produced approximately 300 newtons of peak static thrust.",
-    challenge: "Create a functional pulse jet program from the ground up: organize the team, develop a manufacturable engine, build a safe test system, and replace assumptions with reliable thrust, temperature, and fuel-efficiency measurements.",
+    summary: "An eight-member Virginia Tech student team set out to turn a pulse-jet concept into a functioning, measurable engine program.",
+    challenge: "As founder and president, I needed to organize the team, design and fabricate a manufacturable steel propane-fueled engine, and create a safe bench for measuring thrust, temperature, and fuel efficiency.",
     process: [
       { title: "Define", description: "Set propulsion goals, team roles, operating constraints, and a safe validation plan." },
       { title: "Model", description: "Developed the steel, propane-fueled engine geometry and assembly in SolidWorks." },
@@ -126,8 +126,8 @@ export const projects: Project[] = [
     role: "Mechanical Engineering Design Intern",
     duration: "May 2026 - August 2026",
     location: "Rosemont, Illinois",
-    summary: "At Culligan International, I used SolidWorks and FEA to design, develop, and build water-treatment components, including an injection-molded float system, commercial mounting brackets, and a portable field-training prototype.",
-    challenge: "Develop practical components and training tools for residential and commercial water-treatment systems while working within real product constraints and appropriate confidentiality limits.",
+    summary: "Culligan had residential, commercial, and field-training needs spanning a water-softener float system, hydraulic-system mounting brackets, and a portable training concept.",
+    challenge: "As a Mechanical Engineering Design Intern, I needed to develop practical, manufacturable solutions across those workstreams, communicate them through engineering drawings and prototypes, and protect confidential product details.",
     process: [
       { title: "Discover", description: "Translated residential product, commercial hydraulic, and field-training needs into engineering requirements." },
       { title: "Design", description: "Designed an injection-molded float system and commercial mounting brackets in SolidWorks." },
@@ -166,8 +166,8 @@ export const projects: Project[] = [
     role: "Independent Project",
     duration: "August 2020 - Present",
     location: "Libertyville, Illinois",
-    summary: "I rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche, using welding, machining, and diagnostic problem-solving to return both vehicles to working condition.",
-    challenge: "Bring two aging vehicles back to working condition by diagnosing mechanical and structural problems, planning repairs, and applying hands-on fabrication skills.",
+    summary: "A 2001 Jeep Cherokee and a 1987 Jeep Comanche required extensive mechanical and structural restoration before they could return to working condition.",
+    challenge: "Working independently, I needed to diagnose each vehicle, prioritize and sequence repairs, and restore both systems safely using machining, welding, and hands-on repair skills.",
     process: [
       { title: "Diagnose", description: "Worked from symptoms and inspection findings to isolate mechanical and structural problems." },
       { title: "Plan", description: "Sequenced repairs around safety, system dependencies, and parts availability." },
@@ -203,8 +203,8 @@ export const projects: Project[] = [
     role: "Accessibility Design Project Leader",
     duration: "August 2024 - May 2025",
     location: "Blacksburg, Virginia",
-    summary: "I led the design and rapid prototyping of a telescoping crutch that reduced required storage space by 66%, coordinating the team from SolidWorks concepts through physical demonstrations and progress reporting.",
-    challenge: "Reduce the stored size of a full-length mobility aid without losing its essential function, while keeping a student design team aligned around deadlines, physical prototypes, and clear progress communication.",
+    summary: "A full-length crutch is difficult to store and transport because its fixed length requires substantial space.",
+    challenge: "As project leader, I needed to guide a student team in creating a compact telescoping concept that preserved the crutch's essential function while meeting deadlines and clearly demonstrating the design.",
     process: [
       { title: "Frame", description: "Defined the storage problem and translated accessibility needs into a compacting mechanism goal." },
       { title: "Model", description: "Used SolidWorks to develop telescoping concepts and communicate the device architecture." },

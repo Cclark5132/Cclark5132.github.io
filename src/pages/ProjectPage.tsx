@@ -72,45 +72,77 @@ export function ProjectPage() {
         </div>
       </section>
 
-      <section className="site-container grid gap-6 pb-12 lg:grid-cols-[0.86fr_1.14fr]">
-        <article className="detail-card">
-          <p className="technical-label text-orange">The challenge</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-charcoal">What needed to work?</h2>
-          <p className="mt-4 text-base leading-7 text-steel">{project.challenge}</p>
-        </article>
+      <section className="site-container pb-12">
+        <div className="star-heading">
+          <p className="technical-label text-orange">STAR case study</p>
+          <h2>Situation. Task. Action. Result.</h2>
+        </div>
 
-        <article className="detail-card">
-          <p className="technical-label text-orange">Results</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-charcoal">What changed?</h2>
-          <ul className="mt-4 space-y-3">
-            {project.results.slice(0, 4).map((result) => (
-              <li className="flex gap-3 text-sm leading-6 text-charcoal" key={result}>
-                <Check className="mt-1 shrink-0 text-cyan" size={17} />{result}
-              </li>
-            ))}
-          </ul>
-        </article>
-
-        <article className="detail-card lg:col-span-2">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="technical-label text-orange">Process</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-charcoal">How I approached it.</h2>
+        <div className="star-grid">
+          <article className="star-card">
+            <div className="star-card-heading">
+              <span className="star-letter" aria-hidden="true">S</span>
+              <div>
+                <p className="technical-label text-orange">Situation</p>
+                <h3>What was the context?</h3>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <p className="star-body">{project.summary}</p>
+          </article>
+
+          <article className="star-card">
+            <div className="star-card-heading">
+              <span className="star-letter" aria-hidden="true">T</span>
+              <div>
+                <p className="technical-label text-orange">Task</p>
+                <h3>What was I responsible for?</h3>
+              </div>
+            </div>
+            <p className="star-body">{project.challenge}</p>
+          </article>
+
+          <article className="star-card">
+            <div className="star-card-heading">
+              <span className="star-letter" aria-hidden="true">A</span>
+              <div>
+                <p className="technical-label text-orange">Action</p>
+                <h3>What did I do?</h3>
+              </div>
+            </div>
+            <ol className="star-action-list">
+              {project.process.map((step, index) => (
+                <li key={step.title}>
+                  <span className="star-action-index">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <span>{step.description}</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className="star-skills">
               {project.skills.slice(0, 5).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
             </div>
-          </div>
-          <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {project.process.map((step, index) => (
-              <div className="process-mini" key={step.title}>
-                <span className="technical-label text-cyan">{String(index + 1).padStart(2, "0")}</span>
-                <h3 className="mt-2 font-semibold text-charcoal">{step.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-steel">{step.description}</p>
+          </article>
+
+          <article className="star-card">
+            <div className="star-card-heading">
+              <span className="star-letter" aria-hidden="true">R</span>
+              <div>
+                <p className="technical-label text-orange">Result</p>
+                <h3>What changed?</h3>
               </div>
-            ))}
-          </div>
-        </article>
+            </div>
+            <ul className="star-result-list">
+              {project.results.slice(0, 4).map((result) => (
+                <li key={result}>
+                  <Check aria-hidden="true" size={18} />
+                  <span>{result}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        </div>
       </section>
 
       <section className="other-projects-section">
