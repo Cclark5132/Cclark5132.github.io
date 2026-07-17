@@ -17,17 +17,17 @@ const icons = {
   pdf: FileText,
 };
 
-function Placeholder({ media }: { media: MediaItem }) {
+function MediaFallback({ media }: { media: MediaItem }) {
   const Icon = icons[media.type];
   return (
-    <div className="media-placeholder" role="img" aria-label={media.alt}>
+    <div className="media-fallback" role="img" aria-label={media.alt}>
       <div className="media-orbit" aria-hidden="true"><span /><span /></div>
       <div className="relative z-10 flex max-w-sm flex-col items-center text-center">
         <span className="mb-4 grid size-11 place-items-center rounded-full border border-cyan/35 bg-cyan/10 text-cyan">
           <Icon aria-hidden="true" size={19} />
         </span>
         <p className="text-sm font-semibold text-white">{media.label}</p>
-        <p className="mt-2 text-xs leading-5 text-white/55">{media.caption ?? "Project media coming soon"}</p>
+        <p className="mt-2 text-xs leading-5 text-white/55">{media.caption ?? "Project media"}</p>
       </div>
       <ScanLine className="absolute bottom-4 right-4 text-cyan/35" size={18} aria-hidden="true" />
     </div>
@@ -42,7 +42,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
   if (media.type === "pdf") {
     return (
       <a className={`media-shell media-${aspect} group ${className}`} href={media.src} target="_blank" rel="noreferrer">
-        <Placeholder media={media} />
+        <MediaFallback media={media} />
       </a>
     );
   }
@@ -65,7 +65,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
   if (media.type === "video") {
     return (
       <div className={`media-shell media-${aspect} ${className}`}>
-        {!loaded && <Placeholder media={media} />}
+        {!loaded && <MediaFallback media={media} />}
         {!failed && (
           <video
             className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
@@ -88,7 +88,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
 
   return (
     <figure className={`media-shell media-${aspect} ${className}`}>
-      {!loaded && <Placeholder media={media} />}
+      {!loaded && <MediaFallback media={media} />}
       {!failed && (
         <img
           className={`absolute inset-0 size-full object-cover transition duration-700 ${loaded ? "scale-100 opacity-100" : "scale-[1.02] opacity-0"}`}

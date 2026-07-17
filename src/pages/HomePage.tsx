@@ -35,10 +35,10 @@ export function HomePage() {
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", "https://charlesclark.me/");
-    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/og-simple.png");
+    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
     document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
     document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/og-simple.png");
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
 
     const section = searchParams.get("section");
     if (!section) {

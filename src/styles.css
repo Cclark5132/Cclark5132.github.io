@@ -304,7 +304,7 @@ a {
 .media-portrait { aspect-ratio: 4 / 5; }
 .media-square { aspect-ratio: 1; }
 
-.media-placeholder {
+.media-fallback {
   position: absolute;
   inset: 0;
   display: grid;
@@ -791,12 +791,12 @@ a {
   border-radius: 0;
 }
 
-.other-project-media .media-placeholder {
+.other-project-media .media-fallback {
   padding: 1rem;
 }
 
-.other-project-media .media-placeholder > div:last-of-type p:last-child,
-.other-project-media .media-placeholder > div:last-of-type > span {
+.other-project-media .media-fallback > div:last-of-type p:last-child,
+.other-project-media .media-fallback > div:last-of-type > span {
   display: none;
 }
 
