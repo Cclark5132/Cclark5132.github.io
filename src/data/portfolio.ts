@@ -45,11 +45,13 @@ export const profile = {
   name: "Charles T. Clark",
   title: "Mechanical Engineer / Designer / Builder",
   email: "charlesclark@vt.edu",
+  phone: "(224) 358-5132",
+  phoneLink: "+12243585132",
   location: "Chicago, Illinois",
   availability: "Seeking Spring 2027 Co-op + Summer 2027 Internship",
   resume: "/Charles-Clark-Resume.pdf",
-  linkedIn: "https://www.linkedin.com/in/replace-with-charles-clark",
-  github: "https://github.com/replace-with-charles-clark",
+  linkedIn: "",
+  github: "https://github.com/Cclark5132",
   // Replace with /about/portrait.webp (recommended: 4:5 WebP, at least 1200px wide).
   portrait: "/about/portrait-placeholder.webp",
   heroMedia: {
