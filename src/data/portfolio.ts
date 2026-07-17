@@ -253,11 +253,11 @@ export const projects: Project[] = [
       { value: "2020", label: "Project began", detail: "Independent restoration work" },
     ],
     skills: ["MIG welding", "Stick welding", "Machining", "Automotive diagnostics"],
-    coverImage: { type: "image", src: "/project-photos/automotive-cherokee-finished.webp", label: "Restored 2001 Jeep Cherokee", alt: "Restored red 2001 Jeep Cherokee photographed in a driveway", caption: "2001 Jeep Cherokee returned to working condition", aspect: "landscape" },
+    coverImage: { type: "image", src: "/project-photos/automotive-comanche-finished.webp", label: "Restored 1987 Jeep Comanche", alt: "Charles Clark standing beside the restored 1987 Jeep Comanche", caption: "1987 Jeep Comanche returned to working condition", aspect: "landscape" },
     gallery: [
-      { type: "image", src: "/project-photos/automotive-comanche-finished.webp", label: "Restored 1987 Jeep Comanche", alt: "Charles Clark standing beside the restored 1987 Jeep Comanche", caption: "1987 Jeep Comanche returned to working condition", aspect: "landscape" },
       { type: "image", src: "/project-photos/automotive-garage-teardown.webp", label: "Drivetrain and Axle Teardown", alt: "Jeep Comanche on jack stands with the engine, transmission, axle, and suspension components removed", caption: "Engine, transmission, axle, and suspension work in progress", aspect: "landscape" },
       { type: "image", src: "/project-photos/automotive-engine-install.webp", label: "Engine Rebuild and Swap", alt: "Engine being installed into the red Jeep Cherokee with a shop crane", caption: "Engine installation using a shop crane", aspect: "landscape" },
+      { type: "image", src: "/project-photos/automotive-cherokee-finished.webp", label: "Restored 2001 Jeep Cherokee", alt: "Restored red 2001 Jeep Cherokee photographed in a driveway", caption: "2001 Jeep Cherokee returned to working condition", aspect: "landscape" },
       { type: "image", src: "/project-photos/automotive-engine-bay-wiring.webp", label: "Engine Bay and Wiring Harness", alt: "Jeep engine bay showing the engine, hoses, and wiring-harness work", caption: "Engine-bay assembly and new wiring-harness work", aspect: "landscape" },
     ],
     videos: [{ type: "video", src: "/project-videos/automotive-walkaround.mp4", label: "Restored Vehicle Walk-Around", alt: "Walk-around video of the restored Jeep vehicles", aspect: "cinematic" }],
