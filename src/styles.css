@@ -440,7 +440,7 @@ a {
   bottom: 0.75rem;
   width: 2px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #e87722, #861f41);
+  background: linear-gradient(180deg, #861f41, #e87722);
 }
 
 .experience-timeline-item {
@@ -460,33 +460,55 @@ a {
 }
 
 .experience-timeline-meta p {
-  color: #9a3b1d;
+  border: 1px solid rgba(134, 31, 65, 0.16);
+  border-radius: 999px;
+  background: #fff;
+  padding: 0.4rem 0.65rem;
+  color: #861f41;
   font-size: 0.7rem;
   font-weight: 780;
-  letter-spacing: 0.1em;
+  line-height: 1;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(37, 40, 42, 0.055);
 }
 
 .experience-timeline-dot {
-  width: 0.95rem;
-  height: 0.95rem;
+  display: grid;
+  width: 1.08rem;
+  height: 1.08rem;
   flex-shrink: 0;
+  place-items: center;
   border: 3px solid #fff;
   border-radius: 999px;
+  background: #861f41;
+  box-shadow: 0 0 0 2px rgba(134, 31, 65, 0.3), 0 4px 10px rgba(37, 40, 42, 0.13);
+}
+
+.experience-timeline-dot::after {
+  content: "";
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
   background: #e87722;
-  box-shadow: 0 0 0 2px rgba(134, 31, 65, 0.28);
+}
+
+.experience-timeline-current .experience-timeline-dot {
+  box-shadow: 0 0 0 2px rgba(134, 31, 65, 0.34), 0 0 0 7px rgba(134, 31, 65, 0.08);
 }
 
 .experience-link {
+  position: relative;
+  z-index: 1;
   display: flex;
   min-height: 13.5rem;
   flex: 1;
   flex-direction: column;
   border: 1px solid rgba(37, 40, 42, 0.12);
-  border-left: 3px solid #861f41;
+  border-top: 3px solid #861f41;
   border-radius: 0.75rem;
   background: #eceae7;
-  padding: 1rem;
+  padding: 1.05rem;
   text-decoration: none;
   transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
@@ -947,20 +969,32 @@ a {
   .experience-timeline::before {
     left: 12.5%;
     right: 12.5%;
-    top: 1.98rem;
+    top: 2.95rem;
     bottom: auto;
     width: auto;
-    height: 2px;
-    background: linear-gradient(90deg, #e87722, #861f41);
+    height: 3px;
+    background: linear-gradient(90deg, #861f41, #e87722);
   }
 
   .experience-timeline-meta {
-    min-height: 2.45rem;
+    min-height: 3.45rem;
     flex-direction: column-reverse;
     justify-content: flex-end;
     gap: 0.55rem;
-    margin: 0 0 1rem;
+    margin: 0 0 1.2rem;
     text-align: center;
+  }
+
+  .experience-timeline-item::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 2.95rem;
+    width: 2px;
+    height: 1.85rem;
+    transform: translateX(-50%);
+    background: rgba(134, 31, 65, 0.28);
   }
 
   .other-projects-grid {

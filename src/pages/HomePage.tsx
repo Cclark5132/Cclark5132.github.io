@@ -20,7 +20,7 @@ const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Protot
 const experienceTimeline = [...experiences].sort((a, b) => {
   const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);
   const startYearB = Number(b.duration.match(/\d{4}/)?.[0] ?? 0);
-  return startYearA - startYearB;
+  return startYearB - startYearA;
 });
 
 export function HomePage() {
@@ -164,7 +164,10 @@ export function HomePage() {
               </div>
               <div className="experience-timeline">
                 {experienceTimeline.map((experience) => (
-                  <div className="experience-timeline-item" key={experience.company}>
+                  <div
+                    className={`experience-timeline-item ${experience.duration.includes("Present") ? "experience-timeline-current" : ""}`}
+                    key={experience.company}
+                  >
                     <div className="experience-timeline-meta">
                       <span className="experience-timeline-dot" aria-hidden="true" />
                       <p>{experience.duration}</p>
