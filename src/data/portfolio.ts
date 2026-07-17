@@ -246,6 +246,22 @@ export const experiences = [
     highlights: ["60% residential product footprint reduction", "$75,000 secured for a field-training concept", "Five commercial product and assembly drawing sets"],
   },
   {
+    company: "Pulse Jet Design Team",
+    role: "Founder and President",
+    location: "Blacksburg, Virginia",
+    duration: "May 2025 - Present",
+    summary: "Founded and lead an eight-member team that designs, fabricates, instruments, and tests pulse jet engines.",
+    highlights: ["Designed and tested a steel pulse jet producing approximately 70 lbf peak static thrust", "Built an instrumented bench for thrust, temperature, and fuel-efficiency measurements"],
+  },
+  {
+    company: "Automotive Restoration",
+    role: "Independent Builder",
+    location: "Libertyville, Illinois",
+    duration: "August 2020 - Present",
+    summary: "Restored two aging vehicles through diagnostics, welding, machining, repair planning, and budget management.",
+    highlights: ["Rebuilt a 2001 Jeep Cherokee and 1987 Jeep Comanche", "Applied six years of automotive coursework and hands-on fabrication experience"],
+  },
+  {
     company: "Virginia Tech Engineering Education Department",
     role: "Accessibility Design Project Leader",
     location: "Blacksburg, Virginia",

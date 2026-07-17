@@ -31,7 +31,7 @@ export function Navigation() {
       <nav className="site-container flex h-[4.75rem] items-center justify-between" aria-label="Primary navigation">
         <Link to="/" className="group flex items-center gap-3" aria-label="Charles T. Clark portfolio home">
           <span className="grid size-10 place-items-center rounded-lg bg-cyan text-xs font-bold tracking-[0.08em] text-white transition group-hover:bg-[#6f1836]">CTC</span>
-          <span className="hidden text-sm font-semibold text-charcoal sm:block">Charles T. Clark</span>
+          <span className="hidden text-sm font-semibold text-white sm:block">Charles T. Clark</span>
         </Link>
 
         <div className="hidden items-center gap-2 lg:flex">
@@ -47,7 +47,7 @@ export function Navigation() {
           <a className="button button-compact button-primary hidden sm:inline-flex" href={profile.resume} target="_blank" rel="noreferrer">
             Resume <Download size={17} />
           </a>
-          <button className="grid size-12 place-items-center rounded-lg border border-line bg-white text-charcoal lg:hidden" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close navigation menu" : "Open navigation menu"}>
+          <button className="grid size-12 place-items-center rounded-lg border border-white/15 bg-white/8 text-white lg:hidden" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close navigation menu" : "Open navigation menu"}>
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
@@ -57,7 +57,7 @@ export function Navigation() {
         <div id="mobile-menu" className="border-t border-line bg-ink px-5 py-5 lg:hidden">
           <div className="site-container flex flex-col gap-2">
             {navigation.map(({ label, section }) => (
-              <button className="rounded-lg border border-line bg-white px-5 py-4 text-left text-lg font-semibold text-charcoal" type="button" key={section} onClick={() => goToSection(section)}>{label}</button>
+              <button className="rounded-lg border border-white/12 bg-white/6 px-5 py-4 text-left text-lg font-semibold text-white" type="button" key={section} onClick={() => goToSection(section)}>{label}</button>
             ))}
             <a className="button button-primary mt-2 w-full" href={profile.resume} target="_blank" rel="noreferrer">Open resume <Download size={18} /></a>
           </div>

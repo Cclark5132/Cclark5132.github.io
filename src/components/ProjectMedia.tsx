@@ -26,8 +26,8 @@ function Placeholder({ media }: { media: MediaItem }) {
         <span className="mb-4 grid size-11 place-items-center rounded-full border border-cyan/35 bg-cyan/10 text-cyan">
           <Icon aria-hidden="true" size={19} />
         </span>
-        <p className="text-sm font-medium text-white">{media.label}</p>
-        <p className="mt-2 text-xs leading-5 text-steel">{media.caption ?? "Replace this path in src/data/portfolio.ts"}</p>
+        <p className="text-sm font-semibold text-white">{media.label}</p>
+        <p className="mt-2 text-xs leading-5 text-white/55">{media.caption ?? "Project media coming soon"}</p>
       </div>
       <ScanLine className="absolute bottom-4 right-4 text-cyan/35" size={18} aria-hidden="true" />
     </div>

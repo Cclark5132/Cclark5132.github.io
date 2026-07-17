@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check, LockKeyhole } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Metric } from "../components/Metric";
+import { ProjectMedia } from "../components/ProjectMedia";
 import { projects } from "../data/portfolio";
 import { NotFoundPage } from "./NotFoundPage";
 
@@ -23,7 +24,7 @@ export function ProjectPage() {
       document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", `${project.title} | Charles T. Clark`);
       document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", project.summary);
       document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", pageUrl);
-      document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/og-light.png");
+      document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/og-slate.png");
     }
   }, [project]);
 
@@ -44,8 +45,8 @@ export function ProjectPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.48fr] lg:items-end">
             <div>
               <p className="technical-label text-orange">Case study / {String(projectIndex + 1).padStart(2, "0")}</p>
-              <h1 className="mt-4 max-w-5xl text-balance text-4xl font-semibold leading-[0.95] tracking-[-0.055em] text-charcoal sm:text-5xl md:text-7xl">{project.title}</h1>
-              <p className="mt-5 max-w-3xl text-pretty text-lg leading-8 text-steel">{project.subtitle}</p>
+              <h1 className="mt-4 max-w-5xl text-balance text-4xl font-semibold leading-[0.95] tracking-[-0.055em] text-white sm:text-5xl md:text-7xl">{project.title}</h1>
+              <p className="mt-5 max-w-3xl text-pretty text-lg leading-8 text-white/65">{project.subtitle}</p>
               {project.confidential && (
                 <div className="mt-5 inline-flex items-center gap-2 rounded-lg border border-orange/25 bg-orange/8 px-4 py-3 text-sm text-charcoal">
                   <LockKeyhole size={17} className="text-orange" /> Selected details are limited due to confidentiality.
@@ -62,7 +63,8 @@ export function ProjectPage() {
       </header>
 
       <section className="site-container py-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ProjectMedia media={project.coverImage} eager className="project-cover min-h-[28rem] md:min-h-[38rem]" />
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {project.metrics.map((metric) => <Metric metric={metric} key={metric.label} />)}
         </div>
       </section>
@@ -107,6 +109,22 @@ export function ProjectPage() {
           </div>
         </article>
       </section>
+
+      {project.gallery.length > 0 && (
+        <section className="site-container pb-12">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="technical-label text-orange">Project media</p>
+              <h2 className="mt-2 text-2xl font-semibold text-white">Photos, CAD, and build evidence.</h2>
+            </div>
+          </div>
+          <div className="project-gallery">
+            {project.gallery.slice(0, 3).map((media, index) => (
+              <ProjectMedia media={media} className={index === 0 ? "md:col-span-2" : ""} key={`${media.src}-${index}`} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="border-y border-line bg-panel/65 py-8">
         <div className="site-container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

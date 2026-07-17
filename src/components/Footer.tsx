@@ -4,10 +4,10 @@ import { profile } from "../data/portfolio";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line bg-white py-7">
-      <div className="site-container flex flex-col gap-5 text-sm text-steel md:flex-row md:items-center md:justify-between">
+    <footer className="border-t border-white/10 bg-[#2c3033] py-7">
+      <div className="site-container flex flex-col gap-5 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-semibold text-charcoal">Charles T. Clark</p>
+          <p className="font-semibold text-white">Charles T. Clark</p>
           <p className="mt-1">Mechanical Engineer / {new Date().getFullYear()}</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">

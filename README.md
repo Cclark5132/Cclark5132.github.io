@@ -105,7 +105,7 @@ Telescoping Accessibility Crutch:
 - `public/projects/crutch/iterations-placeholder.webp`
 - `public/projects/crutch/demo-placeholder.mp4`
 
-The active light-theme social-sharing image is `public/og-light.png`. Replace it only with another 3:2 or 1.91:1 image that preserves the site title at small sizes.
+The active dark-gray social-sharing image is `public/og-slate.png`. Replace it only with another 3:2 or 1.91:1 image that preserves the site title at small sizes.
 
 ## Resume
 
