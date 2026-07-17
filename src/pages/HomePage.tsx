@@ -25,12 +25,12 @@ export function HomePage() {
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", "https://charlesclark.me/");
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Mechanical engineer, designer, and builder. View selected work and get in touch.");
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", "https://charlesclark.me/");
-    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/og-slate.png");
+    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/og-simple.png");
     document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", "Charles T. Clark | Mechanical Engineer");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Mechanical engineer, designer, and builder. View selected work and get in touch.");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/og-slate.png");
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Mechanical engineering portfolio featuring selected work, experience, and technical skills.");
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/og-simple.png");
 
     const section = searchParams.get("section");
     if (!section) {
@@ -69,7 +69,7 @@ export function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.08 }}
             >
-              Mechanical engineer / designer / builder
+              Mechanical Engineer
             </motion.p>
             <motion.h1
               className="mt-4 max-w-4xl text-balance text-[clamp(3.6rem,8vw,7.2rem)] font-semibold leading-[0.88] tracking-[-0.07em] text-white"

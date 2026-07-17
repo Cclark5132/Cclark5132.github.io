@@ -43,7 +43,7 @@ export interface Project {
 // Components intentionally show designed fallback panels when a local file is missing.
 export const profile = {
   name: "Charles T. Clark",
-  title: "Mechanical Engineer / Designer / Builder",
+  title: "Mechanical Engineer",
   email: "charlesclark@vt.edu",
   phone: "(224) 358-5132",
   phoneLink: "+12243585132",
@@ -167,7 +167,7 @@ export const projects: Project[] = [
     title: "Automotive Restoration",
     eyebrow: "Fabrication / Diagnostics / Independent Build",
     subtitle: "Two vehicles returned to working condition.",
-    role: "Independent Builder",
+    role: "Independent Project",
     duration: "August 2020 - Present",
     location: "Libertyville, Illinois",
     summary: "I rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche, applying six years of automotive coursework and hands-on experience to diagnostics, repair, welding, machining, and budget-conscious decision-making.",
@@ -255,7 +255,7 @@ export const experiences = [
   },
   {
     company: "Automotive Restoration",
-    role: "Independent Builder",
+    role: "Independent Project",
     location: "Libertyville, Illinois",
     duration: "August 2020 - Present",
     summary: "Restored two aging vehicles through diagnostics, welding, machining, repair planning, and budget management.",
