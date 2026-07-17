@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CaseStudyGallery } from "../components/CaseStudyGallery";
 import { Metric } from "../components/Metric";
+import { ProjectMedia } from "../components/ProjectMedia";
 import { projects } from "../data/portfolio";
 import { NotFoundPage } from "./NotFoundPage";
 
@@ -12,7 +13,7 @@ export function ProjectPage() {
   const reduceMotion = useReducedMotion();
   const projectIndex = projects.findIndex((item) => item.slug === slug);
   const project = projects[projectIndex];
-  const nextProject = projects[(projectIndex + 1) % projects.length];
+  const otherProjects = projects.filter((item) => item.slug !== slug);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -112,15 +113,39 @@ export function ProjectPage() {
         </article>
       </section>
 
-      <section className="border-y border-line bg-panel/65 py-8">
-        <div className="site-container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="technical-label text-orange">Next project</p>
-            <p className="mt-2 text-xl font-semibold text-charcoal">{nextProject.title}</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
+      <section className="other-projects-section">
+        <div className="site-container">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="technical-label text-orange">Keep exploring</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white">Other projects</h2>
+            </div>
             <Link className="button button-secondary" to="/?section=work"><ArrowLeft size={18} /> All projects</Link>
-            <Link className="button button-primary" to={`/projects/${nextProject.slug}`}>Next case study <ArrowRight size={18} /></Link>
+          </div>
+
+          <div className="other-projects-grid">
+            {otherProjects.map((otherProject) => (
+              <Link
+                className="other-project-card group"
+                to={`/projects/${otherProject.slug}`}
+                key={otherProject.slug}
+                aria-label={`View ${otherProject.title} case study`}
+              >
+                <ProjectMedia media={otherProject.coverImage} className="other-project-media" />
+                <div className="other-project-details">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="technical-label text-orange">{otherProject.eyebrow.split(" / ")[0]}</p>
+                    <ArrowRight className="other-project-arrow" size={19} aria-hidden="true" />
+                  </div>
+                  <h3>{otherProject.title}</h3>
+                  <p>{otherProject.role} · {otherProject.duration}</p>
+                  <div className="other-project-metric">
+                    <strong>{otherProject.metrics[0].value}</strong>
+                    <span>{otherProject.metrics[0].label}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
