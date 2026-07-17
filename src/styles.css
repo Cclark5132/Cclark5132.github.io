@@ -821,6 +821,108 @@ a {
   color: #007f86;
 }
 
+.case-study-heading {
+  display: grid;
+  max-width: 52rem;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.case-study-heading h2 {
+  color: #fff;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.case-study-heading > p:last-child {
+  max-width: 46rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.case-study-section-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.case-study-section-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(37, 40, 42, 0.14);
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(37, 40, 42, 0.04);
+}
+
+.case-study-section-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #861f41, #e87722);
+  content: "";
+}
+
+.case-study-section-topline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.case-study-section-topline span:first-child {
+  color: #e87722;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.case-study-section-topline span:last-child {
+  width: 2.25rem;
+  height: 1px;
+  background: rgba(134, 31, 65, 0.35);
+}
+
+.case-study-section-card h3 {
+  margin-top: 1rem;
+  color: #25282a;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.case-study-section-card > p {
+  margin-top: 0.75rem;
+  color: #4f5559;
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+
+.case-study-section-card ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid rgba(37, 40, 42, 0.1);
+  list-style: none;
+}
+
+.case-study-section-card li {
+  display: flex;
+  gap: 0.65rem;
+  color: #25282a;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.case-study-section-card li svg {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+  color: #007f86;
+}
+
 .project-gallery {
   display: grid;
   gap: 1rem;
@@ -1076,7 +1178,8 @@ a {
 
   .quick-card,
   .compact-card,
-  .star-card {
+  .star-card,
+  .case-study-section-card {
     padding: 1.8rem;
   }
 
@@ -1085,6 +1188,10 @@ a {
   }
 
   .star-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .case-study-section-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1135,6 +1242,10 @@ a {
 }
 
 @media (min-width: 1024px) {
+  .case-study-section-grid.is-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .projects-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

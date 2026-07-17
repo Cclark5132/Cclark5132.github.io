@@ -16,6 +16,22 @@ export interface MetricData {
   detail?: string;
 }
 
+export interface CaseStudySection {
+  title: string;
+  description: string;
+  bullets?: string[];
+}
+
+export type CaseStudyContent =
+  | { format: "star" }
+  | {
+      format: "sections";
+      label: string;
+      heading: string;
+      intro: string;
+      sections: CaseStudySection[];
+    };
+
 export interface Project {
   slug: string;
   title: string;
@@ -37,6 +53,7 @@ export interface Project {
   documents: MediaItem[];
   confidential?: boolean;
   featured: boolean;
+  caseStudy: CaseStudyContent;
 }
 
 export const profile = {
@@ -69,7 +86,7 @@ export const projects: Project[] = [
     role: "Founder and President",
     duration: "May 2025 - Present",
     location: "Blacksburg, Virginia",
-    summary: "An eight-member Virginia Tech student team set out to turn a pulse-jet concept into a functioning, measurable engine program.",
+    summary: "I founded and lead an eight-member Virginia Tech team that designs, fabricates, instruments, and tests pulse jet engines, with a focus on measurable, repeatable performance.",
     challenge: "As founder and president, I needed to organize the team, design and fabricate a manufacturable steel propane-fueled engine, and create a safe bench for measuring thrust, temperature, and fuel efficiency.",
     process: [
       { title: "Define", description: "Set propulsion goals, team roles, operating constraints, and a safe validation plan." },
@@ -117,6 +134,32 @@ export const projects: Project[] = [
       { type: "pdf", src: "/project-documents/pulse-jet-test-summary.pdf", label: "Pulse Jet Test Summary", alt: "Pulse jet engine test summary PDF" },
     ],
     featured: true,
+    caseStudy: {
+      format: "sections",
+      label: "Team / Goals / Contributions",
+      heading: "Building a student propulsion team.",
+      intro: "The project combines team leadership with hands-on engine design, fabrication, instrumentation, and testing.",
+      sections: [
+        {
+          title: "The team",
+          description: "I founded the Virginia Tech Pulse Jet Design Team in May 2025 and now lead eight members through the design, fabrication, and testing of pulse jet engines. I organize roles, coordinate the work, and keep the team aligned around safe, measurable progress.",
+        },
+        {
+          title: "Our goals",
+          description: "Our goal is to develop a functional steel, propane-fueled pulse jet and a repeatable test program around it. We measure static thrust, temperature, and fuel efficiency so future design decisions can be based on test evidence.",
+        },
+        {
+          title: "What I specifically did",
+          description: "I helped move the project from an initial concept to a functioning engine and instrumented test setup.",
+          bullets: [
+            "Founded the team and established roles, constraints, and a safe validation plan.",
+            "Designed the steel engine geometry and assembly in SolidWorks.",
+            "Contributed to hands-on fabrication and assembly.",
+            "Built the test bench and ran controlled tests that recorded approximately 300 N of peak static thrust.",
+          ],
+        },
+      ],
+    },
   },
   {
     slug: "culligan",
@@ -126,7 +169,7 @@ export const projects: Project[] = [
     role: "Mechanical Engineering Design Intern",
     duration: "May 2026 - August 2026",
     location: "Rosemont, Illinois",
-    summary: "Culligan had residential, commercial, and field-training needs spanning a water-softener float system, hydraulic-system mounting brackets, and a portable training concept.",
+    summary: "At Culligan International, I contributed to four product and training projects spanning injection-molded design, commercial mounting hardware, prototype development, and engineering drawings.",
     challenge: "As a Mechanical Engineering Design Intern, I needed to develop practical, manufacturable solutions across those workstreams, communicate them through engineering drawings and prototypes, and protect confidential product details.",
     process: [
       { title: "Discover", description: "Translated residential product, commercial hydraulic, and field-training needs into engineering requirements." },
@@ -157,6 +200,30 @@ export const projects: Project[] = [
     documents: [],
     confidential: true,
     featured: true,
+    caseStudy: {
+      format: "sections",
+      label: "Four selected projects",
+      heading: "Product design work at Culligan.",
+      intro: "My internship covered residential products, commercial systems, field training, and technical documentation. Selected details remain limited because the work is confidential.",
+      sections: [
+        {
+          title: "Residential float system",
+          description: "Designed and developed an injection-molded float system for a residential water softener. I used SolidWorks to translate the product need into a practical, manufacturable component concept.",
+        },
+        {
+          title: "Commercial mounting brackets",
+          description: "Developed mounting brackets for a commercial hydraulic system with the goal of improving water pressure. SolidWorks and FEA supported the design and evaluation work.",
+        },
+        {
+          title: "Field-training prototype",
+          description: "Created and presented a portable field-training prototype. The concept secured $75,000 in funding for continued development.",
+        },
+        {
+          title: "Commercial drawing packages",
+          description: "Drafted technical engineering drawings for five commercial water softeners and assemblies, translating the designs into clear manufacturing documentation.",
+        },
+      ],
+    },
   },
   {
     slug: "automotive-restoration",
@@ -166,7 +233,7 @@ export const projects: Project[] = [
     role: "Independent Project",
     duration: "August 2020 - Present",
     location: "Libertyville, Illinois",
-    summary: "A 2001 Jeep Cherokee and a 1987 Jeep Comanche required extensive mechanical and structural restoration before they could return to working condition.",
+    summary: "I restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche through engine rebuild and swap work, an axle swap, a new wiring harness, welding, machining, and diagnostics.",
     challenge: "Working independently, I needed to diagnose each vehicle, prioritize and sequence repairs, and restore both systems safely using machining, welding, and hands-on repair skills.",
     process: [
       { title: "Diagnose", description: "Worked from symptoms and inspection findings to isolate mechanical and structural problems." },
@@ -175,9 +242,10 @@ export const projects: Project[] = [
       { title: "Verify", description: "Tested repaired systems and used new evidence to resolve remaining issues." },
     ],
     results: [
-      "Rebuilt and restored a 2001 Jeep Cherokee.",
-      "Rebuilt and restored a 1987 Jeep Comanche.",
-      "Applied welding, machining, and diagnostic problem-solving throughout both restorations.",
+      "Completed an engine rebuild and engine swap.",
+      "Completed an axle swap.",
+      "Installed a new wiring harness.",
+      "Returned a 2001 Jeep Cherokee and a 1987 Jeep Comanche to working condition.",
     ],
     future: ["Document system-by-system restoration decisions.", "Add a complete walk-around and detailed before/after gallery."],
     metrics: [
@@ -194,6 +262,26 @@ export const projects: Project[] = [
     videos: [{ type: "video", src: "/project-videos/automotive-walkaround.mp4", label: "Restored Vehicle Walk-Around", alt: "Walk-around video of the restored Jeep vehicles", aspect: "cinematic" }],
     documents: [],
     featured: true,
+    caseStudy: {
+      format: "sections",
+      label: "Major restoration work",
+      heading: "Rebuilding the systems that made the vehicles run.",
+      intro: "The 2001 Jeep Cherokee and 1987 Jeep Comanche restorations required major mechanical, drivetrain, and electrical work—not just cosmetic changes.",
+      sections: [
+        {
+          title: "Engine rebuild + swap",
+          description: "Rebuilt an engine and completed an engine swap as part of returning the vehicles to working condition. The work required mechanical diagnosis, careful repair sequencing, and hands-on installation.",
+        },
+        {
+          title: "Axle swap",
+          description: "Removed the existing axle assembly and completed an axle swap, using fabrication and mechanical repair skills to restore the drivetrain system.",
+        },
+        {
+          title: "New wiring harness",
+          description: "Installed a new wiring harness and worked through the electrical connections and diagnostic checks needed to restore reliable vehicle operation.",
+        },
+      ],
+    },
   },
   {
     slug: "telescoping-crutch",
@@ -228,6 +316,7 @@ export const projects: Project[] = [
     videos: [{ type: "video", src: "/project-videos/crutch-demonstration.mp4", label: "Crutch Demonstration", alt: "Demonstration of the telescoping accessibility crutch", aspect: "cinematic" }],
     documents: [],
     featured: true,
+    caseStudy: { format: "star" },
   },
 ];
 
