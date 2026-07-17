@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Mail, Phone, Wrench } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Linkedin, Mail, Wrench } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ProjectCard } from "../components/ProjectCard";
@@ -103,7 +103,7 @@ export function HomePage() {
             >
               <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>View my work <ArrowDownRight size={20} /></button>
               <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={19} /> Email me</a>
-              <a className="button button-secondary" href={`tel:${profile.phoneLink}`}><Phone size={19} /> Call me</a>
+              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={19} /> Connect on LinkedIn</a>
             </motion.div>
           </div>
 
@@ -250,12 +250,12 @@ export function HomePage() {
                 Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.
               </p>
             </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <a className="contact-action contact-action-featured sm:col-span-2" href={profile.linkedIn} target="_blank" rel="noreferrer">
+                <Linkedin size={30} /><span><small>Connect with me</small>linkedin.com/in/charlesclarkvt</span>
+              </a>
               <a className="contact-action" href={`mailto:${profile.email}`}>
                 <Mail size={24} /><span><small>Email</small>{profile.email}</span>
-              </a>
-              <a className="contact-action" href={`tel:${profile.phoneLink}`}>
-                <Phone size={24} /><span><small>Phone</small>{profile.phone}</span>
               </a>
               <a className="contact-action" href={profile.resume} target="_blank" rel="noreferrer">
                 <Download size={24} /><span><small>Resume</small>View PDF</span>

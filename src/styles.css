@@ -663,6 +663,25 @@ a {
   text-transform: uppercase;
 }
 
+.contact-action-featured {
+  min-height: 6.4rem;
+  border-color: #fff;
+  background: #fff;
+  color: #861f41;
+}
+
+.contact-action-featured:hover {
+  background: #f4f2ef;
+}
+
+.contact-action-featured span {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+}
+
+.contact-action-featured small {
+  color: #861f41;
+}
+
 .back-link {
   display: inline-flex;
   min-height: 2.8rem;

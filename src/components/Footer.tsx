@@ -1,4 +1,4 @@
-import { ArrowUp, Mail, Phone } from "lucide-react";
+import { ArrowUp, Linkedin, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { profile } from "../data/portfolio";
 
@@ -12,7 +12,7 @@ export function Footer() {
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <a className="footer-link" href={`mailto:${profile.email}`}><Mail size={16} />{profile.email}</a>
-          <a className="footer-link" href={`tel:${profile.phoneLink}`}><Phone size={16} />{profile.phone}</a>
+          <a className="footer-link" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={16} />LinkedIn</a>
         </div>
         <div className="flex items-center gap-2">
           <Link className="icon-link" to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top"><ArrowUp size={18} /></Link>

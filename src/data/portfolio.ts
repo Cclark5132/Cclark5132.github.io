@@ -60,12 +60,10 @@ export const profile = {
   name: "Charles T. Clark",
   title: "Third-Year Mechanical Engineering Student",
   email: "charlesclark@vt.edu",
-  phone: "(224) 358-5132",
-  phoneLink: "+12243585132",
   location: "Chicago, Illinois",
   availability: "Seeking Spring 2027 Co-op + Summer 2027 Internship",
   resume: "/Charles-Clark-Resume.pdf",
-  linkedIn: "",
+  linkedIn: "https://linkedin.com/in/charlesclarkvt",
   github: "https://github.com/Cclark5132",
   heroMedia: {
     type: "image" as const,
