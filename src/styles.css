@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #383c3f;
+  --color-ink: #3a3e41;
   --color-panel: #454a4e;
   --color-cyan: #861f41;
   --color-orange: #e87722;
@@ -24,14 +24,14 @@
 
 html {
   scroll-behavior: smooth;
-  background: #383c3f;
+  background: #3a3e41;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   overflow-x: hidden;
-  background: #383c3f;
+  background: #3a3e41;
   color: #fff;
 }
 
@@ -94,7 +94,7 @@ a {
 }
 
 .hero-section {
-  background-color: #383c3f;
+  background-color: #3a3e41;
 }
 
 .availability-badge {
