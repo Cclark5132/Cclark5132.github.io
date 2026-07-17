@@ -17,6 +17,12 @@ const quickFacts = [
 
 const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
 
+const experienceTimeline = [...experiences].sort((a, b) => {
+  const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);
+  const startYearB = Number(b.duration.match(/\d{4}/)?.[0] ?? 0);
+  return startYearA - startYearB;
+});
+
 export function HomePage() {
   const reduceMotion = useReducedMotion();
   const [searchParams] = useSearchParams();
@@ -156,23 +162,28 @@ export function HomePage() {
                 <span className="icon-badge"><ArrowRight size={20} /></span>
                 <h3>Experience</h3>
               </div>
-              <div className="experience-grid mt-6">
-                {experiences.map((experience) => (
-                  <Link
-                    className="experience-link group"
-                    to={`/projects/${experience.projectSlug}`}
-                    key={experience.company}
-                    aria-label={`View ${experience.company} case study`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="technical-label text-orange">{experience.duration}</p>
-                      <ArrowUpRight className="experience-link-arrow" size={19} aria-hidden="true" />
+              <div className="experience-timeline">
+                {experienceTimeline.map((experience) => (
+                  <div className="experience-timeline-item" key={experience.company}>
+                    <div className="experience-timeline-meta">
+                      <span className="experience-timeline-dot" aria-hidden="true" />
+                      <p>{experience.duration}</p>
                     </div>
-                    <h4 className="mt-2 text-lg font-semibold text-charcoal">{experience.company}</h4>
-                    <p className="mt-1 text-sm text-steel">{experience.role}</p>
-                    <p className="mt-3 text-sm font-medium leading-6 text-charcoal">{experience.highlights[0]}</p>
-                    <span className="experience-link-label">View case study <ArrowRight size={15} /></span>
-                  </Link>
+                    <Link
+                      className="experience-link group"
+                      to={`/projects/${experience.projectSlug}`}
+                      aria-label={`View ${experience.company} case study`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="technical-label text-orange">{experience.location}</p>
+                        <ArrowUpRight className="experience-link-arrow" size={19} aria-hidden="true" />
+                      </div>
+                      <h4 className="mt-2 text-lg font-semibold text-charcoal">{experience.company}</h4>
+                      <p className="mt-1 text-sm text-steel">{experience.role}</p>
+                      <p className="mt-3 text-sm font-medium leading-6 text-charcoal">{experience.highlights[0]}</p>
+                      <span className="experience-link-label">View case study <ArrowRight size={15} /></span>
+                    </Link>
+                  </div>
                 ))}
               </div>
             </Reveal>

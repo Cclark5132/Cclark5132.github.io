@@ -424,14 +424,63 @@ a {
   gap: 1.25rem;
 }
 
-.experience-grid {
+.experience-timeline {
+  position: relative;
   display: grid;
-  gap: 1.35rem;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-left: 1.75rem;
+}
+
+.experience-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.43rem;
+  top: 0.45rem;
+  bottom: 0.75rem;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #e87722, #861f41);
+}
+
+.experience-timeline-item {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.experience-timeline-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.7rem -1.75rem;
+}
+
+.experience-timeline-meta p {
+  color: #9a3b1d;
+  font-size: 0.7rem;
+  font-weight: 780;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.experience-timeline-dot {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: #e87722;
+  box-shadow: 0 0 0 2px rgba(134, 31, 65, 0.28);
 }
 
 .experience-link {
   display: flex;
-  min-height: 14.5rem;
+  min-height: 13.5rem;
+  flex: 1;
   flex-direction: column;
   border: 1px solid rgba(37, 40, 42, 0.12);
   border-left: 3px solid #861f41;
@@ -885,9 +934,33 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .experience-grid,
   .project-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .experience-timeline {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.1rem;
+    padding-left: 0;
+  }
+
+  .experience-timeline::before {
+    left: 12.5%;
+    right: 12.5%;
+    top: 1.98rem;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(90deg, #e87722, #861f41);
+  }
+
+  .experience-timeline-meta {
+    min-height: 2.45rem;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    margin: 0 0 1rem;
+    text-align: center;
   }
 
   .other-projects-grid {
@@ -904,9 +977,6 @@ a {
     grid-column: 1 / -1;
   }
 
-  .experience-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 640px) {
