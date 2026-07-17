@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Mail, MapPin, Phone, Wrench } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Mail, Phone, Wrench } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ProjectCard } from "../components/ProjectCard";
@@ -9,11 +9,13 @@ import { SectionHeading } from "../components/SectionHeading";
 import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
 
 const quickFacts = [
-  { value: "SolidWorks", label: "CSWP certified" },
-  { value: "FEA", label: "Analysis + validation" },
-  { value: "Rapid prototyping", label: "Product development" },
-  { value: "MIG + Stick", label: "Welding + fabrication" },
+  { value: "Virginia Tech", label: "Mechanical Engineering" },
+  { value: "3.84", label: "GPA" },
+  { value: "May 2028", label: "Expected graduation" },
+  { value: "Chicago, IL", label: "Open to relocation" },
 ];
+
+const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
 
 export function HomePage() {
   const reduceMotion = useReducedMotion();
@@ -121,9 +123,7 @@ export function HomePage() {
 
         <div className="contact-strip">
           <div className="site-container flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <a href={`mailto:${profile.email}`}><Mail size={18} /> {profile.email}</a>
-            <a href={`tel:${profile.phoneLink}`}><Phone size={18} /> {profile.phone}</a>
-            <span><MapPin size={18} /> {profile.location}</span>
+            {topSkills.map((skill) => <span key={skill}><Wrench size={18} /> {skill}</span>)}
           </div>
         </div>
       </section>
