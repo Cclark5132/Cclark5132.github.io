@@ -2,8 +2,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, LockKeyhole } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { CaseStudyGallery } from "../components/CaseStudyGallery";
 import { Metric } from "../components/Metric";
-import { ProjectMedia } from "../components/ProjectMedia";
 import { projects } from "../data/portfolio";
 import { NotFoundPage } from "./NotFoundPage";
 
@@ -29,6 +29,8 @@ export function ProjectPage() {
   }, [project]);
 
   if (!project) return <NotFoundPage />;
+
+  const galleryMedia = [project.coverImage, ...project.gallery];
 
   return (
     <motion.main
@@ -63,7 +65,7 @@ export function ProjectPage() {
       </header>
 
       <section className="site-container py-8">
-        <ProjectMedia media={project.coverImage} eager className="project-cover min-h-[28rem] md:min-h-[38rem]" />
+        <CaseStudyGallery media={galleryMedia} title={project.title} />
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {project.metrics.map((metric) => <Metric metric={metric} key={metric.label} />)}
         </div>
@@ -109,22 +111,6 @@ export function ProjectPage() {
           </div>
         </article>
       </section>
-
-      {project.gallery.length > 0 && (
-        <section className="site-container pb-12">
-          <div className="mb-5 flex items-end justify-between gap-4">
-            <div>
-              <p className="technical-label text-orange">Project media</p>
-              <h2 className="mt-2 text-2xl font-semibold text-white">Photos, CAD, and build evidence.</h2>
-            </div>
-          </div>
-          <div className="project-gallery">
-            {project.gallery.slice(0, 3).map((media, index) => (
-              <ProjectMedia media={media} className={index === 0 ? "md:col-span-2" : ""} key={`${media.src}-${index}`} />
-            ))}
-          </div>
-        </section>
-      )}
 
       <section className="border-y border-line bg-panel/65 py-8">
         <div className="site-container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
