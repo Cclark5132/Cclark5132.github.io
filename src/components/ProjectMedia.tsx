@@ -1,6 +1,5 @@
 import { Box, FileText, Image, Play, ScanLine } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MediaItem } from "../data/portfolio";
 
 interface ProjectMediaProps {
@@ -38,8 +37,33 @@ function MediaFallback({ media }: { media: MediaItem }) {
 export function ProjectMedia({ media, className = "", eager = false }: ProjectMediaProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const aspect = media.aspect ?? "landscape";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || media.type !== "video" || media.playback !== "loop") return;
+
+    const playVideo = () => {
+      void video.play().catch(() => undefined);
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) playVideo();
+        else video.pause();
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [media.playback, media.src, media.type]);
 
   if (media.type === "pdf") {
     return (
@@ -72,12 +96,13 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
         {!loaded && <MediaFallback media={media} />}
         {!failed && (
           <video
+            ref={videoRef}
             className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
             style={{
               objectFit: media.fit ?? "cover",
               objectPosition: media.objectPosition ?? "50% 50%",
             }}
-            autoPlay={isLoopingCover && !reduceMotion}
+            autoPlay={isLoopingCover}
             controls={!isLoopingCover}
             disablePictureInPicture={isLoopingCover}
             disableRemotePlayback={isLoopingCover}
@@ -87,7 +112,10 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
             tabIndex={isLoopingCover ? -1 : undefined}
             preload={isLoopingCover ? "auto" : "metadata"}
             poster={media.poster}
-            onCanPlay={() => setLoaded(true)}
+            onCanPlay={(event) => {
+              setLoaded(true);
+              if (isLoopingCover) void event.currentTarget.play().catch(() => undefined);
+            }}
             onError={() => setFailed(true)}
             aria-label={media.alt}
           >
