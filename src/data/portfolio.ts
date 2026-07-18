@@ -8,6 +8,8 @@ export interface MediaItem {
   caption?: string;
   poster?: string;
   aspect?: "landscape" | "portrait" | "square" | "cinematic";
+  playback?: "controls" | "loop";
+  objectPosition?: string;
 }
 
 export interface MetricData {
@@ -306,7 +308,16 @@ export const projects: Project[] = [
     future: ["Refine mechanism durability and ergonomics.", "Expand user testing and document design-validation results."],
     metrics: [{ value: "66%", label: "Storage-space reduction", detail: "Telescoping concept" }],
     skills: ["SolidWorks", "Accessibility design", "Rapid prototyping", "Project leadership", "Design communication"],
-    coverImage: { type: "cad", src: "/project-photos/crutch-cover.jpg", label: "Telescoping Accessibility Crutch", alt: "Telescoping accessibility crutch prototype", caption: "Compact mobility-aid concept with 66% storage-space reduction", aspect: "landscape" },
+    coverImage: {
+      type: "video",
+      src: "/project-videos/telescoping-crutch-cover.mp4",
+      label: "Telescoping Accessibility Crutch",
+      alt: "Looping demonstration of the telescoping accessibility crutch prototype",
+      caption: "Compact mobility-aid concept with 66% storage-space reduction",
+      aspect: "landscape",
+      playback: "loop",
+      objectPosition: "50% 50%",
+    },
     gallery: [
       { type: "cad", src: "/project-photos/crutch-cad.jpg", label: "SolidWorks Assembly", alt: "SolidWorks assembly of the telescoping crutch", caption: "CAD development of the compacting mechanism", aspect: "landscape" },
       { type: "image", src: "/project-photos/crutch-mechanism.jpg", label: "Telescoping Mechanism", alt: "Close-up of the telescoping crutch mechanism", caption: "Mechanism detail and physical implementation", aspect: "square" },

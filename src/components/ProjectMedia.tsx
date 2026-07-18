@@ -1,4 +1,5 @@
 import { Box, FileText, Image, Play, ScanLine } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import type { MediaItem } from "../data/portfolio";
 
@@ -37,6 +38,7 @@ function MediaFallback({ media }: { media: MediaItem }) {
 export function ProjectMedia({ media, className = "", eager = false }: ProjectMediaProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const reduceMotion = useReducedMotion();
   const aspect = media.aspect ?? "landscape";
 
   if (media.type === "pdf") {
@@ -63,16 +65,21 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
   }
 
   if (media.type === "video") {
+    const isLoopingCover = media.playback === "loop";
+
     return (
       <div className={`media-shell media-${aspect} ${className}`}>
         {!loaded && <MediaFallback media={media} />}
         {!failed && (
           <video
             className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-            controls
+            style={{ objectPosition: media.objectPosition ?? "50% 50%" }}
+            autoPlay={isLoopingCover && !reduceMotion}
+            controls={!isLoopingCover}
+            loop={isLoopingCover}
             muted
             playsInline
-            preload="metadata"
+            preload={isLoopingCover ? "auto" : "metadata"}
             poster={media.poster}
             onCanPlay={() => setLoaded(true)}
             onError={() => setFailed(true)}
