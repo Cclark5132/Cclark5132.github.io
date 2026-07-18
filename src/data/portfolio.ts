@@ -317,7 +317,7 @@ export const projects: Project[] = [
       caption: "Compact mobility-aid concept with 66% storage-space reduction",
       aspect: "landscape",
       playback: "loop",
-      fit: "contain",
+      fit: "cover",
     },
     gallery: [
       { type: "cad", src: "/project-photos/crutch-cad.jpg", label: "SolidWorks Assembly", alt: "SolidWorks assembly of the telescoping crutch", caption: "CAD development of the compacting mechanism", aspect: "landscape" },

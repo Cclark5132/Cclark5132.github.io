@@ -341,6 +341,12 @@ a {
   z-index: 1;
 }
 
+.media-looping-cover video::-webkit-media-controls,
+.media-looping-cover video::-webkit-media-controls-enclosure,
+.media-looping-cover video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+}
+
 .media-fallback {
   position: absolute;
   inset: 0;
