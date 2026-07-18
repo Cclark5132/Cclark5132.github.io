@@ -333,8 +333,7 @@ a {
 
 .media-looping-cover {
   background:
-    radial-gradient(circle at 78% 18%, rgba(232, 119, 34, 0.2), transparent 28%),
-    linear-gradient(135deg, #25282a 0%, #34393d 62%, #54172d 140%);
+    radial-gradient(circle at 82% 20%, #e5e9f1 0%, #f1f3f7 42%, #fafbfc 68%, #ffffff 100%);
 }
 
 .media-looping-cover video {
