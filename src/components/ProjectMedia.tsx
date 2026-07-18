@@ -128,18 +128,33 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
   }
 
   return (
-    <figure className={`media-shell media-${aspect} ${className}`}>
+    <figure className={`media-shell media-${aspect} ${media.fit === "contain" ? "media-uncropped" : ""} ${className}`}>
       {!loaded && <MediaFallback media={media} />}
       {!failed && (
-        <img
-          className={`absolute inset-0 size-full object-cover transition duration-700 ${loaded ? "scale-100 opacity-100" : "scale-[1.02] opacity-0"}`}
-          src={media.src}
-          alt={media.alt}
-          loading={eager ? "eager" : "lazy"}
-          fetchPriority={eager ? "high" : "auto"}
-          onLoad={() => setLoaded(true)}
-          onError={() => setFailed(true)}
-        />
+        <>
+          {media.fit === "contain" && (
+            <img
+              className="media-contain-backdrop"
+              src={media.src}
+              alt=""
+              aria-hidden="true"
+              loading={eager ? "eager" : "lazy"}
+            />
+          )}
+          <img
+            className={`absolute inset-0 size-full object-cover transition duration-700 ${loaded ? "scale-100 opacity-100" : "scale-[1.02] opacity-0"}`}
+            style={{
+              objectFit: media.fit ?? "cover",
+              objectPosition: media.objectPosition ?? "50% 50%",
+            }}
+            src={media.src}
+            alt={media.alt}
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
+            onLoad={() => setLoaded(true)}
+            onError={() => setFailed(true)}
+          />
+        </>
       )}
       {loaded && media.caption && <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">{media.caption}</figcaption>}
     </figure>

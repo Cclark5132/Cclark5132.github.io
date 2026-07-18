@@ -347,6 +347,25 @@ a {
   display: none !important;
 }
 
+.media-contain-backdrop {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  opacity: 0.38;
+  filter: blur(30px) saturate(0.78) brightness(0.82);
+  transform: scale(1.04);
+}
+
+.media-shell figcaption {
+  z-index: 2;
+}
+
+.media-uncropped figcaption {
+  display: none;
+}
+
 .media-fallback {
   position: absolute;
   inset: 0;
@@ -1194,6 +1213,14 @@ a {
 .case-study-lightbox-media img,
 .case-study-lightbox-media video {
   object-fit: contain !important;
+}
+
+.case-study-lightbox-media .media-contain-backdrop {
+  object-fit: cover !important;
+}
+
+.case-study-lightbox-media figcaption {
+  display: none;
 }
 
 .lightbox-arrow {
