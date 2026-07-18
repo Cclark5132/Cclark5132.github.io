@@ -66,10 +66,6 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
 
   if (media.type === "video") {
     const isLoopingCover = media.playback === "loop";
-    const mediaTransform = [
-      media.rotation ? `rotate(${media.rotation}deg)` : "",
-      media.scale ? `scale(${media.scale})` : "",
-    ].filter(Boolean).join(" ");
 
     return (
       <div className={`media-shell media-${aspect} ${isLoopingCover ? "media-looping-cover" : ""} ${className}`}>
@@ -80,7 +76,6 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
             style={{
               objectFit: media.fit ?? "cover",
               objectPosition: media.objectPosition ?? "50% 50%",
-              transform: mediaTransform || undefined,
             }}
             autoPlay={isLoopingCover && !reduceMotion}
             controls={!isLoopingCover}
