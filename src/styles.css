@@ -453,6 +453,27 @@ a {
   box-shadow: 0 20px 45px rgba(37, 40, 42, 0.1);
 }
 
+.home-project-media > img:not(.media-contain-backdrop),
+.home-project-media > video {
+  height: calc(100% - 4rem);
+}
+
+.home-project-media figcaption {
+  inset: auto 0 0;
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  background: linear-gradient(90deg, #34393c, #3d4245);
+  padding: 0.8rem 1rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  backdrop-filter: none;
+}
+
 .project-arrow {
   display: grid;
   width: 3rem;

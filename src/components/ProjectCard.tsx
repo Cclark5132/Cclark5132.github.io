@@ -22,7 +22,7 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <Link to={`/projects/${project.slug}`} className={featured ? "grid h-full lg:grid-cols-[1.15fr_0.85fr]" : "flex h-full flex-col"} aria-label={`View ${project.title} case study`}>
-        <ProjectMedia media={project.coverImage} className={`rounded-none border-0 ${featured ? "min-h-[25rem]" : "min-h-[15rem]"}`} />
+        <ProjectMedia media={project.coverImage} className={`home-project-media rounded-none border-0 ${featured ? "min-h-[25rem]" : "min-h-[15rem]"}`} />
         <div className="flex flex-1 flex-col p-6 md:p-7">
           <div className="flex items-start justify-between gap-4">
             <p className="technical-label max-w-[75%] text-orange">{project.eyebrow}</p>
