@@ -339,6 +339,7 @@ a {
 
 .media-looping-cover video {
   z-index: 1;
+  pointer-events: none;
 }
 
 .media-looping-cover video::-webkit-media-controls,

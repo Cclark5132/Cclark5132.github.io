@@ -72,7 +72,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
         {!loaded && <MediaFallback media={media} />}
         {!failed && (
           <video
-            className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${isLoopingCover ? "pointer-events-none" : ""} ${loaded ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
             style={{
               objectFit: media.fit ?? "cover",
               objectPosition: media.objectPosition ?? "50% 50%",
