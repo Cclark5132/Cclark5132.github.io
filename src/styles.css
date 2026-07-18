@@ -331,6 +331,16 @@ a {
 .media-portrait { aspect-ratio: 4 / 5; }
 .media-square { aspect-ratio: 1; }
 
+.media-looping-cover {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(232, 119, 34, 0.2), transparent 28%),
+    linear-gradient(135deg, #25282a 0%, #34393d 62%, #54172d 140%);
+}
+
+.media-looping-cover video {
+  z-index: 1;
+}
+
 .media-fallback {
   position: absolute;
   inset: 0;

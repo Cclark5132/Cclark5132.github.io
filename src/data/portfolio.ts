@@ -9,7 +9,10 @@ export interface MediaItem {
   poster?: string;
   aspect?: "landscape" | "portrait" | "square" | "cinematic";
   playback?: "controls" | "loop";
+  fit?: "cover" | "contain";
   objectPosition?: string;
+  rotation?: number;
+  scale?: number;
 }
 
 export interface MetricData {
@@ -316,7 +319,10 @@ export const projects: Project[] = [
       caption: "Compact mobility-aid concept with 66% storage-space reduction",
       aspect: "landscape",
       playback: "loop",
+      fit: "contain",
       objectPosition: "50% 50%",
+      rotation: -18,
+      scale: 0.78,
     },
     gallery: [
       { type: "cad", src: "/project-photos/crutch-cad.jpg", label: "SolidWorks Assembly", alt: "SolidWorks assembly of the telescoping crutch", caption: "CAD development of the compacting mechanism", aspect: "landscape" },
