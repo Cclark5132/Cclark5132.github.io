@@ -321,8 +321,8 @@ export const projects: Project[] = [
       playback: "loop",
       fit: "contain",
       objectPosition: "50% 50%",
-      rotation: -18,
-      scale: 0.78,
+      rotation: -30,
+      scale: 0.68,
     },
     gallery: [
       { type: "cad", src: "/project-photos/crutch-cad.jpg", label: "SolidWorks Assembly", alt: "SolidWorks assembly of the telescoping crutch", caption: "CAD development of the compacting mechanism", aspect: "landscape" },
