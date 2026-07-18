@@ -92,7 +92,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
     const isLoopingCover = media.playback === "loop";
 
     return (
-      <div className={`media-shell media-${aspect} ${isLoopingCover ? "media-looping-cover" : ""} ${className}`}>
+      <figure className={`media-shell media-${aspect} ${isLoopingCover ? "media-looping-cover" : ""} ${media.fit === "contain" ? "media-uncropped" : ""} ${className}`}>
         {!loaded && <MediaFallback media={media} />}
         {!failed && (
           <video
@@ -123,7 +123,12 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
             Your browser does not support embedded video. Add a transcript link in the project data.
           </video>
         )}
-      </div>
+        {loaded && isLoopingCover && media.caption && (
+          <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">
+            {media.caption}
+          </figcaption>
+        )}
+      </figure>
     );
   }
 
