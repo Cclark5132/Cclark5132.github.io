@@ -311,7 +311,7 @@ export const projects: Project[] = [
     skills: ["SolidWorks", "Accessibility design", "Rapid prototyping", "Project leadership", "Design communication"],
     coverImage: {
       type: "video",
-      src: "/project-videos/telescoping-crutch-cover.mp4",
+      src: "/project-videos/telescoping-crutch-animation.mp4",
       label: "Telescoping Accessibility Crutch",
       alt: "Looping demonstration of the telescoping accessibility crutch prototype",
       caption: "Compact mobility-aid concept with 66% storage-space reduction",
