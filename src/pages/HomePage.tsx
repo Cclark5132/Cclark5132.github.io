@@ -143,7 +143,7 @@ export function HomePage() {
             description="Click to learn more about my projects."
           />
           <div className="projects-grid">
-            {projects.map((project, index) => <ProjectCard project={project} featured={index === 0} key={project.slug} />)}
+            {projects.map((project) => <ProjectCard project={project} key={project.slug} />)}
           </div>
         </div>
       </section>

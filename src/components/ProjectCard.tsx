@@ -6,23 +6,22 @@ import { ProjectMedia } from "./ProjectMedia";
 
 interface ProjectCardProps {
   project: Project;
-  featured?: boolean;
 }
 
-export function ProjectCard({ project, featured = false }: ProjectCardProps) {
+export function ProjectCard({ project }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
   const headlineMetric = project.metrics[0];
 
   return (
     <motion.article
-      className={`project-card group ${featured ? "project-card-featured" : ""}`}
+      className="project-card group"
       initial={reduceMotion ? false : { opacity: 0, y: 18 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Link to={`/projects/${project.slug}`} className={featured ? "grid h-full lg:grid-cols-[1.15fr_0.85fr]" : "flex h-full flex-col"} aria-label={`View ${project.title} case study`}>
-        <ProjectMedia media={project.coverImage} className={`home-project-media rounded-none border-0 ${featured ? "min-h-[25rem]" : "min-h-[15rem]"}`} />
+      <Link to={`/projects/${project.slug}`} className="flex h-full flex-col" aria-label={`View ${project.title} case study`}>
+        <ProjectMedia media={project.coverImage} className="home-project-media min-h-[15rem] rounded-none border-0" />
         <div className="flex flex-1 flex-col p-6 md:p-7">
           <div className="flex items-start justify-between gap-4">
             <p className="technical-label max-w-[75%] text-orange">{project.eyebrow}</p>
@@ -31,7 +30,7 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
           <h3 className="mt-5 text-2xl font-semibold tracking-[-0.035em] text-charcoal md:text-3xl">{project.title}</h3>
           <p className="mt-3 text-base leading-7 text-steel">{project.subtitle}</p>
           <div className="mt-auto flex flex-wrap gap-2 pt-5">
-            {project.skills.slice(0, featured ? 4 : 3).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
+            {project.skills.slice(0, 3).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
           </div>
           <div className="mt-5 flex items-end justify-between gap-5 border-t border-black/10 pt-5">
             <div>
