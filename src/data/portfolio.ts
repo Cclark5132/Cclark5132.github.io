@@ -114,11 +114,11 @@ export const projects: Project[] = [
     ],
     skills: ["SolidWorks", "Propulsion", "Test engineering", "Instrumentation", "Fabrication", "Team leadership"],
     coverImage: {
-      type: "cad",
-      src: "/project-photos/pulse-jet-cover.jpg",
-      label: "Pulse Jet Engine Design",
-      alt: "Steel propane-fueled pulse jet engine CAD or workshop view",
-      caption: "Engine design developed in SolidWorks and validated through bench testing",
+      type: "image",
+      src: "/project-photos/pulse-jet-assembly-render.png",
+      label: "Pulse Jet Test Assembly",
+      alt: "SolidWorks assembly rendering of the pulse jet engine, propane cylinder, fuel line, and wheeled support frame",
+      caption: "Complete SolidWorks assembly of the pulse jet engine and test setup",
       aspect: "landscape",
     },
     gallery: [
