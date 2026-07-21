@@ -31,8 +31,8 @@ Only upload images that Culligan has approved for public release. Remove confide
 | --- | --- | --- |
 | `culligan-cover.jpg` | Homepage, project card, and first gallery image | Approved overview graphic or sanitized product photograph |
 | `culligan-float-system.jpg` | Gallery image 2 | Approved float-system CAD or component view |
-| `culligan-bracket-analysis.jpg` | Gallery image 3 | Approved bracket, hydraulic, or FEA view |
-| `culligan-training-prototype.jpg` | Gallery image 4 | Approved field-training prototype |
+| `culligan-training-prototype.jpg` | Gallery image 3 | Approved field-training prototype |
+| `culligan-drawing-package.jpg` | Gallery image 4 | Approved, sanitized drawing-package overview without confidential details |
 
 ## Automotive Restoration
 
