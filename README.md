@@ -1,6 +1,6 @@
 # Charles T. Clark Engineering Portfolio
 
-Recruiter-facing mechanical engineering portfolio for Charles T. Clark, a Third-Year Mechanical Engineering Student at Virginia Tech with experience in product design, SolidWorks, finite element analysis, prototyping, fabrication, and test engineering.
+Recruiter-facing mechanical engineering portfolio for Charles T. Clark, a third-year Virginia Tech mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship. The portfolio highlights SolidWorks, finite element analysis, product development, prototyping, fabrication, and test engineering.
 
 Live site: [charlesclark.me](https://charlesclark.me)
 

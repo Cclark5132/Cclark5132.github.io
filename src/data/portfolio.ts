@@ -70,11 +70,12 @@ export const profile = {
   github: "https://github.com/Cclark5132",
   heroMedia: {
     type: "image" as const,
-    src: "/project-photos/pulse-jet-cover.jpg",
-    label: "Pulse Jet Design Team",
-    alt: "Charles Clark's steel propane-fueled pulse jet project",
-    caption: "SolidWorks, fabrication, instrumentation, and bench testing",
-    aspect: "portrait" as const,
+    src: "/project-photos/pulse-jet-assembly-render.png",
+    label: "Pulse Jet Test Assembly",
+    alt: "SolidWorks assembly rendering of the pulse jet engine, propane cylinder, fuel line, and wheeled support frame",
+    caption: "SolidWorks assembly for the Pulse Jet Design Team test setup",
+    aspect: "landscape" as const,
+    fit: "contain" as const,
   },
 };
 
@@ -83,7 +84,7 @@ export const projects: Project[] = [
     slug: "pulse-jet",
     title: "Pulse Jet Design Team",
     eyebrow: "Propulsion / Team Leadership / Test Engineering",
-    subtitle: "From a blank page to measured static thrust.",
+    subtitle: "Designed, fabricated, and measured on the test bench.",
     role: "Founder and President",
     duration: "May 2025 - Present",
     location: "Blacksburg, Virginia",
@@ -143,7 +144,7 @@ export const projects: Project[] = [
       sections: [
         {
           title: "The team",
-          description: "I founded the Virginia Tech Pulse Jet Design Team in May 2025 and now lead eight members through the design, fabrication, and testing of pulse jet engines. I organize roles, coordinate the work, and keep the team aligned around safe, measurable progress.",
+          description: "I founded the eight-member Virginia Tech Pulse Jet Design Team in May 2025 and now lead its design, fabrication, and testing work. I organize roles, coordinate the work, and keep the team aligned around safe, measurable progress.",
         },
         {
           title: "Our goals",
@@ -165,34 +166,35 @@ export const projects: Project[] = [
   {
     slug: "culligan",
     title: "Culligan Product Design Work",
-    eyebrow: "Product Design / Injection Molding / Technical Documentation",
-    subtitle: "Molded components, training prototype, production drawings.",
+    eyebrow: "Product Design / FEA / Injection Molding",
+    subtitle: "Four projects spanning product design, analysis, and documentation.",
     role: "Mechanical Engineering Design Intern",
     duration: "May 2026 - August 2026",
     location: "Rosemont, Illinois",
-    summary: "At Culligan International, I contributed to three product and training projects spanning injection-molded design, prototype development, and engineering drawings.",
-    challenge: "As a Mechanical Engineering Design Intern, I developed practical, manufacturable solutions across those workstreams, communicated them through engineering drawings and prototypes, and protected confidential product details.",
+    summary: "At Culligan International, I contributed to four projects spanning injection-molded design, commercial hydraulic hardware, prototype development, and engineering drawings.",
+    challenge: "As a Mechanical Engineering Design Intern, I developed practical, manufacturable solutions across four workstreams, communicated them through analysis, drawings, and prototypes, and protected confidential product details.",
     process: [
-      { title: "Discover", description: "Translated residential product and field-training needs into engineering requirements." },
-      { title: "Design", description: "Designed an injection-molded float system in SolidWorks." },
-      { title: "Prototype", description: "Developed and presented a portable field-training prototype." },
-      { title: "Document", description: "Prepared technical drawing packages for water-treatment products and assemblies." },
+      { title: "Define", description: "Translated residential, commercial hydraulic, and field-training needs into engineering requirements." },
+      { title: "Design", description: "Designed an injection-molded float system and commercial mounting brackets in SolidWorks." },
+      { title: "Analyze", description: "Used FEA to evaluate water-treatment components and support design decisions." },
+      { title: "Communicate", description: "Presented a portable field-training prototype and drafted five commercial product drawing sets." },
     ],
     results: [
       "Designed a new float system with injection-molded parts for a residential water softener.",
-      "Created and presented a portable field-training prototype for continued development.",
-      "Drafted technical engineering drawings for water softeners and assemblies.",
+      "Developed mounting brackets to improve water pressure in a commercial hydraulic system.",
+      "Created and presented a portable field-training suitcase prototype that secured $75,000 in funding.",
+      "Drafted technical engineering drawings for five commercial water softeners and assemblies.",
     ],
     future: ["Selected project details and visuals are intentionally limited due to confidentiality."],
     metrics: [
-      { value: "CAD", label: "Component design", detail: "Residential products" },
-      { value: "Prototype", label: "Field training", detail: "Portable demonstration system" },
-      { value: "Drawings", label: "Technical documentation", detail: "Products and assemblies" },
+      { value: "$75K", label: "Funding secured", detail: "Field-training prototype" },
+      { value: "5", label: "Drawing packages", detail: "Commercial products" },
+      { value: "4", label: "Selected projects", detail: "Design / analysis / training / drawings" },
     ],
-    skills: ["SolidWorks", "Injection molding", "Engineering drawings", "Prototype development"],
+    skills: ["SolidWorks", "Finite Element Analysis (FEA)", "Injection molding", "Engineering drawings", "Prototype development"],
     coverImage: {
       type: "image",
-      src: "/project-photos/culligan-photos-pending-approval.jpg",
+      src: "/project-photos/culligan-cover.jpg",
       label: "Project Photos Pending Approval",
       alt: "Culligan project photos awaiting manager approval for public release",
       caption: "Confidential project imagery will be added after manager approval for public release.",
@@ -205,21 +207,25 @@ export const projects: Project[] = [
     featured: true,
     caseStudy: {
       format: "sections",
-      label: "Three selected projects",
+      label: "Four selected projects",
       heading: "Product design work at Culligan.",
-      intro: "My internship covered residential products, field training, and technical documentation. Selected details remain limited because the work is confidential.",
+      intro: "My internship covered residential products, commercial hydraulic systems, field training, and technical documentation. Selected details remain limited because the work is confidential.",
       sections: [
         {
           title: "Residential float system",
           description: "Designed and developed an injection-molded float system for a residential water softener. I used SolidWorks to translate the product need into a practical, manufacturable component concept.",
         },
         {
+          title: "Commercial mounting brackets",
+          description: "Developed mounting brackets for a commercial hydraulic system with the goal of improving water pressure. SolidWorks and FEA supported the design and evaluation work.",
+        },
+        {
           title: "Field-training prototype",
-          description: "Created and presented a portable field-training prototype designed to support continued development and hands-on instruction.",
+          description: "Created and presented a portable field-training suitcase prototype. The concept secured $75,000 in funding for continued development.",
         },
         {
           title: "Commercial drawing packages",
-          description: "Drafted technical engineering drawings for commercial water softeners and assemblies, translating the designs into clear manufacturing documentation.",
+          description: "Drafted technical engineering drawings for five commercial water softeners and assemblies, translating the designs into clear manufacturing documentation.",
         },
       ],
     },
@@ -287,7 +293,7 @@ export const projects: Project[] = [
     slug: "telescoping-crutch",
     title: "Telescoping Accessibility Crutch",
     eyebrow: "Accessibility / Rapid Prototyping / Design Leadership",
-    subtitle: "Full support, one-third the storage volume.",
+    subtitle: "A telescoping concept with 66% less storage space.",
     role: "Accessibility Design Project Leader",
     duration: "August 2024 - May 2025",
     location: "Blacksburg, Virginia",
@@ -351,8 +357,8 @@ export const experiences = [
     role: "Mechanical Engineering Design Intern",
     location: "Rosemont, Illinois",
     duration: "May 2026 - August 2026",
-    summary: "Designed molded components, developed a field-training prototype, and drafted production documentation.",
-    highlights: ["Used SolidWorks to design and develop water-treatment components", "Created and presented a portable field-training prototype", "Drafted technical drawing packages for water-softener products and assemblies"],
+    summary: "Used SolidWorks and FEA across four projects involving product design, prototyping, and technical documentation.",
+    highlights: ["Used SolidWorks and FEA extensively to design, develop, and build water-treatment components", "Designed an injection-molded residential float system and commercial hydraulic mounting brackets", "Created a field-training suitcase prototype that secured $75,000 in funding", "Drafted engineering drawing packages for five commercial water softeners and assemblies"],
   },
   {
     company: "Pulse Jet Design Team",
@@ -369,8 +375,8 @@ export const experiences = [
     role: "Independent Project",
     location: "Libertyville, Illinois",
     duration: "August 2020 - Present",
-    summary: "Restored two aging vehicles through diagnostics, welding, machining, and repair planning.",
-    highlights: ["Rebuilt a 2001 Jeep Cherokee and 1987 Jeep Comanche", "Used welding, machining, and diagnostic problem-solving"],
+    summary: "Rebuilt and restored two vehicles through diagnostics, welding, machining, and repair planning.",
+    highlights: ["Rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche", "Used welding, machining, and diagnostic problem-solving"],
   },
   {
     company: "Virginia Tech Engineering Education Department",
@@ -384,14 +390,14 @@ export const experiences = [
 ];
 
 export const skillGroups = [
-  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings", "MATLAB"] },
+  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis (FEA)", "Engineering drawings", "MATLAB"] },
   { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
   { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
 
 export const education = {
   school: "Virginia Tech",
-  degree: "Bachelor of Science in Mechanical Engineering",
+  degree: "Bachelor of Science, Mechanical Engineering Candidate",
   graduation: "Expected Graduation: May 2028",
   details: ["GPA: 3.84", "Dean's List every semester", "Mechanical Engineering Undergraduate Student Ambassador", "Raymond & Shirley Lynn Merit Scholarship recipient"],
   coursework: ["Dynamics", "Thermodynamics", "Differential Equations", "Mechanics of Bodies", "Electrical Theory"],
@@ -399,7 +405,7 @@ export const education = {
 
 export const credentials = [
   { title: "Certified SolidWorks Professional (CSWP)", issuer: "Dassault Systèmes", date: "July 2026" },
-  { title: "Finite Element Analysis Certification", issuer: "GoEngineer", date: "July 2026" },
+  { title: "Finite Element Analysis (FEA) Certification", issuer: "GoEngineer", date: "July 2026" },
   { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023" },
 ];
 

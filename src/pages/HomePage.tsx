@@ -9,13 +9,13 @@ import { SectionHeading } from "../components/SectionHeading";
 import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
 
 const quickFacts = [
-  { value: "Virginia Tech", label: "Mechanical Engineering" },
+  { value: "Virginia Tech", label: "Mechanical Engineering Candidate" },
   { value: "3.84", label: "GPA" },
   { value: "May 2028", label: "Expected graduation" },
   { value: "Chicago, IL", label: "Open to relocation" },
 ];
 
-const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
+const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis (FEA)", "Rapid Prototyping"];
 
 const experienceTimeline = [...experiences].sort((a, b) => {
   const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);
@@ -28,16 +28,16 @@ export function HomePage() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const description = "Charles T. Clark is a Third-Year Mechanical Engineering Student at Virginia Tech with experience in product design, SolidWorks, FEA, fabrication, and test engineering.";
+    const description = "Third-year Virginia Tech mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship, with experience in SolidWorks, FEA, product development, fabrication, and testing.";
     document.title = `${profile.name} | ${profile.title}`;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", "https://charlesclark.me/");
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", "Third-Year Mechanical Engineering Student portfolio featuring selected work, experience, and technical skills.");
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", description);
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", "https://charlesclark.me/");
     document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
     document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", "Third-Year Mechanical Engineering Student portfolio featuring selected work, experience, and technical skills.");
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", description);
     document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
 
     const section = searchParams.get("section");
@@ -93,7 +93,7 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.16, duration: 0.45 }}
             >
-              Third year mechanical engineering student seeking Co-op for Spring 2027 and Internship for Summer 2027.
+              Third-year mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship.
             </motion.p>
             <motion.div
               className="mt-8 flex flex-wrap gap-3"
@@ -154,7 +154,7 @@ export function HomePage() {
             index="02"
             eyebrow="Background"
             title="Experience at a glance."
-            description="Four roles spanning commercial product design, propulsion, accessibility, and hands-on restoration."
+            description="Four roles spanning product design, propulsion testing, accessibility, and automotive restoration."
           />
           <div className="compact-background-grid">
             <Reveal className="compact-card md:col-span-2">

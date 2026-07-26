@@ -26,6 +26,9 @@ export function ProjectPage() {
       document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", project.summary);
       document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", pageUrl);
       document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
+      document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", `${project.title} | Charles T. Clark`);
+      document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", project.summary);
+      document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
     }
   }, [project]);
 
