@@ -6,6 +6,7 @@ export interface MediaItem {
   label: string;
   alt: string;
   caption?: string;
+  captionPlacement?: "overlay" | "below";
   poster?: string;
   aspect?: "landscape" | "portrait" | "square" | "cinematic";
   playback?: "controls" | "loop";
@@ -197,6 +198,8 @@ export const projects: Project[] = [
       src: "/project-photos/culligan-float-system.png",
       label: "Residential Float System",
       alt: "Three side-by-side views of the residential float system: physical prototype, SolidWorks model, and design comparison",
+      caption: "Physical prototype, SolidWorks model, and design-comparison view of the injection-molded residential float system.",
+      captionPlacement: "below",
       aspect: "landscape",
       fit: "contain",
     },
@@ -206,6 +209,8 @@ export const projects: Project[] = [
         src: "/project-photos/culligan-bracket-fea.png",
         label: "Acrylic Mounting-Bracket FEA",
         alt: "Static structural FEA results for the acrylic mounting bracket, including loading, stress distribution, factor of safety, and conclusions",
+        caption: "Static structural analysis predicted 2,217 psi maximum von Mises stress and a 2.94 factor of safety.",
+        captionPlacement: "below",
         aspect: "landscape",
         fit: "contain",
       },
@@ -214,6 +219,8 @@ export const projects: Project[] = [
         src: "/project-photos/culligan-training-suitcase.jpeg",
         label: "Field-Training Suitcase Prototype",
         alt: "Open portable field-training suitcase prototype with machined aluminum mounting panels installed",
+        caption: "Machined aluminum mounting panels installed in the portable field-training suitcase prototype.",
+        captionPlacement: "below",
         aspect: "portrait",
         fit: "contain",
       },
@@ -222,6 +229,8 @@ export const projects: Project[] = [
         src: "/project-photos/culligan-commercial-drawings.png",
         label: "Commercial Drawing Package",
         alt: "Both sheets of the commercial water-softener general-arrangement drawing package displayed side by side",
+        caption: "Two-sheet general-arrangement drawing package covering commercial water-softener configurations and specifications.",
+        captionPlacement: "below",
         aspect: "landscape",
         fit: "contain",
       },

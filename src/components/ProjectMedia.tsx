@@ -123,7 +123,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
             Your browser does not support embedded video. Add a transcript link in the project data.
           </video>
         )}
-        {loaded && isLoopingCover && media.caption && (
+        {loaded && isLoopingCover && media.caption && media.captionPlacement !== "below" && (
           <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">
             {media.caption}
           </figcaption>
@@ -161,7 +161,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
           />
         </>
       )}
-      {loaded && media.caption && <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">{media.caption}</figcaption>}
+      {loaded && media.caption && media.captionPlacement !== "below" && <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">{media.caption}</figcaption>}
     </figure>
   );
 }

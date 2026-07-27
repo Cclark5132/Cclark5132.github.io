@@ -114,6 +114,12 @@ export function CaseStudyGallery({ media, title }: CaseStudyGalleryProps) {
             {slides.map((item, index) => (
               <div className="case-study-slide" key={`${item.src}-${index}`}>
                 <ProjectMedia media={item} eager={index === 0} className="case-study-gallery-media" />
+                {item.caption && item.captionPlacement === "below" && (
+                  <div className="case-study-slide-caption">
+                    <strong>{item.label}</strong>
+                    <span>{item.caption}</span>
+                  </div>
+                )}
                 <button
                   className="gallery-expand-trigger"
                   type="button"
