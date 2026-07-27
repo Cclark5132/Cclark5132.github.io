@@ -207,7 +207,7 @@ export const projects: Project[] = [
       { value: "$75K", label: "Funding secured", detail: "Field-training prototype" },
       { value: "5", label: "Systems documented", detail: "Commercial water softeners" },
     ],
-    skills: ["SolidWorks", "Finite Element Analysis", "Injection-molded part design", "Engineering drawings (GD&T)", "Prototype development"],
+    skills: ["SolidWorks", "FEA", "Injection-molded part design", "Engineering drawings (GD&T)", "Prototype development"],
     coverImage: {
       type: "image",
       src: "/project-photos/culligan-float-system.png",
@@ -439,7 +439,7 @@ export const experiences = [
 ];
 
 export const skillGroups = [
-  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings (GD&T)", "MATLAB"] },
+  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "FEA", "Engineering drawings (GD&T)", "MATLAB"] },
   { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
   { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
@@ -454,7 +454,7 @@ export const education = {
 
 export const credentials = [
   { title: "Certified SolidWorks Professional (CSWP)", issuer: "Dassault Systèmes", date: "July 2026" },
-  { title: "Finite Element Analysis (FEA) Certification", issuer: "GoEngineer", date: "July 2026" },
+  { title: "FEA Certification", issuer: "GoEngineer", date: "July 2026" },
   { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023" },
 ];
 
