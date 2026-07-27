@@ -29,11 +29,10 @@ Only upload images that Culligan has approved for public release. Remove confide
 
 | Exact filename | Where it appears | Recommended image |
 | --- | --- | --- |
-| `culligan-cover.jpg` | Homepage, project card, and first gallery image | Approved overview graphic or sanitized product photograph |
-| `culligan-float-system.jpg` | Gallery image 2 | Approved float-system CAD or component view |
-| `culligan-bracket-analysis.jpg` | Gallery image 3 | Approved mounting-bracket or sanitized FEA view |
-| `culligan-training-prototype.jpg` | Gallery image 4 | Approved field-training prototype |
-| `culligan-drawing-package.jpg` | Gallery image 5 | Approved, sanitized drawing-package overview without confidential details |
+| `culligan-float-system.png` | Homepage, project card, and gallery image 1 | Physical prototype and two engineering views on one slide |
+| `culligan-bracket-fea.png` | Gallery image 2 | Approved mounting-bracket FEA summary |
+| `culligan-training-suitcase.jpeg` | Gallery image 3 | Approved field-training suitcase prototype |
+| `culligan-commercial-drawings.png` | Gallery image 4 | Both approved drawing sheets on one slide |
 
 ## Automotive Restoration
 
