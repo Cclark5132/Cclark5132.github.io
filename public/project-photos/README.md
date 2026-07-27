@@ -17,11 +17,9 @@ On Windows, turn on **View → Show → File name extensions** in File Explorer.
 
 | Exact filename | Where it appears | Recommended image |
 | --- | --- | --- |
-| `pulse-jet-cover.jpg` | Homepage, project card, and first gallery image | Best overall engine, CAD, or workshop photograph |
-| `pulse-jet-fabrication.jpg` | Gallery image 2 | Engine fabrication, welding, or assembly |
-| `pulse-jet-test-bench.jpg` | Gallery image 3 | Complete instrumented test-bench setup |
-| `pulse-jet-test-data.jpg` | Gallery image 4 | Clear test-data chart or measurement setup |
-| `pulse-jet-team.jpg` | Gallery image 5 | Full eight-member design team |
+| `pulse-jet-assembly-render.png` | Homepage, project card, and gallery image 1 | Complete SolidWorks assembly of the engine and test setup |
+| `pulse-jet-fabricated-engine.jpg` | Gallery image 2 | Fabricated steel engine during workshop assembly |
+| `pulse-jet-test-assembly.jpg` | Gallery image 3 | Completed engine mounted on the rolling test frame |
 
 ## Culligan International
 
@@ -32,7 +30,7 @@ Only upload images that Culligan has approved for public release. Remove confide
 | `culligan-float-system.png` | Homepage, project card, and gallery image 1 | Physical prototype and two engineering views on one slide |
 | `culligan-bracket-fea.png` | Gallery image 2 | Approved mounting-bracket FEA summary |
 | `culligan-training-suitcase.jpeg` | Gallery image 3 | Approved field-training suitcase prototype |
-| `culligan-commercial-drawings.png` | Gallery image 4 | Both approved drawing sheets on one slide |
+| `culligan-commercial-drawings.png` | Gallery image 4 | Both approved drawing sheets stacked vertically |
 
 ## Automotive Restoration
 
