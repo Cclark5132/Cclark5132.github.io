@@ -181,17 +181,17 @@ export const projects: Project[] = [
   {
     slug: "culligan",
     title: "Culligan Product Design Work",
-    eyebrow: "Product Design / FEA / Injection Molding",
-    subtitle: "Four projects spanning product design, analysis, and documentation.",
+    eyebrow: "Product Design / Prototyping / Engineering Drawings",
+    subtitle: "Four projects spanning product design, prototyping, and documentation.",
     role: "Mechanical Engineering Design Intern",
     duration: "May 2026 - August 2026",
     location: "Rosemont, Illinois",
-    summary: "At Culligan International, I used SolidWorks and FEA to design, develop, and build water-treatment components across four selected workstreams.",
+    summary: "At Culligan International, I designed, developed, and built water-treatment components across four selected workstreams.",
     challenge: "As a Mechanical Engineering Design Intern, I developed practical, manufacturable solutions across cost reduction, commercial hydraulic performance, field training, and engineering documentation while protecting confidential product details.",
     process: [
       { title: "Define", description: "Translated residential, commercial hydraulic, and field-training needs into clear engineering requirements." },
       { title: "Design", description: "3D modeled an injection-molded float and developed a booster pump kit for a commercial hydraulic valve." },
-      { title: "Analyze", description: "Used FEA to evaluate water-treatment components and support design decisions." },
+      { title: "Validate", description: "Reviewed component performance and manufacturability to support design decisions." },
       { title: "Build + document", description: "Fabricated and sourced a portable field-training prototype, modeled 3D systems, and drafted commercial engineering drawings." },
     ],
     results: [
@@ -207,7 +207,7 @@ export const projects: Project[] = [
       { value: "$75K", label: "Funding secured", detail: "Field-training prototype" },
       { value: "5", label: "Systems documented", detail: "Commercial water softeners" },
     ],
-    skills: ["SolidWorks", "FEA", "Injection-molded part design", "Engineering drawings (GD&T)", "Prototype development"],
+    skills: ["SolidWorks", "Injection-molded part design", "Prototype development", "Engineering drawings (GD&T)", "FEA"],
     coverImage: {
       type: "image",
       src: "/project-photos/culligan-float-system.png",
@@ -406,7 +406,7 @@ export const experiences = [
     role: "Mechanical Engineering Design Intern",
     location: "Rosemont, Illinois",
     duration: "May 2026 - August 2026",
-    summary: "Used SolidWorks and FEA to design, develop, and build water-treatment components.",
+    summary: "Designed, developed, and built water-treatment components using SolidWorks, prototyping, and technical documentation.",
     highlights: ["3D modeled and drafted GD&T drawings for an injection-molded float, reducing costs by $15,000", "Developed a booster pump kit that increased water pressure by 150% for a commercial hydraulic valve", "Fabricated and sourced a portable field-training prototype that secured $75,000 in funding", "Modeled 3D systems and drafted technical engineering drawings for five commercial water softeners"],
   },
   {
@@ -439,7 +439,7 @@ export const experiences = [
 ];
 
 export const skillGroups = [
-  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "FEA", "Engineering drawings (GD&T)", "MATLAB"] },
+  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings (GD&T)", "MATLAB"] },
   { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
   { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
@@ -454,7 +454,7 @@ export const education = {
 
 export const credentials = [
   { title: "Certified SolidWorks Professional (CSWP)", issuer: "Dassault Systèmes", date: "July 2026" },
-  { title: "FEA Certification", issuer: "GoEngineer", date: "July 2026" },
+  { title: "Finite Element Analysis (FEA) Certification", issuer: "GoEngineer", date: "July 2026" },
   { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023" },
 ];
 

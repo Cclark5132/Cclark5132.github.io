@@ -15,7 +15,7 @@ const quickFacts = [
   { value: "Chicago, IL", label: "Open to relocation" },
 ];
 
-const topSkills = ["SolidWorks (CSWP)", "FEA", "Rapid Prototyping"];
+const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
 
 const experienceTimeline = [...experiences].sort((a, b) => {
   const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);
