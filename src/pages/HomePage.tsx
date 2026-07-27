@@ -9,13 +9,13 @@ import { SectionHeading } from "../components/SectionHeading";
 import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
 
 const quickFacts = [
-  { value: "Virginia Tech", label: "Mechanical Engineering Candidate" },
+  { value: "Virginia Tech", label: "B.S. Mechanical Engineering" },
   { value: "3.84", label: "GPA" },
   { value: "May 2028", label: "Expected graduation" },
   { value: "Chicago, IL", label: "Open to relocation" },
 ];
 
-const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis (FEA)", "Rapid Prototyping"];
+const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
 
 const experienceTimeline = [...experiences].sort((a, b) => {
   const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);

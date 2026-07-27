@@ -1619,6 +1619,10 @@ a {
 }
 
 @media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .case-study-section-grid.is-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

@@ -21,20 +21,20 @@ export function ProjectCard({ project }: ProjectCardProps) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <Link to={`/projects/${project.slug}`} className="flex h-full flex-col" aria-label={`View ${project.title} case study`}>
-        <ProjectMedia media={project.coverImage} className="home-project-media min-h-[15rem] rounded-none border-0" />
-        <div className="flex flex-1 flex-col p-6 md:p-7">
+        <ProjectMedia media={project.coverImage} className="home-project-media min-h-[11rem] rounded-none border-0" />
+        <div className="flex flex-1 flex-col p-5">
           <div className="flex items-start justify-between gap-4">
             <p className="technical-label max-w-[75%] text-orange">{project.eyebrow}</p>
             <span className="project-arrow"><ArrowUpRight size={20} aria-hidden="true" /></span>
           </div>
-          <h3 className="mt-5 text-2xl font-semibold tracking-[-0.035em] text-charcoal md:text-3xl">{project.title}</h3>
-          <p className="mt-3 text-base leading-7 text-steel">{project.subtitle}</p>
+          <h3 className="mt-4 text-xl font-semibold tracking-[-0.035em] text-charcoal lg:text-[1.35rem]">{project.title}</h3>
+          <p className="mt-3 text-sm leading-6 text-steel">{project.subtitle}</p>
           <div className="mt-auto flex flex-wrap gap-2 pt-5">
-            {project.skills.slice(0, 3).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
+            {project.skills.slice(0, 2).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
           </div>
           <div className="mt-5 flex items-end justify-between gap-5 border-t border-black/10 pt-5">
             <div>
-              <strong className="text-2xl text-cyan">{headlineMetric.value}</strong>
+              <strong className="text-xl text-cyan">{headlineMetric.value}</strong>
               <p className="mt-1 text-xs font-medium uppercase tracking-[0.11em] text-steel">{headlineMetric.label}</p>
             </div>
             <span className="text-sm font-semibold text-cyan">View case study</span>
