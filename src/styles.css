@@ -3344,3 +3344,271 @@ button:focus-visible,
     justify-self: start;
   }
 }
+
+/* Larger, more readable type scale */
+.technical-label,
+.hero-kicker,
+.project-card-index,
+.project-card-discipline,
+.experience-date,
+.experience-location,
+.skill-strip,
+.section-heading-index,
+.section-heading-title > p {
+  font-size: 0.78rem;
+}
+
+.site-brand strong {
+  font-size: 1rem;
+}
+
+.site-brand small {
+  font-size: 0.75rem;
+}
+
+.nav-link,
+.nav-resume {
+  font-size: 0.78rem;
+}
+
+.mobile-menu button,
+.mobile-menu a {
+  font-size: 1rem;
+}
+
+.hero-objective {
+  font-size: 1.16rem;
+  line-height: 1.6;
+}
+
+.availability-badge {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.button {
+  font-size: 0.86rem;
+}
+
+.hero-media-label {
+  font-size: 0.78rem;
+}
+
+.hero-media-label small,
+.hero-media-action {
+  font-size: 0.68rem;
+}
+
+.fact-item strong {
+  font-size: 1.08rem;
+}
+
+.fact-item span {
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.skill-strip > span {
+  font-size: 0.78rem;
+}
+
+.section-heading-description {
+  font-size: 1.13rem;
+  line-height: 1.65;
+}
+
+.project-card-discipline {
+  font-size: 0.74rem;
+}
+
+.project-card h3 {
+  font-size: 1.68rem;
+  line-height: 1.1;
+}
+
+.project-card-summary {
+  font-size: 1rem;
+  line-height: 1.58;
+}
+
+.project-card-skills {
+  font-size: 0.7rem;
+}
+
+.project-card-result strong {
+  font-size: 1.55rem;
+}
+
+.project-card-result small,
+.project-card-result .project-card-cta {
+  font-size: 0.68rem;
+}
+
+.experience-copy h3 {
+  font-size: 1.42rem;
+}
+
+.experience-role {
+  font-size: 0.96rem;
+}
+
+.experience-highlight {
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.experience-link-label {
+  font-size: 0.72rem;
+}
+
+.education-panel h3 {
+  font-size: 1.75rem;
+}
+
+.education-degree,
+.education-graduation {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.education-details {
+  font-size: 0.95rem;
+}
+
+.credential-list strong {
+  font-size: 0.92rem;
+}
+
+.credential-list span {
+  font-size: 0.72rem;
+}
+
+.skill-group h3 {
+  font-size: 0.82rem;
+}
+
+.skill-group li {
+  font-size: 1.03rem;
+}
+
+.contact-layout > div:first-child > p:last-child {
+  font-size: 1.08rem;
+}
+
+.contact-links span {
+  font-size: 1rem;
+}
+
+.contact-links small {
+  font-size: 0.7rem;
+}
+
+.footer-layout > p strong {
+  font-size: 0.95rem;
+}
+
+.footer-layout > p span,
+.footer-contact a {
+  font-size: 0.82rem;
+}
+
+.back-link {
+  font-size: 0.78rem;
+}
+
+.site-shell > main:not(.home-page) > header h1 + p {
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+.project-meta dt {
+  font-size: 0.72rem;
+}
+
+.project-meta dd {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.gallery-heading h2,
+.case-study-heading h2,
+.star-heading h2 {
+  font-size: clamp(2.35rem, 4vw, 3.5rem);
+}
+
+.gallery-guidance {
+  font-size: 1rem;
+}
+
+.gallery-heading > p {
+  font-size: 0.86rem;
+}
+
+.case-study-slide-caption strong {
+  font-size: 1rem;
+}
+
+.case-study-slide-caption span {
+  font-size: 0.9rem;
+}
+
+.metric-card > p:first-child {
+  font-size: 2.2rem;
+}
+
+.metric-card > p:nth-child(2) {
+  font-size: 1rem;
+}
+
+.metric-card > p:last-child:not(:nth-child(2)) {
+  font-size: 0.76rem;
+}
+
+.star-card-heading h3,
+.case-study-section-card h3 {
+  font-size: 1.45rem;
+}
+
+.star-body,
+.case-study-section-card > p,
+.star-action-list li div > span,
+.case-study-section-card li,
+.star-result-list li {
+  font-size: 1.04rem;
+  line-height: 1.68;
+}
+
+.star-action-list strong {
+  font-size: 1.08rem;
+}
+
+.case-study-heading > p:last-child {
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.other-project-details h3 {
+  font-size: 1.38rem;
+}
+
+.other-project-details > p {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.other-project-metric strong {
+  font-size: 1.35rem;
+}
+
+.other-project-metric small,
+.other-project-cta {
+  font-size: 0.67rem;
+}
+
+.lightbox-footer strong {
+  font-size: 1.05rem;
+}
+
+.lightbox-footer p {
+  font-size: 0.92rem;
+}
