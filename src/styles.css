@@ -2909,3 +2909,438 @@ body {
     height: 2.8rem;
   }
 }
+
+/* Clarity and interaction pass */
+a,
+button {
+  cursor: pointer;
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.hero-statement {
+  max-width: 12ch;
+  margin: 1.35rem 0 0;
+  border-left: 5px solid var(--orange);
+  padding-left: 1rem;
+  color: var(--graphite);
+  font-size: clamp(1.85rem, 4vw, 3.15rem);
+  font-weight: 760;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.hero-role {
+  margin-top: 1.35rem;
+  color: var(--maroon);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.84rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-objective {
+  max-width: 42rem;
+  font-size: 1.05rem;
+}
+
+.button {
+  min-height: 3.35rem;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-width: 2px;
+  padding: 0.9rem 1.15rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 130ms ease, box-shadow 130ms ease, background-color 130ms ease, color 130ms ease;
+}
+
+.button-primary {
+  border-color: var(--graphite);
+  background: var(--orange);
+  box-shadow: 4px 4px 0 var(--graphite);
+  color: var(--graphite);
+}
+
+.button-primary:hover {
+  border-color: var(--graphite);
+  background: #f28a3a;
+  box-shadow: 2px 2px 0 var(--graphite);
+  color: var(--graphite);
+  transform: translate(2px, 2px);
+}
+
+.button-secondary,
+.button-ghost {
+  border-color: var(--graphite);
+  background: var(--paper-light);
+  box-shadow: 3px 3px 0 rgba(32, 36, 33, 0.3);
+}
+
+.button-secondary:hover,
+.button-ghost:hover {
+  border-color: var(--graphite);
+  background: var(--graphite);
+  box-shadow: 1px 1px 0 rgba(32, 36, 33, 0.3);
+  color: #fff;
+  transform: translate(2px, 2px);
+}
+
+.nav-link {
+  min-height: 2.75rem;
+  border-bottom: 3px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.nav-link:hover {
+  border-bottom-color: var(--orange);
+  background: var(--paper-light);
+  color: var(--graphite);
+}
+
+.nav-resume {
+  min-height: 2.75rem;
+  border: 1px solid var(--graphite);
+  background: var(--orange);
+  padding: 0.55rem 0.8rem;
+  color: var(--graphite);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav-resume:hover {
+  background: var(--graphite);
+  color: #fff;
+}
+
+.mobile-menu button,
+.mobile-menu a {
+  display: flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  color: var(--graphite);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero-media-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-media-link:hover .hero-media-action {
+  background: var(--maroon);
+}
+
+.hero-media-link:hover .hero-project-media img,
+.hero-media-link:hover .hero-project-media video {
+  transform: scale(1.015);
+}
+
+.hero-project-media img,
+.hero-project-media video {
+  transition: transform 180ms ease;
+}
+
+.hero-media-label > span:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--graphite);
+}
+
+.hero-media-label small {
+  color: var(--muted-graphite);
+  font-size: 0.6rem;
+}
+
+.hero-media-action {
+  display: inline-flex;
+  min-height: 2.55rem;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--graphite);
+  padding: 0.65rem 0.75rem;
+  color: #fff;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background-color 130ms ease;
+}
+
+.section-heading h2 {
+  max-width: 19ch;
+  font-size: clamp(2.65rem, 5.7vw, 4.8rem);
+}
+
+.section-heading-description {
+  max-width: 42rem;
+  color: var(--graphite);
+  font-size: 1.05rem;
+}
+
+.project-card {
+  overflow: hidden;
+  border: 2px solid var(--graphite);
+  background: var(--paper-light);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.project-card:hover {
+  border-color: var(--graphite);
+  box-shadow: 7px 7px 0 var(--orange);
+  transform: translate(-3px, -3px);
+}
+
+.project-card-body {
+  padding: 1rem;
+}
+
+.project-card-index > svg {
+  transition: transform 130ms ease;
+}
+
+.project-card:hover .project-card-index > svg {
+  transform: translate(3px, -3px);
+}
+
+.project-card h3 {
+  font-size: 1.55rem;
+}
+
+.project-card-summary {
+  color: var(--graphite);
+  font-size: 0.92rem;
+}
+
+.project-card-result {
+  align-items: stretch;
+  border-top: 2px solid var(--graphite);
+  padding-top: 0.9rem;
+}
+
+.project-card-result > span:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-card-result small {
+  margin-top: 0.1rem;
+  color: var(--muted-graphite);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.58rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.project-card-result .project-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--maroon);
+  padding: 0.75rem;
+  color: #fff;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.experience-row {
+  position: relative;
+  padding: 1.4rem 0.9rem;
+  transition: background-color 130ms ease, padding-inline 130ms ease;
+}
+
+.experience-row:hover {
+  background: var(--paper-light);
+}
+
+.experience-link-label {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 2px solid var(--orange);
+  padding-bottom: 0.25rem;
+  color: var(--graphite);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.67rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.experience-row:hover .experience-link-label {
+  color: var(--maroon);
+}
+
+.contact-links {
+  display: grid;
+  gap: 0.65rem;
+  border-top: 0;
+}
+
+.contact-links a {
+  min-height: 4.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  padding: 0.8rem 1rem;
+  transition: border-color 130ms ease, background-color 130ms ease, color 130ms ease;
+}
+
+.contact-links a > svg:last-child {
+  margin-left: auto;
+}
+
+.contact-links a:hover {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: var(--graphite);
+}
+
+.contact-links a:hover small {
+  color: rgba(32, 36, 33, 0.7);
+}
+
+.footer-contact a {
+  border-bottom: 1px solid transparent;
+}
+
+.footer-contact a:hover {
+  border-bottom-color: var(--orange);
+  color: #fff;
+}
+
+.back-link {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  gap: 0.55rem;
+  border: 2px solid var(--graphite);
+  background: var(--paper-light);
+  padding: 0.65rem 0.9rem;
+  color: var(--graphite);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.back-link:hover {
+  background: var(--orange);
+}
+
+.gallery-guidance {
+  display: block;
+  max-width: 42rem;
+  margin-top: 0.45rem;
+  color: var(--muted-graphite);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.gallery-expand-trigger > span {
+  min-height: 2.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: var(--graphite);
+  padding: 0.7rem 0.9rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gallery-arrow {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-width: 2px;
+}
+
+.other-project-card {
+  border-width: 2px;
+  transition: border-color 130ms ease, transform 130ms ease, box-shadow 130ms ease;
+}
+
+.other-project-card:hover {
+  box-shadow: 6px 6px 0 var(--orange);
+  transform: translate(-2px, -2px);
+}
+
+.other-project-metric {
+  align-items: stretch;
+}
+
+.other-project-metric > span:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.other-project-metric small {
+  margin-top: 0.15rem;
+  color: rgba(255, 255, 255, 0.56);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+}
+
+.other-project-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--orange);
+  padding: 0.7rem;
+  color: var(--graphite);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .hero-statement {
+    font-size: clamp(1.8rem, 9vw, 2.6rem);
+  }
+
+  .hero-media-label {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-media-action {
+    justify-content: space-between;
+  }
+
+  .project-card-result,
+  .other-project-metric {
+    flex-direction: column;
+  }
+
+  .project-card-result .project-card-cta,
+  .other-project-cta {
+    justify-content: space-between;
+  }
+
+  .experience-link-label {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

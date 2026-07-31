@@ -206,10 +206,10 @@ export function ProjectPage() {
                     <ArrowRight className="other-project-arrow" size={19} aria-hidden="true" />
                   </div>
                   <h3>{otherProject.title}</h3>
-                  <p>{otherProject.role} · {otherProject.duration}</p>
+                  <p>{otherProject.role} / {otherProject.duration}</p>
                   <div className="other-project-metric">
-                    <strong>{otherProject.metrics[0].value}</strong>
-                    <span>{otherProject.metrics[0].label}</span>
+                    <span><strong>{otherProject.metrics[0].value}</strong><small>{otherProject.metrics[0].label}</small></span>
+                    <span className="other-project-cta">View case study <ArrowRight size={17} /></span>
                   </div>
                 </div>
               </Link>

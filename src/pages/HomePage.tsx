@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, Download, Linkedin, Mail } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, Linkedin, Mail } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ProjectCard } from "../components/ProjectCard";
@@ -86,6 +86,14 @@ export function HomePage() {
             >
               {profile.title}
             </motion.p>
+            <motion.h2
+              className="hero-statement"
+              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+            >
+              I design, build, and test mechanical systems.
+            </motion.h2>
             <motion.p
               className="hero-objective"
               initial={reduceMotion ? false : { opacity: 0 }}
@@ -101,18 +109,20 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.16, duration: 0.3 }}
             >
-              <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>Projects <ArrowDownRight size={18} /></button>
-              <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={18} /> Email</a>
-              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={18} /> LinkedIn</a>
+              <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>View projects <ArrowDownRight size={18} /></button>
+              <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={18} /> Email me</a>
+              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={18} /> View LinkedIn</a>
             </motion.div>
           </div>
 
           <Reveal className="hero-media-frame">
-            <ProjectMedia media={profile.heroMedia} eager className="hero-project-media" />
-            <div className="hero-media-label">
-              <span>Current build</span>
-              <strong>Pulse Jet Design Team</strong>
-            </div>
+            <Link className="hero-media-link" to="/projects/pulse-jet" aria-label="View the Pulse Jet Design Team case study">
+              <ProjectMedia media={profile.heroMedia} eager className="hero-project-media" />
+              <div className="hero-media-label">
+                <span><small>Current build</small><strong>Pulse Jet Design Team</strong></span>
+                <span className="hero-media-action">View case study <ArrowUpRight size={17} /></span>
+              </div>
+            </Link>
           </Reveal>
         </div>
 
@@ -140,8 +150,8 @@ export function HomePage() {
           <SectionHeading
             index="01"
             eyebrow="Selected work"
-            title="Projects"
-            description="Four projects covering product design, propulsion, automotive restoration, and accessibility."
+            title="Four engineering projects"
+            description="Select a project to see the design problem, the work I completed, and the result."
           />
           <div className="projects-grid">
             {projects.map((project, index) => <ProjectCard project={project} index={index + 1} key={project.slug} />)}
@@ -174,7 +184,7 @@ export function HomePage() {
                     <p className="experience-role">{experience.role}</p>
                     <p className="experience-highlight">{experience.highlights[0]}</p>
                   </div>
-                  <ArrowUpRight size={20} aria-hidden="true" />
+                  <span className="experience-link-label">View case study <ArrowUpRight size={17} aria-hidden="true" /></span>
                 </Link>
               ))}
             </div>
@@ -207,7 +217,7 @@ export function HomePage() {
           <SectionHeading
             index="03"
             eyebrow="Technical skills"
-            title="Tools I use"
+            title="Engineering tools and capabilities"
           />
           <div className="skills-list">
             {skillGroups.map((group) => (
@@ -230,9 +240,9 @@ export function HomePage() {
             <p>Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.</p>
           </div>
           <div className="contact-links">
-            <a href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={20} /><span><small>LinkedIn</small>charlesclarkvt</span></a>
-            <a href={`mailto:${profile.email}`}><Mail size={20} /><span><small>Email</small>{profile.email}</span></a>
-            <a href={profile.resume} target="_blank" rel="noreferrer"><Download size={20} /><span><small>Resume</small>Open PDF</span></a>
+            <a href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={20} /><span><small>Open LinkedIn</small>charlesclarkvt</span><ArrowRight size={18} /></a>
+            <a href={`mailto:${profile.email}`}><Mail size={20} /><span><small>Send an email</small>{profile.email}</span><ArrowRight size={18} /></a>
+            <a href={profile.resume} target="_blank" rel="noreferrer"><Download size={20} /><span><small>View my resume</small>Open PDF</span><ArrowUpRight size={18} /></a>
           </div>
         </div>
       </section>

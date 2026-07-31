@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Project } from "../data/portfolio";
 import { ProjectMedia } from "./ProjectMedia";
@@ -33,8 +33,8 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <p className="project-card-summary">{project.subtitle}</p>
           <p className="project-card-skills">{project.skills.slice(0, 2).join(" / ")}</p>
           <div className="project-card-result">
-            <strong>{headlineMetric.value}</strong>
-            <span>{headlineMetric.label}</span>
+            <span><strong>{headlineMetric.value}</strong><small>{headlineMetric.label}</small></span>
+            <span className="project-card-cta">View case study <ArrowRight size={17} /></span>
           </div>
         </div>
       </Link>

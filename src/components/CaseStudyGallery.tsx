@@ -78,7 +78,8 @@ export function CaseStudyGallery({ media, title }: CaseStudyGalleryProps) {
         <div className="gallery-heading">
           <div>
             <p className="technical-label text-orange">Project gallery</p>
-            <h2>Scroll through the build.</h2>
+            <h2>Project photos</h2>
+            <span className="gallery-guidance">Use the arrows to browse. Select any image to open it full screen.</span>
           </div>
           <p>{String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</p>
         </div>
