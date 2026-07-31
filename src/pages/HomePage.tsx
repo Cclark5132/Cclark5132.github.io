@@ -86,14 +86,6 @@ export function HomePage() {
             >
               {profile.title}
             </motion.p>
-            <motion.p
-              className="hero-objective"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.12, duration: 0.3 }}
-            >
-              Third-year mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship.
-            </motion.p>
             <p className="availability-badge">{profile.availability}</p>
             <motion.div
               className="hero-actions"
