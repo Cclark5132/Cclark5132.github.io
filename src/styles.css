@@ -2923,18 +2923,6 @@ button:focus-visible,
   outline-offset: 3px;
 }
 
-.hero-statement {
-  max-width: 12ch;
-  margin: 1.35rem 0 0;
-  border-left: 5px solid var(--orange);
-  padding-left: 1rem;
-  color: var(--graphite);
-  font-size: clamp(1.85rem, 4vw, 3.15rem);
-  font-weight: 760;
-  line-height: 1.02;
-  letter-spacing: -0.05em;
-}
-
 .hero-role {
   margin-top: 1.35rem;
   color: var(--maroon);
@@ -3316,10 +3304,6 @@ button:focus-visible,
 }
 
 @media (max-width: 639px) {
-  .hero-statement {
-    font-size: clamp(1.8rem, 9vw, 2.6rem);
-  }
-
   .hero-media-label {
     align-items: stretch;
     flex-direction: column;

@@ -86,14 +86,6 @@ export function HomePage() {
             >
               {profile.title}
             </motion.p>
-            <motion.h2
-              className="hero-statement"
-              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
-            >
-              I design, build, and test mechanical systems.
-            </motion.h2>
             <motion.p
               className="hero-objective"
               initial={reduceMotion ? false : { opacity: 0 }}
@@ -150,8 +142,8 @@ export function HomePage() {
           <SectionHeading
             index="01"
             eyebrow="Selected work"
-            title="Four engineering projects"
-            description="Select a project to see the design problem, the work I completed, and the result."
+            title="Four projects. Clear outcomes."
+            description="Click to learn more about my projects."
           />
           <div className="projects-grid">
             {projects.map((project, index) => <ProjectCard project={project} index={index + 1} key={project.slug} />)}
@@ -164,8 +156,8 @@ export function HomePage() {
           <SectionHeading
             index="02"
             eyebrow="Background"
-            title="Experience and education"
-            description="A concise version of the experience and credentials in my resume."
+            title="Experience at a glance."
+            description="Four roles spanning product design, propulsion testing, accessibility, and automotive restoration."
           />
 
           <div className="background-layout">
@@ -190,7 +182,7 @@ export function HomePage() {
             </div>
 
             <aside className="education-panel">
-              <p className="technical-label">Education</p>
+              <p className="technical-label">Education + credentials</p>
               <h3>{education.school}</h3>
               <p className="education-degree">{education.degree}</p>
               <p className="education-graduation">{education.graduation}</p>
@@ -217,7 +209,7 @@ export function HomePage() {
           <SectionHeading
             index="03"
             eyebrow="Technical skills"
-            title="Engineering tools and capabilities"
+            title="From CAD to fabrication."
           />
           <div className="skills-list">
             {skillGroups.map((group) => (
