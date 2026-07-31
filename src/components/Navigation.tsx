@@ -44,7 +44,7 @@ export function Navigation() {
         </div>
 
         <div className="nav-actions">
-          <a className="nav-resume" href={profile.resume} target="_blank" rel="noreferrer">View resume <Download size={15} /></a>
+          <a className="nav-resume" href={profile.resume} target="_blank" rel="noreferrer">Resume <Download size={15} /></a>
           <button className="mobile-menu-button" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close navigation menu" : "Open navigation menu"}>
             {open ? <X size={21} /> : <Menu size={21} />}
           </button>
