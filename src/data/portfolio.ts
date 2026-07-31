@@ -71,12 +71,12 @@ export const profile = {
   github: "https://github.com/Cclark5132",
   heroMedia: {
     type: "image" as const,
-    src: "/project-photos/pulse-jet-assembly-render.png",
-    label: "Pulse Jet Test Assembly",
-    alt: "SolidWorks assembly rendering of the pulse jet engine, propane cylinder, fuel line, and wheeled support frame",
-    caption: "SolidWorks assembly for the Pulse Jet Design Team test setup",
+    src: "/project-photos/pulse-jet-test-assembly.jpg",
+    label: "Completed Pulse Jet Test Assembly",
+    alt: "Fabricated steel pulse-jet engine mounted on a rolling test frame and connected to a propane cylinder",
+    caption: "Fabricated engine and rolling test frame",
     aspect: "landscape" as const,
-    fit: "contain" as const,
+    fit: "cover" as const,
   },
 };
 

@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, GraduationCap, Linkedin, Mail, Wrench } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Download, Linkedin, Mail } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ProjectCard } from "../components/ProjectCard";
@@ -54,70 +54,70 @@ export function HomePage() {
   return (
     <motion.main
       id="main-content"
+      className="home-page"
       initial={reduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={reduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.2 }}
     >
-      <section className="hero-section technical-grid pt-24">
-        <div className="site-container grid gap-9 py-12 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:py-16">
-          <div>
-            <motion.div
-              className="availability-badge"
-              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <span className="pulse-dot" aria-hidden="true" />
-              {profile.availability}
-            </motion.div>
+      <section className="hero-section pt-24">
+        <div className="site-container hero-layout">
+          <div className="hero-copy">
             <motion.p
-              className="technical-label mt-8 text-orange"
+              className="hero-kicker"
               initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.08 }}
+              transition={{ duration: 0.25 }}
+            >
+              Mechanical engineering portfolio / Virginia Tech
+            </motion.p>
+            <motion.h1
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              Charles Clark
+            </motion.h1>
+            <motion.p
+              className="hero-role"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.08, duration: 0.3 }}
             >
               {profile.title}
             </motion.p>
-            <motion.h1
-              className="mt-4 max-w-4xl text-balance text-[clamp(3.6rem,8vw,7.2rem)] font-semibold leading-[0.88] tracking-[-0.07em] text-white"
-              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              Charles T.<br /><span className="text-cyan">Clark</span>
-            </motion.h1>
             <motion.p
-              className="mt-6 max-w-2xl text-pretty text-lg leading-8 text-white/70 md:text-xl"
-              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.16, duration: 0.45 }}
+              className="hero-objective"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.12, duration: 0.3 }}
             >
               Third-year mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship.
             </motion.p>
+            <p className="availability-badge">{profile.availability}</p>
             <motion.div
-              className="mt-8 flex flex-wrap gap-3"
-              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+              className="hero-actions"
+              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.22, duration: 0.45 }}
+              transition={{ delay: 0.16, duration: 0.3 }}
             >
-              <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>View my work <ArrowDownRight size={20} /></button>
-              <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={19} /> Email me</a>
-              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={19} /> Connect on LinkedIn</a>
+              <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>Projects <ArrowDownRight size={18} /></button>
+              <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={18} /> Email</a>
+              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={18} /> LinkedIn</a>
             </motion.div>
           </div>
 
           <Reveal className="hero-media-frame">
-            <ProjectMedia media={profile.heroMedia} eager className="min-h-[30rem] border-0" />
+            <ProjectMedia media={profile.heroMedia} eager className="hero-project-media" />
             <div className="hero-media-label">
-              <span className="technical-label text-white">Featured work</span>
-              <span>Pulse Jet Design Team</span>
+              <span>Current build</span>
+              <strong>Pulse Jet Design Team</strong>
             </div>
           </Reveal>
         </div>
 
         <div className="fact-strip">
-          <div className="site-container grid grid-cols-2 lg:grid-cols-4">
+          <div className="site-container fact-grid">
             {quickFacts.map((fact) => (
               <div className="fact-item" key={fact.label}>
                 <strong>{fact.value}</strong>
@@ -128,140 +128,112 @@ export function HomePage() {
         </div>
 
         <div className="contact-strip">
-          <div className="site-container flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-            {topSkills.map((skill) => <span key={skill}><Wrench size={18} /> {skill}</span>)}
+          <div className="site-container skill-strip">
+            <span className="skill-strip-label">Core tools</span>
+            {topSkills.map((skill) => <span key={skill}>{skill}</span>)}
           </div>
         </div>
       </section>
 
-      <section id="work" className="section-space scroll-mt-24">
+      <section id="work" className="section-space scroll-mt-24 work-section">
         <div className="site-container">
           <SectionHeading
             index="01"
             eyebrow="Selected work"
-            title="Four projects. Clear outcomes."
-            description="Click to learn more about my projects."
+            title="Projects"
+            description="Four projects covering product design, propulsion, automotive restoration, and accessibility."
           />
           <div className="projects-grid">
-            {projects.map((project) => <ProjectCard project={project} key={project.slug} />)}
+            {projects.map((project, index) => <ProjectCard project={project} index={index + 1} key={project.slug} />)}
           </div>
         </div>
       </section>
 
-      <section id="background" className="section-space scroll-mt-24 border-y border-line bg-panel/65">
+      <section id="background" className="section-space scroll-mt-24 background-section">
         <div className="site-container">
           <SectionHeading
             index="02"
             eyebrow="Background"
-            title="Experience at a glance."
-            description="Four roles spanning product design, propulsion testing, accessibility, and automotive restoration."
+            title="Experience and education"
+            description="A concise version of the experience and credentials in my resume."
           />
-          <div className="compact-background-grid">
-            <Reveal className="compact-card md:col-span-2">
-              <div className="flex items-center gap-3">
-                <span className="icon-badge"><ArrowRight size={20} /></span>
-                <h3>Experience</h3>
-              </div>
-              <div className="experience-timeline">
-                {experienceTimeline.map((experience) => (
-                  <div
-                    className={`experience-timeline-item ${experience.duration.includes("Present") ? "experience-timeline-current" : ""}`}
-                    key={experience.company}
-                  >
-                    <div className="experience-timeline-meta">
-                      <span className="experience-timeline-dot" aria-hidden="true" />
-                      <p>{experience.duration}</p>
-                    </div>
-                    <Link
-                      className="experience-link group"
-                      to={`/projects/${experience.projectSlug}`}
-                      aria-label={`View ${experience.company} case study`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="technical-label text-orange">{experience.location}</p>
-                        <ArrowUpRight className="experience-link-arrow" size={19} aria-hidden="true" />
-                      </div>
-                      <h4 className="mt-2 text-lg font-semibold text-charcoal">{experience.company}</h4>
-                      <p className="mt-1 text-sm text-steel">{experience.role}</p>
-                      <p className="mt-3 text-sm font-medium leading-6 text-charcoal">{experience.highlights[0]}</p>
-                      <span className="experience-link-label">View case study <ArrowRight size={15} /></span>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
 
-            <Reveal className="compact-card md:col-span-2">
-              <div className="flex items-center gap-3">
-                <span className="icon-badge"><GraduationCap size={20} /></span>
-                <h3>Education + credentials</h3>
-              </div>
-              <div className="mt-6 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <p className="text-xl font-semibold text-charcoal">{education.school}</p>
-                  <p className="mt-1 text-sm leading-6 text-steel">{education.degree}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {education.details.map((detail) => <span className="tag" key={detail}>{detail}</span>)}
-                  <span className="tag">{education.graduation}</span>
-                </div>
-              </div>
-              <div className="mt-6 grid gap-3 border-t border-black/10 pt-5 sm:grid-cols-3">
+          <div className="background-layout">
+            <div className="experience-list">
+              {experienceTimeline.map((experience) => (
+                <Link
+                  className="experience-row"
+                  to={`/projects/${experience.projectSlug}`}
+                  key={experience.company}
+                  aria-label={`View ${experience.company} case study`}
+                >
+                  <p className="experience-date">{experience.duration}</p>
+                  <div className="experience-copy">
+                    <p className="experience-location">{experience.location}</p>
+                    <h3>{experience.company}</h3>
+                    <p className="experience-role">{experience.role}</p>
+                    <p className="experience-highlight">{experience.highlights[0]}</p>
+                  </div>
+                  <ArrowUpRight size={20} aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+
+            <aside className="education-panel">
+              <p className="technical-label">Education</p>
+              <h3>{education.school}</h3>
+              <p className="education-degree">{education.degree}</p>
+              <p className="education-graduation">{education.graduation}</p>
+              <ul className="education-details">
+                {education.details.map((detail) => <li key={detail}>{detail}</li>)}
+              </ul>
+
+              <div className="credential-list">
+                <p className="technical-label">Credentials</p>
                 {credentials.map((credential) => (
                   <div key={credential.title}>
-                    <p className="text-sm font-semibold leading-5 text-charcoal">{credential.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-steel">{credential.issuer} · {credential.date}</p>
+                    <strong>{credential.title}</strong>
+                    <span>{credential.issuer} / {credential.date}</span>
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </aside>
           </div>
         </div>
       </section>
 
-      <section id="skills" className="section-space scroll-mt-24">
+      <section id="skills" className="section-space scroll-mt-24 skills-section">
         <div className="site-container">
           <SectionHeading
             index="03"
             eyebrow="Technical skills"
-            title="From CAD to fabrication."
+            title="Tools I use"
           />
-          <div className="grid gap-5 lg:grid-cols-3">
-            {skillGroups.map((group, index) => (
-              <Reveal className="skill-card" delay={index * 0.06} key={group.title}>
-                <span className="icon-badge"><Wrench size={20} /></span>
-                <h3 className="mt-5 text-xl font-semibold text-charcoal">{group.title}</h3>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {group.skills.map((skill) => <span className="tag" key={skill}>{skill}</span>)}
-                </div>
-              </Reveal>
+          <div className="skills-list">
+            {skillGroups.map((group) => (
+              <section className="skill-group" key={group.title}>
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.skills.map((skill) => <li key={skill}>{skill}</li>)}
+                </ul>
+              </section>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="contact" className="section-space scroll-mt-24">
-        <div className="site-container">
-          <Reveal className="contact-panel">
-            <div>
-              <p className="technical-label text-orange">04 / Contact</p>
-              <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">Contact me.</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/75">
-                Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.
-              </p>
-            </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <a className="contact-action contact-action-featured sm:col-span-2" href={profile.linkedIn} target="_blank" rel="noreferrer">
-                <Linkedin size={30} /><span><small>Connect with me</small>linkedin.com/in/charlesclarkvt</span>
-              </a>
-              <a className="contact-action" href={`mailto:${profile.email}`}>
-                <Mail size={24} /><span><small>Email</small>{profile.email}</span>
-              </a>
-              <a className="contact-action" href={profile.resume} target="_blank" rel="noreferrer">
-                <Download size={24} /><span><small>Resume</small>View PDF</span>
-              </a>
-            </div>
-          </Reveal>
+      <section id="contact" className="contact-section scroll-mt-24">
+        <div className="site-container contact-layout">
+          <div>
+            <p className="technical-label">04 / Contact</p>
+            <h2>Get in touch</h2>
+            <p>Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.</p>
+          </div>
+          <div className="contact-links">
+            <a href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={20} /><span><small>LinkedIn</small>charlesclarkvt</span></a>
+            <a href={`mailto:${profile.email}`}><Mail size={20} /><span><small>Email</small>{profile.email}</span></a>
+            <a href={profile.resume} target="_blank" rel="noreferrer"><Download size={20} /><span><small>Resume</small>Open PDF</span></a>
+          </div>
         </div>
       </section>
     </motion.main>

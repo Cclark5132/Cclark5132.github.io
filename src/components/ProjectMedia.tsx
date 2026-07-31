@@ -1,4 +1,4 @@
-import { Box, FileText, Image, Play, ScanLine } from "lucide-react";
+import { Box, FileText, Image, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { MediaItem } from "../data/portfolio";
 
@@ -21,15 +21,11 @@ function MediaFallback({ media }: { media: MediaItem }) {
   const Icon = icons[media.type];
   return (
     <div className="media-fallback" role="img" aria-label={media.alt}>
-      <div className="media-orbit" aria-hidden="true"><span /><span /></div>
-      <div className="relative z-10 flex max-w-sm flex-col items-center text-center">
-        <span className="mb-4 grid size-11 place-items-center rounded-full border border-cyan/35 bg-cyan/10 text-cyan">
-          <Icon aria-hidden="true" size={19} />
-        </span>
-        <p className="text-sm font-semibold text-white">{media.label}</p>
-        <p className="mt-2 text-xs leading-5 text-white/55">{media.caption ?? "Project media"}</p>
+      <div>
+        <Icon aria-hidden="true" size={21} />
+        <p>{media.label}</p>
+        <span>{media.caption ?? "Project media pending"}</span>
       </div>
-      <ScanLine className="absolute bottom-4 right-4 text-cyan/35" size={18} aria-hidden="true" />
     </div>
   );
 }
