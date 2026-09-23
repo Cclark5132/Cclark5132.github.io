@@ -1,61 +1,28 @@
-# Project Photo Upload Guide
+# Project Photos
 
-This is the only folder used for portfolio project images.
+Every image the portfolio displays lives in this folder and is referenced by filename from `src/data/portfolio.ts`.
 
-## Uploading photos
+## Adding or replacing a photo
 
-1. Export each image as a standard **JPG** file.
-2. Rename it to one of the exact filenames below.
-3. Copy it into this folder: `public/project-photos`.
-4. Commit and push the file to `main`.
+1. Keep the full-quality original in [`source-photos/`](../../source-photos). That folder is not published.
+2. Export a **WebP** copy about **1600–2400 px wide** (use the larger size for drawings or posters with small text). Quality 82–88 keeps photos and diagrams sharp at roughly 100–500 KB.
+3. Save it in this folder and point the matching `src` in `src/data/portfolio.ts` at it.
+4. Write meaningful `alt` text and a caption for the image in the same place.
+5. Run `pnpm build`, then commit and push to `main`.
 
-The website is already connected to these filenames. No code changes are needed.
+Keep each published image under about 600 KB. The homepage loads only the cover images, and project pages load the gallery lazily.
 
-On Windows, turn on **View → Show → File name extensions** in File Explorer. Confirm the file ends in `.jpg`, not `.jpg.jpg`. Do not change a PNG or HEIC extension by typing `.jpg`; export or save the image as JPG.
+## Current files
 
-## Pulse Jet Design Team
+| Project | Files |
+| --- | --- |
+| Pulse Jet Design Team | `pulse-jet-assembly-render.webp` (cover), `pulse-jet-fabricated-engine.webp`, `pulse-jet-test-assembly.webp` (also the homepage hero) |
+| Culligan International | `culligan-float-system.webp` (cover), `culligan-bracket-fea.webp`, `culligan-training-suitcase.webp`, `culligan-commercial-drawings.webp` |
+| Automotive Restoration | `automotive-comanche-finished.webp` (cover), `automotive-garage-teardown.webp`, `automotive-engine-install.webp`, `automotive-cherokee-finished.webp`, `automotive-engine-bay-wiring.webp` |
+| Telescoping Accessibility Crutch | `crutch-accessibility-poster.webp`, `crutch-prototype.webp` |
 
-| Exact filename | Where it appears | Recommended image |
-| --- | --- | --- |
-| `pulse-jet-assembly-render.png` | Homepage, project card, and gallery image 1 | Complete SolidWorks assembly of the engine and test setup |
-| `pulse-jet-fabricated-engine.jpg` | Gallery image 2 | Fabricated steel engine during workshop assembly |
-| `pulse-jet-test-assembly.jpg` | Gallery image 3 | Completed engine mounted on the rolling test frame |
+Only publish Culligan images that Culligan has approved for public release, with confidential dimensions, part numbers, customer information, and internal documents removed.
 
-## Culligan International
+## Social sharing image
 
-Only upload images that Culligan has approved for public release. Remove confidential dimensions, part numbers, customer information, and internal documents.
-
-| Exact filename | Where it appears | Recommended image |
-| --- | --- | --- |
-| `culligan-float-system.png` | Homepage, project card, and gallery image 1 | Physical prototype and two engineering views on one slide |
-| `culligan-bracket-fea.png` | Gallery image 2 | Approved mounting-bracket FEA summary |
-| `culligan-training-suitcase.jpeg` | Gallery image 3 | Approved field-training suitcase prototype |
-| `culligan-commercial-drawings.png` | Gallery image 4 | Both approved drawing sheets stacked vertically |
-
-## Automotive Restoration
-
-| Exact filename | Where it appears | Recommended image |
-| --- | --- | --- |
-| `automotive-cherokee-finished.webp` | Homepage, project card, and gallery image 1 | Finished 2001 Jeep Cherokee |
-| `automotive-comanche-finished.webp` | Gallery image 2 | Charles with the finished 1987 Jeep Comanche |
-| `automotive-garage-teardown.webp` | Gallery image 3 | Engine, transmission, axle, and suspension teardown |
-| `automotive-engine-install.webp` | Gallery image 4 | Engine rebuild and swap installation |
-| `automotive-engine-bay-wiring.webp` | Gallery image 5 | Engine-bay assembly and wiring-harness work |
-
-## Telescoping Accessibility Crutch
-
-| Exact filename | Where it appears | Recommended image |
-| --- | --- | --- |
-| `crutch-cover.jpg` | Homepage, project card, and first gallery image | Best overall prototype photograph |
-| `crutch-cad.jpg` | Gallery image 2 | Clear SolidWorks assembly or CAD view |
-| `crutch-mechanism.jpg` | Gallery image 3 | Close-up of the telescoping mechanism |
-| `crutch-iterations.jpg` | Gallery image 4 | Multiple prototype iterations side by side |
-
-## Image quality
-
-- Use landscape images whenever possible.
-- Aim for at least **1800 pixels wide**.
-- Use clear, well-lit images without heavy filters.
-- Crop cover images close to a **16:10** ratio.
-- Keep each JPG below approximately **2 MB** for fast loading.
-- Remove visible personal, confidential, or proprietary information before uploading.
+`public/social-preview.png` (1200 px wide, under 200 KB) is the link-preview image for every page. Keep it small: some platforms skip preview images over roughly 1 MB.

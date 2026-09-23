@@ -71,7 +71,7 @@ export const profile = {
   github: "https://github.com/Cclark5132",
   heroMedia: {
     type: "image" as const,
-    src: "/project-photos/pulse-jet-test-assembly.jpg",
+    src: "/project-photos/pulse-jet-test-assembly.webp",
     label: "Completed Pulse Jet Test Assembly",
     alt: "Fabricated steel pulse-jet engine mounted on a rolling test frame and connected to a propane cylinder",
     caption: "Fabricated engine and rolling test frame",
@@ -117,7 +117,7 @@ export const projects: Project[] = [
     skills: ["SolidWorks", "Propulsion", "Test engineering", "Instrumentation", "Fabrication", "Team leadership"],
     coverImage: {
       type: "image",
-      src: "/project-photos/pulse-jet-assembly-render.png",
+      src: "/project-photos/pulse-jet-assembly-render.webp",
       label: "Pulse Jet Test Assembly",
       alt: "SolidWorks assembly rendering of the pulse jet engine, propane cylinder, fuel line, and wheeled support frame",
       caption: "Complete SolidWorks assembly of the pulse jet engine and test setup",
@@ -126,7 +126,7 @@ export const projects: Project[] = [
     gallery: [
       {
         type: "image",
-        src: "/project-photos/pulse-jet-fabricated-engine.jpg",
+        src: "/project-photos/pulse-jet-fabricated-engine.webp",
         label: "Fabricated Pulse-Jet Engine",
         alt: "Fabricated steel pulse-jet engine standing on an outdoor workshop table with fabrication tools nearby",
         caption: "Fabricated steel engine during workshop assembly and finishing.",
@@ -135,7 +135,7 @@ export const projects: Project[] = [
       },
       {
         type: "image",
-        src: "/project-photos/pulse-jet-test-assembly.jpg",
+        src: "/project-photos/pulse-jet-test-assembly.webp",
         label: "Completed Test Assembly",
         alt: "Completed steel pulse-jet engine mounted horizontally on a rolling test frame and connected to a propane cylinder",
         caption: "Completed propane-fueled engine mounted on the rolling test frame.",
@@ -210,7 +210,7 @@ export const projects: Project[] = [
     skills: ["SolidWorks", "Injection-molded part design", "Prototype development", "Engineering drawings (GD&T)", "FEA"],
     coverImage: {
       type: "image",
-      src: "/project-photos/culligan-float-system.png",
+      src: "/project-photos/culligan-float-system.webp",
       label: "Residential Float System",
       alt: "Three side-by-side views of the residential float system: physical prototype, SolidWorks model, and design comparison",
       caption: "Physical prototype, SolidWorks model, and design-comparison view of the injection-molded residential float system.",
@@ -221,7 +221,7 @@ export const projects: Project[] = [
     gallery: [
       {
         type: "image",
-        src: "/project-photos/culligan-bracket-fea.png",
+        src: "/project-photos/culligan-bracket-fea.webp",
         label: "Acrylic Mounting-Bracket FEA",
         alt: "Static structural FEA results for the acrylic mounting bracket, including loading, stress distribution, factor of safety, and conclusions",
         caption: "Static structural analysis predicted 2,217 psi maximum von Mises stress and a 2.94 factor of safety.",
@@ -231,7 +231,7 @@ export const projects: Project[] = [
       },
       {
         type: "image",
-        src: "/project-photos/culligan-training-suitcase.jpeg",
+        src: "/project-photos/culligan-training-suitcase.webp",
         label: "Field-Training Suitcase Prototype",
         alt: "Open portable field-training suitcase prototype with machined aluminum mounting panels installed",
         caption: "Machined aluminum mounting panels installed in the portable field-training suitcase prototype.",
@@ -241,7 +241,7 @@ export const projects: Project[] = [
       },
       {
         type: "image",
-        src: "/project-photos/culligan-commercial-drawings.png",
+        src: "/project-photos/culligan-commercial-drawings.webp",
         label: "Commercial Drawing Package",
         alt: "Both sheets of the commercial water-softener general-arrangement drawing package stacked vertically",
         caption: "Two-sheet general-arrangement drawing package stacked vertically for full-width review.",
@@ -375,7 +375,7 @@ export const projects: Project[] = [
     gallery: [
       {
         type: "image",
-        src: "/project-photos/crutch-accessibility-poster.png",
+        src: "/project-photos/crutch-accessibility-poster.webp",
         label: "Accessibility on Campus Project Poster",
         alt: "Complete Accessibility on Campus presentation poster showing design performance, stakeholders, research, solution overview, limitations, and recommendations",
         caption: "Final project poster documenting the research, design decisions, performance, and recommendations",
@@ -384,7 +384,7 @@ export const projects: Project[] = [
       },
       {
         type: "image",
-        src: "/project-photos/crutch-prototype.png",
+        src: "/project-photos/crutch-prototype.webp",
         label: "Working Telescoping Crutch Prototype",
         alt: "Physical telescoping crutch prototype with PVC frame, wiring, sensors, and a green status light",
         caption: "Physical prototype with the locking indicator illuminated",

@@ -17,13 +17,13 @@ Project facts, metrics, skills, captions, and media references are maintained in
 
 ## Adding project photography
 
-All website photography belongs in [`public/project-photos`](public/project-photos).
+All website photography belongs in [`public/project-photos`](public/project-photos) as compressed WebP files. Full-quality originals are kept in [`source-photos/`](source-photos), which is not published.
 
-The folder contains a complete filename checklist and image guidance:
+The folder README lists the current files and the export guidance:
 
 [`public/project-photos/README.md`](public/project-photos/README.md)
 
-Once an image has the exact listed filename and is placed in that folder, the website will display it automatically.
+After adding an image, point the matching entry in `src/data/portfolio.ts` at its filename.
 
 ## Resume
 
