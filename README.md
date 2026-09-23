@@ -64,7 +64,9 @@ pnpm build
 
 The `main` branch is published automatically through GitHub Actions. The production build is hosted with GitHub Pages and served from the custom domain `charlesclark.me`.
 
-Direct project URLs are handled by the GitHub Pages single-page application fallback in [`public/404.html`](public/404.html).
+Each case study is prerendered at build time to `dist/projects/<slug>.html` by [`scripts/prerender-projects.ts`](scripts/prerender-projects.ts), so direct project URLs return a real page with the correct title, description, and canonical tags. GitHub Pages serves it at the clean `/projects/<slug>` URL. Any other unknown path falls back to the single-page application redirect in [`public/404.html`](public/404.html).
+
+New projects are picked up automatically from `src/data/portfolio.ts`; add the URL to `public/sitemap.xml` as well.
 
 ## Repository structure
 
