@@ -1,4 +1,5 @@
-import { Box, FileText, Image, Play } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
+import { Box, FileText, Image, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { MediaItem } from "../data/portfolio";
 
@@ -6,6 +7,8 @@ interface ProjectMediaProps {
   media: MediaItem;
   className?: string;
   eager?: boolean;
+  /** Shows a pause/play button on looping videos. Omit inside links, where a nested button is invalid. */
+  motionControl?: boolean;
 }
 
 const icons = {
@@ -30,15 +33,23 @@ function MediaFallback({ media }: { media: MediaItem }) {
   );
 }
 
-export function ProjectMedia({ media, className = "", eager = false }: ProjectMediaProps) {
+export function ProjectMedia({ media, className = "", eager = false, motionControl = false }: ProjectMediaProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const reduceMotion = useReducedMotion();
+  const [userPaused, setUserPaused] = useState<boolean | null>(null);
+  const paused = userPaused ?? Boolean(reduceMotion);
   const aspect = media.aspect ?? "landscape";
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video || media.type !== "video" || media.playback !== "loop") return;
+
+    if (paused) {
+      video.pause();
+      return;
+    }
 
     const playVideo = () => {
       void video.play().catch(() => undefined);
@@ -59,7 +70,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [media.playback, media.src, media.type]);
+  }, [media.playback, media.src, media.type, paused]);
 
   if (media.type === "pdf") {
     return (
@@ -98,7 +109,7 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
               objectFit: media.fit ?? "cover",
               objectPosition: media.objectPosition ?? "50% 50%",
             }}
-            autoPlay={isLoopingCover}
+            autoPlay={isLoopingCover && !paused}
             controls={!isLoopingCover}
             disablePictureInPicture={isLoopingCover}
             disableRemotePlayback={isLoopingCover}
@@ -110,19 +121,29 @@ export function ProjectMedia({ media, className = "", eager = false }: ProjectMe
             poster={media.poster}
             onCanPlay={(event) => {
               setLoaded(true);
-              if (isLoopingCover) void event.currentTarget.play().catch(() => undefined);
+              if (isLoopingCover && !paused) void event.currentTarget.play().catch(() => undefined);
             }}
             onError={() => setFailed(true)}
             aria-label={media.alt}
           >
             <source src={media.src} />
-            Your browser does not support embedded video. Add a transcript link in the project data.
+            Your browser does not support embedded video. <a href={media.src}>Download the video</a>.
           </video>
         )}
         {loaded && isLoopingCover && media.caption && media.captionPlacement !== "below" && (
           <figcaption className="absolute inset-x-3 bottom-3 rounded-md bg-ink/80 px-3 py-2 text-xs text-white/75 backdrop-blur">
             {media.caption}
           </figcaption>
+        )}
+        {isLoopingCover && motionControl && (
+          <button
+            className="media-motion-toggle"
+            type="button"
+            onClick={() => setUserPaused(!paused)}
+            aria-label={paused ? "Play animation" : "Pause animation"}
+          >
+            {paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}
+          </button>
         )}
       </figure>
     );

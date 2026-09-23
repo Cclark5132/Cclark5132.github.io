@@ -113,7 +113,7 @@ export function CaseStudyGallery({ media, title }: CaseStudyGalleryProps) {
           >
             {slides.map((item, index) => (
               <div className="case-study-slide" key={`${item.src}-${index}`}>
-                <ProjectMedia media={item} eager={index === 0} className="case-study-gallery-media" />
+                <ProjectMedia media={item} eager={index === 0} motionControl className="case-study-gallery-media" />
                 {item.caption && item.captionPlacement === "below" && (
                   <div className="case-study-slide-caption">
                     <strong>{item.label}</strong>
@@ -190,6 +190,7 @@ export function CaseStudyGallery({ media, title }: CaseStudyGalleryProps) {
               key={`${lightboxMedia.src}-${lightboxIndex}`}
               media={lightboxMedia}
               eager
+              motionControl
               className="case-study-lightbox-media"
             />
             {slides.length > 1 && (

@@ -124,19 +124,6 @@ a {
   background-color: #3a3e41;
 }
 
-.availability-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 0.65rem 0.9rem;
-  font-size: 0.75rem;
-  font-weight: 650;
-  color: rgba(255, 255, 255, 0.82);
-}
-
 .pulse-dot {
   width: 0.5rem;
   height: 0.5rem;
@@ -1905,23 +1892,6 @@ body {
   line-height: 1.65;
 }
 
-.availability-badge {
-  display: block;
-  max-width: 38rem;
-  margin-top: 1.4rem;
-  border: 0;
-  border-left: 4px solid var(--orange);
-  border-radius: 0;
-  background: transparent;
-  padding: 0.25rem 0 0.25rem 0.9rem;
-  color: var(--graphite);
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -2541,6 +2511,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 2.5rem;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.75rem;
   text-decoration: none;
@@ -2944,12 +2915,44 @@ html {
 }
 
 .availability-badge {
+  display: block;
   max-width: 44rem;
   margin-top: 2rem;
-  border-left-width: 6px;
+  border: 0;
+  border-left: 6px solid var(--orange);
+  border-radius: 0;
   background: var(--paper-light);
   padding: 0.85rem 1rem;
+  color: var(--graphite);
+  font-family: Consolas, "Courier New", monospace;
   font-size: clamp(0.84rem, 1.5vw, 1rem);
+  font-weight: 700;
   letter-spacing: 0.055em;
   line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* Pause/play control for looping case-study video */
+.media-motion-toggle {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 4;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(32, 36, 33, 0.85);
+  color: #fff;
+  cursor: pointer;
+}
+
+.media-motion-toggle:hover {
+  background: rgba(32, 36, 33, 1);
+}
+
+.media-motion-toggle:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
 }

@@ -53,8 +53,6 @@ export interface Project {
   skills: string[];
   coverImage: MediaItem;
   gallery: MediaItem[];
-  videos: MediaItem[];
-  documents: MediaItem[];
   confidential?: boolean;
   featured: boolean;
   caseStudy: CaseStudyContent;
@@ -142,13 +140,6 @@ export const projects: Project[] = [
         aspect: "landscape",
         fit: "contain",
       },
-    ],
-    videos: [
-      { type: "video", src: "/project-videos/pulse-jet-test-fire.mp4", poster: "/project-photos/pulse-jet-cover.jpg", label: "Pulse Jet Test Fire", alt: "Pulse jet engine test-fire footage", caption: "Controlled test fire of the steel propane-fueled engine", aspect: "cinematic" },
-      { type: "video", src: "/project-videos/pulse-jet-thrust-test.mp4", label: "Static Thrust Test", alt: "Pulse jet static-thrust test footage", aspect: "cinematic" },
-    ],
-    documents: [
-      { type: "pdf", src: "/project-documents/pulse-jet-test-summary.pdf", label: "Pulse Jet Test Summary", alt: "Pulse jet engine test summary PDF" },
     ],
     featured: true,
     caseStudy: {
@@ -250,8 +241,6 @@ export const projects: Project[] = [
         fit: "contain",
       },
     ],
-    videos: [],
-    documents: [],
     confidential: true,
     featured: true,
     caseStudy: {
@@ -314,8 +303,6 @@ export const projects: Project[] = [
       { type: "image", src: "/project-photos/automotive-cherokee-finished.webp", label: "Restored 2001 Jeep Cherokee", alt: "Restored red 2001 Jeep Cherokee photographed in a driveway", caption: "2001 Jeep Cherokee returned to working condition", aspect: "landscape" },
       { type: "image", src: "/project-photos/automotive-engine-bay-wiring.webp", label: "Engine Bay and Wiring Harness", alt: "Jeep engine bay showing the engine, hoses, and wiring-harness work", caption: "Engine-bay assembly and new wiring-harness work", aspect: "landscape" },
     ],
-    videos: [{ type: "video", src: "/project-videos/automotive-walkaround.mp4", label: "Restored Vehicle Walk-Around", alt: "Walk-around video of the restored Jeep vehicles", aspect: "cinematic" }],
-    documents: [],
     featured: true,
     caseStudy: {
       format: "sections",
@@ -392,8 +379,6 @@ export const projects: Project[] = [
         fit: "contain",
       },
     ],
-    videos: [{ type: "video", src: "/project-videos/crutch-demonstration.mp4", label: "Crutch Demonstration", alt: "Demonstration of the telescoping accessibility crutch", aspect: "cinematic" }],
-    documents: [],
     featured: true,
     caseStudy: { format: "star" },
   },
