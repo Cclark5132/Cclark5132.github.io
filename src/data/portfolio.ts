@@ -65,7 +65,7 @@ export const profile = {
   title: "Third-Year Mechanical Engineering Student",
   email: "charlesclark@vt.edu",
   location: "Chicago, Illinois",
-  availability: "Seeking Spring 2027 Co-op + Summer 2027 Internship",
+  availability: "Incoming at SpaceX Spring 2027 + Seeking Summer 2027 Internship",
   resume: "/Charles-Clark-Resume.pdf",
   linkedIn: "https://linkedin.com/in/charlesclarkvt",
   github: "https://github.com/Cclark5132",

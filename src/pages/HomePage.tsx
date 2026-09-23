@@ -28,7 +28,7 @@ export function HomePage() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const description = "Third-year Virginia Tech mechanical engineering student seeking a Spring 2027 co-op and a Summer 2027 internship, with experience in SolidWorks, FEA, product development, fabrication, and testing.";
+    const description = "Third-year Virginia Tech mechanical engineering student incoming at SpaceX in Spring 2027 and seeking a Summer 2027 internship, with experience in SolidWorks, FEA, product development, fabrication, and testing.";
     document.title = `${profile.name} | ${profile.title}`;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", "https://charlesclark.me/");
@@ -219,7 +219,7 @@ export function HomePage() {
           <div>
             <p className="technical-label">04 / Contact</p>
             <h2>Get in touch</h2>
-            <p>Seeking a Spring 2027 co-op and Summer 2027 internship. Based in Chicago and open to relocation.</p>
+            <p>Incoming at SpaceX in Spring 2027 and seeking a Summer 2027 internship. Based in Chicago and open to relocation.</p>
           </div>
           <div className="contact-links">
             <a href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={20} /><span><small>LinkedIn</small>charlesclarkvt</span></a>
