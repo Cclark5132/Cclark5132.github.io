@@ -1,20 +1,23 @@
-import type { Plugin } from "vite";
+import react from "@vitejs/plugin-react";
+import { createServer, type Plugin } from "vite";
 import { projects } from "../src/data/portfolio";
 
 const SITE_URL = "https://charlesclark.me";
+const EMPTY_ROOT = '<div id="root"></div>';
 
 const escapeAttribute = (value: string) =>
   value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 const escapeText = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
-/** Replaces one head tag and fails the build if the tag is missing, so the metadata cannot silently go stale. */
-function replaceTag(html: string, pattern: RegExp, replacement: string) {
-  if (!pattern.test(html)) throw new Error(`prerender-projects: could not find ${pattern}`);
+/** Replaces one tag and fails the build if it is missing, so prerendered output cannot silently go stale. */
+function replaceTag(html: string, pattern: RegExp | string, replacement: string) {
+  const found = typeof pattern === "string" ? html.includes(pattern) : pattern.test(html);
+  if (!found) throw new Error(`prerender-projects: could not find ${pattern}`);
   return html.replace(pattern, () => replacement);
 }
 
-function renderProjectPage(template: string, project: (typeof projects)[number]) {
+function renderProjectHead(template: string, project: (typeof projects)[number]) {
   const title = `${project.title} | Charles T. Clark`;
   const url = `${SITE_URL}/projects/${project.slug}`;
   const description = escapeAttribute(project.summary);
@@ -32,23 +35,52 @@ function renderProjectPage(template: string, project: (typeof projects)[number])
   return html;
 }
 
+/** Loads the app through Vite's SSR loader so the real components render to HTML without a second build. */
+async function createRenderer() {
+  const server = await createServer({
+    configFile: false,
+    plugins: [react()],
+    appType: "custom",
+    logLevel: "error",
+    server: { middlewareMode: true, hmr: false, watch: null },
+    optimizeDeps: { noDiscovery: true, include: [] },
+  });
+  const { render } = (await server.ssrLoadModule("/src/entry-server.tsx")) as { render: (url: string) => string };
+  return { render, close: () => server.close() };
+}
+
 /**
- * GitHub Pages answers unknown paths with a 404, so direct project URLs would otherwise rely on the
- * 404.html redirect. This emits `projects/<slug>.html` per case study with the correct title, description,
- * and canonical tags. GitHub Pages serves each file at the clean `/projects/<slug>` URL with a 200.
+ * Prerenders the homepage and every case study at build time.
+ *
+ * Each page ships with its real content in `#root` (so crawlers, link-preview bots, and readers without
+ * JavaScript see the portfolio, not an empty shell) and, for case studies, its own title, description, and
+ * canonical tags. React's server renderer also emits a high-priority preload for each page's first image.
+ * The client still mounts with `createRoot`, which replaces the prerendered markup.
+ *
+ * GitHub Pages answers unknown paths with a 404, so case studies are emitted as `projects/<slug>.html`,
+ * which it serves at the clean `/projects/<slug>` URL with a 200.
  */
 export function prerenderProjects(): Plugin {
   return {
     name: "prerender-projects",
     apply: "build",
     enforce: "post",
-    generateBundle(_options, bundle) {
+    async generateBundle(_options, bundle) {
       const index = bundle["index.html"];
       if (!index || index.type !== "asset") throw new Error("prerender-projects: index.html was not generated before this plugin ran");
       const template = String(index.source);
+      if (!template.includes(EMPTY_ROOT)) throw new Error("prerender-projects: expected an empty #root in index.html");
 
-      for (const project of projects) {
-        this.emitFile({ type: "asset", fileName: `projects/${project.slug}.html`, source: renderProjectPage(template, project) });
+      const renderer = await createRenderer();
+      try {
+        index.source = replaceTag(template, EMPTY_ROOT, `<div id="root">${renderer.render("/")}</div>`);
+
+        for (const project of projects) {
+          const page = replaceTag(renderProjectHead(template, project), EMPTY_ROOT, `<div id="root">${renderer.render(`/projects/${project.slug}`)}</div>`);
+          this.emitFile({ type: "asset", fileName: `projects/${project.slug}.html`, source: page });
+        }
+      } finally {
+        await renderer.close();
       }
     },
   };
