@@ -69,7 +69,7 @@ export const profile = {
   github: "https://github.com/Cclark5132",
   heroMedia: {
     type: "image" as const,
-    src: "/project-photos/pulse-jet-test-assembly.webp",
+    src: "/project-photos/pulse-jet-test-assembly-hero.webp",
     label: "Completed Pulse Jet Test Assembly",
     alt: "Fabricated steel pulse-jet engine mounted on a rolling test frame and connected to a propane cylinder",
     caption: "Fabricated engine and rolling test frame",

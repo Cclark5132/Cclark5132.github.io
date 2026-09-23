@@ -16,7 +16,7 @@ Keep each published image under about 600 KB. The homepage loads only the cover 
 
 | Project | Files |
 | --- | --- |
-| Pulse Jet Design Team | `pulse-jet-assembly-render.webp` (cover), `pulse-jet-fabricated-engine.webp`, `pulse-jet-test-assembly.webp` (also the homepage hero) |
+| Pulse Jet Design Team | `pulse-jet-assembly-render.webp` (cover), `pulse-jet-fabricated-engine.webp`, `pulse-jet-test-assembly.webp`; `pulse-jet-test-assembly-hero.webp` is a smaller 1200 px copy used for the homepage hero |
 | Culligan International | `culligan-float-system.webp` (cover), `culligan-bracket-fea.webp`, `culligan-training-suitcase.webp`, `culligan-commercial-drawings.webp` |
 | Automotive Restoration | `automotive-comanche-finished.webp` (cover), `automotive-garage-teardown.webp`, `automotive-engine-install.webp`, `automotive-cherokee-finished.webp`, `automotive-engine-bay-wiring.webp` |
 | Telescoping Accessibility Crutch | `crutch-accessibility-poster.webp`, `crutch-prototype.webp` |
