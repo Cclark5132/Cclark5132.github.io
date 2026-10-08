@@ -2,6 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Footer } from "./components/Footer";
 import { Navigation } from "./components/Navigation";
+import { RouteAnalytics } from "./components/RouteAnalytics";
 import { HomePage } from "./pages/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { ProjectPage } from "./pages/ProjectPage";
@@ -11,6 +12,7 @@ function App() {
 
   return (
     <div className="site-shell min-h-screen selection:bg-orange/25">
+      <RouteAnalytics />
       <Navigation />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
