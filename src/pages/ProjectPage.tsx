@@ -1,9 +1,10 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Figures } from "../components/Figures";
 import { projectNumber } from "../components/ProjectSheet";
 import { Readout } from "../components/Readout";
+import { SectionHead } from "../components/SectionHead";
 import { VideoSlot } from "../components/VideoSlot";
 import { projectMeta } from "../data/meta";
 import { projects } from "../data/portfolio";
@@ -38,21 +39,25 @@ export function ProjectPage() {
   return (
     <main id="main-content" tabIndex={-1} className="project-page">
       <div className="wrap">
-        <nav className="crumbs" aria-label="Breadcrumb">
-          <Link to="/#projects">
+        <nav className="crumbs intro" aria-label="Breadcrumb">
+          <Link className="r-fade" to="/#projects">
             <ArrowLeft size={15} aria-hidden="true" /> All projects
           </Link>
         </nav>
 
-        <header className="project-head">
-          <p className="project-index">
+        {/* The title block draws itself on page load (CSS only), like the home page hero. */}
+        <header className="project-head intro">
+          <span className="project-head-rule r-draw" aria-hidden="true" />
+          <p className="project-index r-fade">
             Project {projectNumber(index)} <span aria-hidden="true">/</span>
             <span className="sr-only"> of </span> {String(total).padStart(2, "0")}
           </p>
-          <h1 tabIndex={-1}>{project.title}</h1>
-          <p className="project-summary">{project.summary}</p>
+          <h1 className="r-rise" tabIndex={-1}>
+            <span className="rise-inner">{project.title}</span>
+          </h1>
+          <p className="project-summary r-fade">{project.summary}</p>
           {project.confidentialNote && (
-            <p className="confidential">
+            <p className="confidential r-wipe">
               <strong>Confidential</strong>
               {project.confidentialNote}
             </p>
@@ -60,11 +65,11 @@ export function ProjectPage() {
         </header>
 
         <div className="project-layout">
-          <aside className="spec-rail" aria-label="Project details">
+          <aside className="spec-rail intro" aria-label="Project details">
             <div className="spec-rail-inner">
               <dl className="spec-list spec-list-rail">
-                {details.map((detail) => (
-                  <div key={detail.label}>
+                {details.map((detail, detailIndex) => (
+                  <div className="r-fade" style={{ "--i": detailIndex } as CSSProperties} key={detail.label}>
                     <dt>{detail.label}</dt>
                     <dd>{detail.value}</dd>
                   </div>
@@ -79,20 +84,25 @@ export function ProjectPage() {
 
             <div className="writeup">
               {project.sections.map((section, sectionIndex) => (
-                <section key={section.heading} aria-labelledby={`${project.slug}-s${sectionIndex}`} data-reveal>
-                  <h2 id={`${project.slug}-s${sectionIndex}`}>
+                <section key={section.heading} aria-labelledby={`${project.slug}-s${sectionIndex}`} data-reveal="section">
+                  <span className="writeup-rule r-draw" aria-hidden="true" />
+                  <h2 className="r-fade" id={`${project.slug}-s${sectionIndex}`}>
                     <span className="writeup-number" aria-hidden="true">
                       {sectionIndex + 1}.
                     </span>
                     {section.heading}
                   </h2>
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
+                  {section.paragraphs.map((paragraph, paragraphIndex) => (
+                    <p className="r-fade" style={{ "--i": paragraphIndex } as CSSProperties} key={paragraph}>
+                      {paragraph}
+                    </p>
                   ))}
                   {section.list && (
                     <ul className="dash-list writeup-list">
-                      {section.list.map((item) => (
-                        <li key={item}>{item}</li>
+                      {section.list.map((item, itemIndex) => (
+                        <li className="r-pop" style={{ "--i": itemIndex } as CSSProperties} key={item}>
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   )}
@@ -102,16 +112,14 @@ export function ProjectPage() {
             </div>
 
             <section className="figures" aria-labelledby="figures-title">
-              <h2 id="figures-title" className="figures-title">
-                Figures
-              </h2>
+              <SectionHead number="" title="Figures" id="figures-title" className="figures-head" />
               <Figures figures={project.figures} start={firstFigure} />
             </section>
           </div>
         </div>
 
-        <nav className="pager" aria-label="Other projects">
-          <Link className="pager-link" to={`/projects/${previous.slug}`}>
+        <nav className="pager" aria-label="Other projects" data-reveal="rows">
+          <Link className="pager-link r-pop" style={{ "--i": 0 } as CSSProperties} to={`/projects/${previous.slug}`}>
             <span className="pager-dir">
               <ArrowLeft size={15} aria-hidden="true" /> Previous
             </span>
@@ -119,7 +127,7 @@ export function ProjectPage() {
               <span className="pager-number">{projectNumber(projects.indexOf(previous))}</span> {previous.title}
             </span>
           </Link>
-          <Link className="pager-link pager-next" to={`/projects/${next.slug}`}>
+          <Link className="pager-link pager-next r-pop" style={{ "--i": 1 } as CSSProperties} to={`/projects/${next.slug}`}>
             <span className="pager-dir">
               Next <ArrowRight size={15} aria-hidden="true" />
             </span>

@@ -15,14 +15,15 @@ export const projectNumber = (index: number) => String(index + 1).padStart(2, "0
 
 /**
  * One project on the home page, styled as a drawing sheet. On large screens the sheets pin and stack while
- * the list scrolls, so each sheet's title strip stays visible as an index of the set.
+ * the list scrolls, so each sheet's title strip stays visible as an index of the set. On scroll-in the strip
+ * wipes across, the image is plotted behind a scan line, and the key numbers pop in and count up.
  */
 export function ProjectSheet({ project, index, total }: ProjectSheetProps) {
   const number = projectNumber(index);
 
   return (
-    <article className="sheet" style={{ "--i": index } as CSSProperties} aria-labelledby={`sheet-${project.slug}`}>
-      <header className="sheet-strip">
+    <article className="sheet" style={{ "--stack": index } as CSSProperties} aria-labelledby={`sheet-${project.slug}`} data-reveal="sheet">
+      <header className="sheet-strip r-wipe">
         <span className="sheet-number">
           <span className="sr-only">Project </span>
           {number}
@@ -39,16 +40,16 @@ export function ProjectSheet({ project, index, total }: ProjectSheetProps) {
         </span>
       </header>
       <div className="sheet-body">
-        <div className="sheet-media">
+        <div className="sheet-media r-plot">
           <Media media={project.cover} sizes="(min-width: 1100px) 640px, 100vw" />
         </div>
         <div className="sheet-info">
-          <p className="sheet-role">
+          <p className="sheet-role r-fade">
             {project.role} <span aria-hidden="true">·</span> {project.dates}
           </p>
-          <p className="sheet-summary">{project.summary}</p>
+          <p className="sheet-summary r-fade">{project.summary}</p>
           <Readout metrics={project.metrics} layout="grid" className="sheet-readout" />
-          <span className="sheet-cta" aria-hidden="true">
+          <span className="sheet-cta r-fade" aria-hidden="true">
             Open project <ArrowRight size={16} />
           </span>
         </div>

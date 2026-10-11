@@ -13,12 +13,12 @@ interface VideoSlotProps {
  */
 export function VideoSlot({ label, media, figureNumber }: VideoSlotProps) {
   return (
-    <section className="video-slot" aria-labelledby="video-slot-title">
-      <div className="video-slot-bar">
+    <section className="video-slot intro" aria-labelledby="video-slot-title">
+      <div className="video-slot-bar r-wipe">
         <h2 id="video-slot-title">{label}</h2>
         <span>{media ? `Fig. ${figureNumber}` : "Pending"}</span>
       </div>
-      <div className="video-slot-frame">
+      <div className="video-slot-frame r-plot">
         {media ? (
           <Media media={media} fit="contain" />
         ) : (
@@ -32,7 +32,7 @@ export function VideoSlot({ label, media, figureNumber }: VideoSlotProps) {
           </div>
         )}
       </div>
-      {media?.caption && <p className="video-slot-caption">{media.caption}</p>}
+      {media?.caption && <p className="video-slot-caption r-fade">{media.caption}</p>}
     </section>
   );
 }

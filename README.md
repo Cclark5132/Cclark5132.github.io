@@ -58,15 +58,23 @@ YouTube and Vimeo players load only after the visitor presses play, so the page 
 
 ## Motion
 
+The page is drawn like a drawing sheet as it scrolls in: lines draw, headings rise, images are plotted behind a scan line, and small items pop in one after another.
+
 | Effect | Where | Behavior |
 | --- | --- | --- |
-| Stacking project sheets | Home, desktop screens at least 1100 px wide and 740 px tall | Each project sheet pins below the previous sheet's title strip, so the strips collect at the top as an index |
-| Count-up numbers | Project readouts | Numbers below the fold start at zero and count to their value when scrolled into view |
+| Hero and project title blocks | Top of each page, on load | Name or title rises from behind its edge, the empty title block fills in cell by cell, the photo is uncovered behind an orange scan line, buttons pop in |
+| Drawn rules and rising headings | Every section heading, write-up section and contact row | The rule draws from left to right, then the heading rises from behind it |
+| Plotted images | Project cards, figures, video slot | A drafting grid appears, an orange scan line sweeps across and the image is revealed behind it |
+| Popping items | Key numbers, skills, credentials, list items | Items scale in one after another with a small overshoot |
+| Count-up numbers | Key numbers | Numbers start at zero and count to their value when scrolled into view |
+| Experience timeline | Experience list | A line draws down the list as it scrolls past the middle of the screen; each entry's marker turns orange when the line reaches it |
+| Stacking project cards | Home, desktop screens at least 1100 px wide and 740 px tall | Each card pins below the previous card's title strip, so the strips collect at the top as an index |
 | Sticky spec rail | Project pages, 1024 px and wider | Role, dates, location and key numbers stay beside the write-up while it scrolls |
 | Scroll progress bar | Header | Thin orange bar showing position on the page |
-| Fade-in | Blocks below the fold | Short opacity and position change on first view |
 
-All of it is off when the visitor's system asks for reduced motion: sheets and the rail scroll normally, numbers show their final value, the progress bar is hidden and the crutch animation does not autoplay. On phones and short screens the project sheets are a plain list. Number widths are reserved before counting starts and every image has its dimensions set, so nothing shifts while the page loads.
+How it works: an element with `data-reveal` is a trigger, and [`src/lib/reveal.ts`](src/lib/reveal.ts) marks it when it scrolls into view. Its children carry classes that say how they appear (`r-draw`, `r-rise`, `r-fade`, `r-pop`, `r-wipe`, `r-plot`). Containers with the class `intro` play the same animations on page load. Timing is set per component at the end of [`src/styles.css`](src/styles.css).
+
+All of it is off when the visitor's system asks for reduced motion: everything is shown in its final state, cards and the rail scroll normally, the timeline is drawn in full, the progress bar is hidden and the crutch and build-sequence clips do not autoplay. Nothing is hidden when JavaScript is off. On phones and short screens the project cards are a plain list. Animations use transforms, opacity and clip-path only, and every image has its size set, so nothing shifts while the page loads.
 
 ## Media
 

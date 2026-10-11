@@ -9,7 +9,7 @@ interface FiguresProps {
   start: number;
 }
 
-/** Numbered figures with captions. Images open full size in a native modal dialog. */
+/** Numbered figures with captions, plotted in as they scroll into view. Images open full size in a native modal dialog. */
 export function Figures({ figures, start }: FiguresProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -29,9 +29,9 @@ export function Figures({ figures, start }: FiguresProps) {
           const number = start + index;
           const portrait = (figure.height ?? 0) > (figure.width ?? 0);
           return (
-            <li key={figure.src} data-reveal>
+            <li key={figure.src} data-reveal="plot">
               <figure className={`figure ${portrait ? "figure-portrait" : ""}`}>
-                <div className="figure-frame">
+                <div className="figure-frame r-plot">
                   {figure.type === "image" ? (
                     <button
                       className="figure-zoom"
@@ -48,7 +48,7 @@ export function Figures({ figures, start }: FiguresProps) {
                     <Media media={figure} fit="contain" />
                   )}
                 </div>
-                <figcaption>
+                <figcaption className="r-fade">
                   <span className="figure-number">Fig. {number}</span>
                   <span>{figure.caption ?? figure.label}</span>
                 </figcaption>

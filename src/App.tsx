@@ -4,7 +4,8 @@ import { RouteAnalytics } from "./components/RouteAnalytics";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { legacySectionIds } from "./data/navigation";
-import { isInViewport, markMounted, motionAllowed } from "./lib/motion";
+import { markMounted } from "./lib/motion";
+import { useRevealOnScroll } from "./lib/reveal";
 import { HomePage } from "./pages/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { ProjectPage } from "./pages/ProjectPage";
@@ -43,35 +44,6 @@ function ScrollManager() {
   }, [pathname, hash, search, navigationType]);
 
   return null;
-}
-
-/**
- * Fades blocks in as they first scroll into view. Only blocks below the fold are hidden, and only after the
- * app has mounted, so prerendered content is never hidden from readers without JavaScript.
- */
-function useRevealOnScroll(pathname: string) {
-  useEffect(() => {
-    if (!motionAllowed() || !("IntersectionObserver" in window)) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          (entry.target as HTMLElement).dataset.revealState = "in";
-          observer.unobserve(entry.target);
-        }
-      },
-      { rootMargin: "0px 0px -6% 0px" },
-    );
-    for (const element of document.querySelectorAll<HTMLElement>('[data-reveal]:not([data-reveal-state="in"])')) {
-      if (isInViewport(element)) {
-        element.dataset.revealState = "in";
-      } else {
-        element.dataset.revealState = "pending";
-        observer.observe(element);
-      }
-    }
-    return () => observer.disconnect();
-  }, [pathname]);
 }
 
 function App() {

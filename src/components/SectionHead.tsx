@@ -3,16 +3,23 @@ interface SectionHeadProps {
   title: string;
   id: string;
   aside?: string;
+  className?: string;
 }
 
-export function SectionHead({ number, title, id, aside }: SectionHeadProps) {
+/** Numbered section heading. On scroll-in the rule draws across, then the title rises from behind it. */
+export function SectionHead({ number, title, id, aside, className = "" }: SectionHeadProps) {
   return (
-    <div className="section-head" data-reveal>
-      <span className="section-number" aria-hidden="true">
-        {number}
-      </span>
-      <h2 id={id}>{title}</h2>
-      {aside && <p className="section-aside">{aside}</p>}
+    <div className={`section-head ${className}`} data-reveal="head">
+      <span className="section-rule r-draw" aria-hidden="true" />
+      {number && (
+        <span className="section-number r-pop" aria-hidden="true">
+          {number}
+        </span>
+      )}
+      <h2 id={id} className="r-rise">
+        <span className="rise-inner">{title}</span>
+      </h2>
+      {aside && <p className="section-aside r-fade">{aside}</p>}
     </div>
   );
 }

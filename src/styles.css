@@ -462,7 +462,7 @@ a {
   text-transform: uppercase;
 }
 
-.hero-name span {
+.hero-name .rise-line {
   display: block;
 }
 
@@ -632,13 +632,31 @@ a {
 }
 
 .section-head {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: end;
   gap: 0 14px;
   margin-bottom: 28px;
-  padding-top: 14px;
-  border-top: 4px solid var(--color-maroon);
+  padding-top: 18px;
+}
+
+.section-rule {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: var(--color-maroon);
+  transform-origin: 0 50%;
+}
+
+.figures-head {
+  margin-bottom: 24px;
+}
+
+.figures-head h2 {
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
 }
 
 .section-number {
@@ -865,7 +883,7 @@ a {
 
   .sheet {
     position: sticky;
-    top: calc(var(--stack-top) + var(--i) * var(--strip-h));
+    top: calc(var(--stack-top) + var(--stack) * var(--strip-h));
     display: grid;
     grid-template-rows: var(--strip-h) minmax(0, 1fr);
     height: var(--sheet-h);
@@ -966,11 +984,58 @@ a {
   gap: 48px;
 }
 
+.experience-track {
+  position: relative;
+}
+
 .experience-item {
+  position: relative;
   display: grid;
   gap: 6px 32px;
-  padding: 22px 0 26px;
-  border-top: 1px solid var(--color-ink);
+  padding: 22px 0 26px 30px;
+}
+
+.experience-rule {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--color-ink);
+  transform-origin: 0 50%;
+}
+
+/* Vertical line through the entries. The script scales the fill with scroll; without it the line is full. */
+.experience-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  width: 2px;
+  background: var(--color-rule);
+}
+
+.experience-line-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-maroon);
+  transform-origin: 50% 0;
+}
+
+.experience-node {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-maroon);
+  background: var(--color-paper);
+}
+
+.experience-item[data-reached="true"] .experience-node {
+  border-color: var(--color-orange);
+  background: var(--color-orange);
 }
 
 .experience-item:last-child {
@@ -1108,6 +1173,15 @@ a {
 @media (min-width: 768px) {
   .experience-item {
     grid-template-columns: 11rem minmax(0, 1fr);
+    padding-left: 0;
+  }
+
+  .experience-line {
+    left: calc(11rem + 15px);
+  }
+
+  .experience-node {
+    left: calc(11rem + 10px);
   }
 
   .experience-when {
@@ -1133,11 +1207,17 @@ a {
 
 .skill-group h3 {
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--color-ink);
   color: var(--color-maroon);
   font: 500 0.8125rem/1.3 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.skill-rule {
+  display: block;
+  height: 2px;
+  background: var(--color-ink);
+  transform-origin: 0 50%;
 }
 
 .skill-group li {
@@ -1168,10 +1248,14 @@ a {
 }
 
 .contact-head {
+  position: relative;
   display: flex;
   gap: 14px;
-  padding-top: 14px;
-  border-top: 4px solid #fff;
+  padding-top: 18px;
+}
+
+.contact-head .section-rule {
+  background: #fff;
 }
 
 .contact .section-number {
@@ -1179,10 +1263,20 @@ a {
 }
 
 .contact-list > div {
+  position: relative;
   display: grid;
   gap: 2px;
   padding: 14px 0;
-  border-top: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.contact-rule {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 0.35);
+  transform-origin: 0 50%;
 }
 
 .contact-list > div:last-child {
@@ -1294,9 +1388,19 @@ a {
 }
 
 .project-head {
+  position: relative;
   margin-bottom: 32px;
   padding: 8px 0 32px;
-  border-bottom: 1px solid var(--color-ink);
+}
+
+.project-head-rule {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--color-ink);
+  transform-origin: 0 50%;
 }
 
 .project-head h1,
@@ -1412,6 +1516,7 @@ a {
 
 .video-slot-frame {
   position: relative;
+  overflow: hidden;
   aspect-ratio: 16 / 9;
   background: var(--color-ink);
 }
@@ -1477,12 +1582,18 @@ a {
   gap: 32px;
 }
 
+.writeup-rule {
+  display: block;
+  height: 1px;
+  margin-bottom: 14px;
+  background: var(--color-ink);
+  transform-origin: 0 50%;
+}
+
 .writeup h2 {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding-top: 14px;
-  border-top: 1px solid var(--color-ink);
   font-size: clamp(1.375rem, 2.4vw, 1.75rem);
   font-stretch: 90%;
   font-weight: 700;
@@ -1518,20 +1629,9 @@ a {
   margin-top: 64px;
 }
 
-.figures-title {
-  padding-top: 12px;
-  border-top: 4px solid var(--color-maroon);
-  font-size: clamp(1.875rem, 4vw, 2.75rem);
-  font-stretch: 72%;
-  font-weight: 800;
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-
 .figure-list {
   display: grid;
   gap: 40px;
-  margin-top: 24px;
 }
 
 .figure {
@@ -1540,6 +1640,7 @@ a {
 
 .figure-frame {
   position: relative;
+  overflow: hidden;
   border: 1px solid var(--color-ink);
   background: var(--color-paper-deep);
 }
@@ -1845,20 +1946,323 @@ a {
   margin-top: 28px;
 }
 
-/* ---------- Motion ---------- */
+/* ---------- Motion ----------
+ *
+ * The page is drawn like a drawing sheet as it scrolls in. An element with `data-reveal` is the trigger; the
+ * script in src/lib/reveal.ts sets data-reveal-state="pending" while it is below the fold and "in" once it
+ * scrolls into view. Containers with class `intro` (hero, project title block) play the same animations on
+ * page load instead. Children say how they appear:
+ *   .r-draw  a line extends from the left          .r-rise  text rises from behind its bottom edge
+ *   .r-fade  fades up a few pixels                 .r-pop   scales up with a small overshoot
+ *   .r-wipe  wipes in from the left                .r-plot  image is plotted behind a moving scan line
+ * --d is a child's delay, --i its place in a sequence, --step the gap between places.
+ * Everything here is off under prefers-reduced-motion, and nothing is hidden without the script.
+ */
+
+/* Structure the animations rely on. Harmless when motion is off. */
+.r-rise,
+.rise-line {
+  clip-path: inset(-1em -1em -0.08em -1em);
+}
+
+.rise-inner {
+  display: inline-block;
+}
+
+.r-plot::before,
+.r-plot::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Faint drafting grid shown under an image while it is plotted. */
+.r-plot::before {
+  background-color: var(--color-paper-deep);
+  background-image:
+    linear-gradient(rgb(29 26 24 / 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(29 26 24 / 0.09) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Scan line: the right edge of a full-width layer, slid from the left edge to the right edge. */
+.r-plot::after {
+  z-index: 3;
+  border-right: 2px solid var(--color-orange);
+  background: linear-gradient(90deg, transparent 85%, rgb(229 117 31 / 0.16));
+  transform: translateX(-100%);
+}
+
+.hero-reveal {
+  display: none;
+}
+
+@keyframes r-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes r-rise {
+  from {
+    transform: translateY(115%);
+  }
+}
+
+@keyframes r-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes r-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+
+  55% {
+    opacity: 1;
+  }
+}
+
+@keyframes r-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes r-scan {
+  0% {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+
+  92% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@keyframes r-grid {
+  0%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes r-curtain {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes r-mark {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+@keyframes r-node {
+  0% {
+    transform: scale(0.4);
+  }
+
+  60% {
+    transform: scale(1.4);
+  }
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal-state="pending"] {
+  :root {
+    --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Waiting below the fold */
+  [data-reveal-state="pending"] :is(.r-fade, .r-pop) {
     opacity: 0;
-    transform: translateY(16px);
   }
 
-  [data-reveal-state="in"] {
-    transition:
-      opacity 600ms var(--ease),
-      transform 600ms var(--ease);
+  [data-reveal-state="pending"] .r-draw {
+    transform: scaleX(0);
   }
 
+  [data-reveal-state="pending"] :is(.r-rise, .rise-line) > .rise-inner {
+    transform: translateY(115%);
+  }
+
+  [data-reveal-state="pending"] .r-wipe,
+  [data-reveal-state="pending"] .r-plot > * {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  [data-reveal-state="pending"] .r-plot::before {
+    opacity: 1;
+  }
+
+  /* Playing (scrolled in, or on load inside .intro) */
+  :is([data-reveal-state="in"], .intro) .r-draw {
+    animation: r-draw 850ms var(--ease) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) :is(.r-rise, .rise-line) > .rise-inner {
+    animation: r-rise 850ms var(--ease) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-fade {
+    animation: r-fade 700ms var(--ease) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-pop {
+    animation: r-pop 650ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-wipe {
+    animation: r-wipe 700ms var(--ease-io) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-plot > * {
+    animation: r-wipe 1100ms var(--ease-io) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-plot::before {
+    animation: r-grid 1250ms linear calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  :is([data-reveal-state="in"], .intro) .r-plot::after {
+    animation: r-scan 1100ms var(--ease-io) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 80ms)) both;
+  }
+
+  /* Timing, per component */
+  .section-head .r-rise { --d: 180ms; }
+  .section-head .section-number { --d: 420ms; }
+  .section-head .section-aside { --d: 560ms; }
+
+  .sheet .sheet-media { --d: 120ms; }
+  .sheet .sheet-role { --d: 280ms; }
+  .sheet .sheet-summary { --d: 360ms; }
+  .sheet .readout { --d: 380ms; }
+  .sheet .readout-cell { --d: 600ms; --step: 120ms; }
+  .sheet .sheet-cta { --d: 950ms; }
+
+  .experience-item .experience-when { --d: 120ms; }
+  .experience-item h3 { --d: 180ms; }
+  .experience-item .experience-role { --d: 260ms; }
+  .experience-item .experience-project { --d: 460ms; }
+  .experience-item .dash-list li { --d: 340ms; --step: 90ms; }
+
+  .panel .spec-list > div,
+  .panel .dash-list li { --d: 200ms; --step: 70ms; }
+  .panel .credential-list li { --d: 200ms; --step: 100ms; }
+
+  .skill-group h3 { --d: calc(var(--g, 0) * 140ms); }
+  .skill-group .skill-rule { --d: calc(100ms + var(--g, 0) * 140ms); }
+  .skill-group li { --d: calc(260ms + var(--g, 0) * 140ms); --step: 70ms; }
+
+  .contact-list > div { --step: 120ms; }
+  .contact-list dt { --d: 120ms; }
+  .contact-list dd { --d: 170ms; }
+
+  .writeup h2 { --d: 120ms; }
+  .writeup p { --d: 220ms; --step: 110ms; }
+  .writeup-list li { --d: 320ms; --step: 70ms; }
+  .writeup .writeup-readout { --d: 260ms; }
+  .writeup-readout .readout-cell { --d: 420ms; --step: 120ms; }
+
+  .figure figcaption { --d: 750ms; }
+  .pager-link { --step: 110ms; }
+
+  /* Home hero, on load */
+  .hero .rise-line { --d: 80ms; --step: 110ms; }
+  .hero .hero-status { --d: 440ms; }
+  .hero .hero-actions li { --d: 900ms; --step: 70ms; }
+  .hero .hero-figure figcaption { --d: 1150ms; }
+
+  .intro .hero-status::before {
+    animation: r-pop 600ms var(--ease-pop) 380ms both;
+  }
+
+  /* Fill the empty title block one cell at a time (the cells keep their background so the grid stays). */
+  .intro .title-cell > * {
+    animation: r-fade 600ms var(--ease) calc(560ms + var(--i, 0) * 80ms) both;
+  }
+
+  .intro .hero-reveal {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* A drafting-grid cover over the photo that is cut away behind the scan line. The photo itself is painted
+     from the first frame, so it still counts as the largest paint for page-speed metrics. */
+  .intro .hero-curtain,
+  .intro .hero-scan {
+    position: absolute;
+    inset: 0;
+  }
+
+  .intro .hero-curtain {
+    background-color: var(--color-paper-deep);
+    background-image:
+      linear-gradient(rgb(29 26 24 / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(29 26 24 / 0.09) 1px, transparent 1px);
+    background-size: 24px 24px;
+    animation: r-curtain 1200ms var(--ease-io) 150ms both;
+  }
+
+  .intro .hero-scan {
+    border-left: 2px solid var(--color-orange);
+    background: linear-gradient(90deg, rgb(229 117 31 / 0.16), transparent 15%);
+    animation: r-scan-cover 1200ms var(--ease-io) 150ms both;
+  }
+
+  .intro .hero-frame::before,
+  .intro .hero-frame::after {
+    animation: r-mark 500ms var(--ease-pop) 1250ms both;
+  }
+
+  /* Project page title block and spec rail, on load */
+  .project-head .project-index { --d: 60ms; }
+  .project-head .r-rise { --d: 120ms; }
+  .project-head .project-head-rule { --d: 200ms; }
+  .project-head .project-summary { --d: 380ms; }
+  .project-head .confidential { --d: 520ms; }
+  .spec-rail .spec-list > div { --d: 280ms; --step: 60ms; }
+  .spec-rail .readout { --d: 520ms; }
+  .spec-rail .readout-cell { --d: 720ms; --step: 120ms; }
+  .video-slot .video-slot-bar { --d: 250ms; }
+  .video-slot .video-slot-frame { --d: 400ms; }
+  .video-slot .video-slot-caption { --d: 1300ms; }
+
+  /* Timeline markers pop when the line reaches them */
+  .experience-item[data-reached="true"] .experience-node {
+    animation: r-node 450ms var(--ease-pop);
+  }
+
+  /* Hover feedback */
   .button,
   .header-resume,
   .menu-button,
@@ -1883,5 +2287,22 @@ a {
 
   .sheet:hover .sheet-go svg {
     transform: translate(2px, -2px);
+  }
+}
+
+/* Cover for the hero photo: its left edge (the scan line) slides from the left edge to the right edge. */
+@keyframes r-scan-cover {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  92% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
   }
 }
