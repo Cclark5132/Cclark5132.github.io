@@ -16,6 +16,8 @@ The home page has five sections, in this order:
 
 Each project has its own page at `/projects/<slug>` (`pulse-jet`, `culligan`, `automotive-restoration`, `telescoping-crutch`).
 
+A project page opens with the title, a one-sentence summary, a details box and the key numbers. Below that, a slideshow tells the story one photo at a time: each photo's `label` in `portfolio.ts` is the slide heading and its `caption` is the explanation underneath. Facts that no photo shows go in the project's `notes` (shown as short tags under the summary).
+
 All text, numbers, captions and media references live in [`src/data/portfolio.ts`](src/data/portfolio.ts). Page titles and descriptions are built in [`src/data/meta.ts`](src/data/meta.ts).
 
 ## Adding the pulse jet test video
@@ -47,7 +49,7 @@ media: { type: "youtube", src: "VIDEO_ID", label: "Static thrust test", alt: "Pu
 media: { type: "vimeo", src: "123456789", label: "Static thrust test", alt: "Pulse jet running on the test bench" },
 ```
 
-YouTube and Vimeo players load only after the visitor presses play, so the page stays fast. Once a video is added it becomes Fig. 1 and the other figures renumber automatically.
+YouTube and Vimeo players load only after the visitor presses play, so the page stays fast. The video is always the first slide on the pulse jet page.
 
 ## Design
 
@@ -63,13 +65,13 @@ The page builds itself as it scrolls: headings build letter by letter, panels as
 | Effect | Where | Behavior |
 | --- | --- | --- |
 | Letter-by-letter headings | Hero name, section headings, project titles | Letters rise into place one after another |
-| Block-built images | Hero photo, project cards, figures, video slot | A 14 × 9 grid of blocks covers the image; behind a sweeping orange scan line each block flashes maroon and shrinks away. The sweep waits until the image has loaded |
+| Block-built images | Hero photo, project cards, project page slides | A 14 × 9 grid of blocks covers the image; behind a sweeping orange scan line each block flashes maroon and shrinks away. The sweep waits until the image has loaded |
 | Assembling panels | Hero title block, project title strips, key-number panels, skills, buttons | Cells fly in from alternating sides and snap into place |
 | Count-up numbers | Key numbers | Count from zero to their value each time they scroll into view |
-| Drawn rules | Section headings, write-up sections, experience entries, contact rows | Lines extend from left to right |
+| Drawn rules | Section headings, experience entries, project title blocks | Lines extend from left to right |
 | Experience timeline | Experience list | A line draws down the list with scroll; each entry's marker turns orange when the line reaches it |
 | Stacking project cards | Home, desktop screens at least 1100 px wide and 740 px tall | Each card pins below the previous card's title strip, so the strips collect at the top as an index |
-| Sticky spec rail | Project pages, 1024 px and wider | Role, dates, location and key numbers stay beside the write-up while it scrolls |
+| Slideshow | Project pages | One photo at a time with its explanation underneath; swipe, arrows, arrow keys or numbered tabs. Each slide builds as it comes into view |
 | Scroll progress bar | Header | Thin orange bar showing position on the page |
 
 Most effects finish in well under a second. They replay: a block that scrolls well clear of the screen resets, and builds again when it comes back.
@@ -131,7 +133,7 @@ public/
 scripts/
   prerender-projects.ts Build-time HTML for every page
 src/
-  components/           Header, project sheets, readouts, media, figures
+  components/           Header, project sheets, readouts, media, slideshow
   data/                 Portfolio content, navigation, page metadata
   lib/                  Motion helpers, head-tag updates
   pages/                Home, project page, 404

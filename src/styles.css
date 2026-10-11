@@ -662,14 +662,6 @@ a {
   transform-origin: 0 50%;
 }
 
-.figures-head {
-  margin-bottom: 24px;
-}
-
-.figures-head h2 {
-  font-size: clamp(1.875rem, 4vw, 2.75rem);
-}
-
 .section-number {
   align-self: start;
   padding-top: 4px;
@@ -1488,101 +1480,272 @@ a {
   text-transform: uppercase;
 }
 
-.project-layout {
+/* Overview: details and key numbers, then any facts no photo covers. */
+.project-overview {
   display: grid;
-  gap: 40px;
-}
-
-.spec-rail {
-  display: grid;
-  align-self: start;
   gap: 16px;
+  margin-bottom: 40px;
 }
 
-.spec-list-rail {
+.project-details {
   border: 1.5px solid var(--color-ink);
   background: var(--color-card);
 }
 
-.project-body {
-  min-width: 0;
-  max-width: 760px;
+.project-notes {
+  display: grid;
+  gap: 10px;
 }
 
-@media (min-width: 1024px) {
-  .project-layout {
-    grid-template-columns: 300px minmax(0, 1fr);
-    gap: 56px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .project-layout {
-    grid-template-columns: 340px minmax(0, 1fr);
-    gap: 72px;
-  }
-}
-
-/* The rail stays beside the write-up while it scrolls. Static on phones, short screens and under reduced motion. */
-@media (min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
-  .spec-rail {
-    position: sticky;
-    top: calc(var(--header-h) + 24px);
-  }
-}
-
-/* Video slot */
-
-.video-slot {
-  margin-bottom: 44px;
-  border: 1.5px solid var(--color-ink);
-  background: var(--color-ink);
-}
-
-.video-slot-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 14px;
-  background: var(--color-maroon);
-  color: #fff;
-}
-
-.video-slot-bar h2,
-.video-slot-bar span {
-  font: 500 0.8125rem/1.3 var(--font-mono);
+.project-notes-label {
+  color: var(--color-maroon);
+  font: 500 0.75rem/1.3 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.video-slot-bar span {
-  color: rgb(255 255 255 / 0.85);
+.project-notes ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.video-slot-frame {
+.project-notes li {
+  padding: 8px 12px;
+  border: 1.5px solid var(--color-ink);
+  background: var(--color-card);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@media (min-width: 768px) {
+  .project-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+  }
+
+  .project-details > div {
+    border-right: 1px solid var(--color-rule);
+  }
+
+  .project-details > div:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .project-details > div:last-child,
+  .project-details > div:nth-last-child(2):nth-child(odd) {
+    border-bottom: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-overview {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+
+  .project-notes {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Slideshow: one photo at a time, its explanation underneath. */
+.slideshow {
+  display: grid;
+  gap: 14px;
+}
+
+.slideshow-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 4px solid var(--color-maroon);
+}
+
+.slideshow-count {
+  color: var(--color-maroon);
+  font: 500 0.875rem/1 var(--font-mono);
+  letter-spacing: 0.06em;
+}
+
+.slideshow-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.slideshow-arrows button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--color-ink);
+  background: var(--color-card);
+}
+
+.slideshow-arrows button:hover:not(:disabled) {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.slideshow-arrows button:disabled {
+  border-color: var(--color-rule);
+  color: var(--color-rule);
+  cursor: default;
+}
+
+.slideshow-track {
+  display: grid;
+  grid-auto-columns: 100%;
+  grid-auto-flow: column;
+  gap: 24px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.slideshow-track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .slideshow-track {
+    scroll-behavior: smooth;
+  }
+}
+
+.slide {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.slide-frame {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background: var(--color-ink);
+  aspect-ratio: 4 / 3;
+  border: 1.5px solid var(--color-ink);
+  background: var(--color-paper-deep);
 }
 
-.video-slot-frame > .media-el,
-.video-slot-frame > .media-facade,
-.video-slot-frame > .media-loop {
+.slide-frame > .media-el,
+.slide-frame > .media-loop,
+.slide-frame > .media-facade,
+.slide-zoom {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.video-slot-frame > .media-el {
+.slide-zoom {
+  display: block;
+  cursor: zoom-in;
+}
+
+.slide-frame .media-el {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+}
+
+.slide-caption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px 0 4px;
+}
+
+.slide-number {
+  color: var(--color-maroon);
+  font: 500 0.875rem/1.9 var(--font-mono);
+}
+
+.slide-title {
+  font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+  font-stretch: 90%;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.slide-text {
+  max-width: 68ch;
+  margin-top: 6px;
+  color: var(--color-ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.slideshow-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slideshow-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--color-ink);
+  background: var(--color-card);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.slideshow-tab-number {
+  color: var(--color-maroon);
+  font: 500 0.75rem/1 var(--font-mono);
+}
+
+.slideshow-tabs button:hover {
+  border-color: var(--color-maroon);
+}
+
+.slideshow-tabs button[aria-current="true"] {
+  border-color: var(--color-maroon);
+  background: var(--color-maroon);
+  color: #fff;
+}
+
+.slideshow-tabs button[aria-current="true"] .slideshow-tab-number {
+  color: #fff;
+}
+
+/* Phones: numbers only in the tabs. The title stays readable to screen readers. */
+@media (max-width: 639px) {
+  .slideshow-tab-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .slideshow-tabs button {
+    min-width: 44px;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .slide-frame {
+    aspect-ratio: auto;
+    height: clamp(320px, 62vh, 640px);
+  }
 }
 
 .video-placeholder {
   position: absolute;
   inset: 0;
+  background-color: var(--color-ink);
   display: grid;
   place-content: center;
   justify-items: center;
@@ -1615,104 +1778,6 @@ a {
   font-size: 0.9375rem;
 }
 
-.video-slot-caption {
-  padding: 10px 14px 12px;
-  color: var(--color-panel-label);
-  font-size: 0.9375rem;
-}
-
-/* Write-up */
-
-.writeup {
-  display: grid;
-  gap: 32px;
-}
-
-.writeup-rule {
-  display: block;
-  height: 1px;
-  margin-bottom: 14px;
-  background: var(--color-ink);
-  transform-origin: 0 50%;
-}
-
-.writeup h2 {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-size: clamp(1.375rem, 2.4vw, 1.75rem);
-  font-stretch: 90%;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.writeup-number {
-  min-width: 2ch;
-  color: var(--color-maroon);
-  font: 500 0.875rem/1 var(--font-mono);
-}
-
-.writeup p {
-  max-width: 66ch;
-  margin-top: 12px;
-  font-size: 1.125rem;
-  line-height: 1.65;
-}
-
-.writeup-list {
-  margin-top: 14px;
-  font-size: 1.0625rem;
-}
-
-.writeup-readout {
-  max-width: 520px;
-  margin-top: 18px;
-}
-
-/* Figures */
-
-.figures {
-  margin-top: 64px;
-}
-
-.figure-list {
-  display: grid;
-  gap: 40px;
-}
-
-.figure {
-  margin: 0;
-}
-
-.figure-frame {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--color-ink);
-  background: var(--color-paper-deep);
-}
-
-.figure-frame .media-el {
-  width: 100%;
-  height: auto;
-  max-height: min(78vh, 760px);
-  object-fit: contain;
-}
-
-.figure-portrait .figure-frame .media-el {
-  max-height: min(78vh, 720px);
-}
-
-.figure-frame .media-loop {
-  position: relative;
-}
-
-.figure-zoom {
-  position: relative;
-  display: block;
-  width: 100%;
-  cursor: zoom-in;
-}
-
 .figure-zoom-hint {
   position: absolute;
   right: 8px;
@@ -1732,18 +1797,8 @@ a {
   background: var(--color-maroon);
 }
 
-.figure figcaption {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding-top: 10px;
-  color: var(--color-ink-soft);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.figure figcaption .figure-number {
-  flex: none;
+.slide-zoom:hover .figure-zoom-hint {
+  background: var(--color-maroon);
 }
 
 /* Full-size viewer */
@@ -2264,12 +2319,7 @@ a {
 
   .contact-links li { --d: 60ms; --step: 85ms; }
 
-  .writeup h2 { --d: 70ms; }
-  .writeup p { --d: 130ms; --step: 70ms; }
-  .writeup-list li { --d: 190ms; --step: 50ms; }
-  .writeup-readout .readout-cell { --d: 240ms; --step: 85ms; }
 
-  .figure figcaption { --d: 420ms; }
   .pager-link { --step: 85ms; }
 
   /* Home hero */
@@ -2294,12 +2344,14 @@ a {
   .project-head h1 { --d: 70ms; --cstep: 20ms; }
   .project-head .project-head-rule { --d: 145ms; }
   .project-head .project-summary { --d: 290ms; }
+  .project-overview .spec-list > div { --d: 160ms; --step: 40ms; }
+  .project-overview .readout-cell { --d: 300ms; --step: 85ms; }
+  .project-notes li { --d: 420ms; --step: 50ms; }
+  .slide .plot { --d: 40ms; }
+  .slide .slide-number { --d: 200ms; }
+  .slide .slide-title { --d: 240ms; }
+  .slide .slide-text { --d: 320ms; }
   .project-head .confidential { --d: 385ms; }
-  .spec-rail .spec-list > div { --d: 190ms; --step: 40ms; }
-  .spec-rail .readout-cell { --d: 430ms; --step: 85ms; }
-  .video-slot .video-slot-bar { --d: 145ms; }
-  .video-slot .plot { --d: 240ms; }
-  .video-slot .video-slot-caption { --d: 840ms; }
 
   /* Timeline markers pop when the line reaches them */
   .experience-item[data-reached="true"] .experience-node {

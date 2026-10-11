@@ -4,9 +4,11 @@ export interface MediaItem {
   type: MediaType;
   /** File path under public/ for images and video files. For "youtube" and "vimeo", the video id or full URL. */
   src: string;
-  /** Short name used in figure captions and the full-size viewer. */
+  /** Heading for the image: slide title on project pages, title in the full-size viewer. */
+  /** Heading for the image (slide title, viewer title). */
   label: string;
   alt: string;
+  /** Explanation shown under the image. On project pages this is the write-up for that part of the project. */
   caption?: string;
   /** Still image shown before a video plays. */
   poster?: string;
@@ -37,13 +39,6 @@ export interface Spec {
   value: string;
 }
 
-export interface WriteUpSection {
-  heading: string;
-  paragraphs: string[];
-  list?: string[];
-  metrics?: Metric[];
-}
-
 export interface Project {
   slug: string;
   title: string;
@@ -65,8 +60,12 @@ export interface Project {
    *   { type: "vimeo", src: "76979871", … }        (id or full Vimeo URL)
    */
   testVideo?: { label: string; media: MediaItem | null };
-  sections: WriteUpSection[];
-  /** Figures on the project page, in order. */
+  /** Short facts shown under the summary that no photo covers, e.g. a list of work done. */
+  notes?: { label: string; items: string[] };
+  /**
+   * Slides on the project page, in order. Each slide shows the image with its `label` as the heading and its
+   * `caption` as the explanation underneath, so the captions carry the write-up.
+   */
   figures: MediaItem[];
   confidentialNote?: string;
 }
@@ -79,9 +78,10 @@ const pulseJetRender: MediaItem = {
   height: 1000,
   fit: "contain",
   matte: "#f5f5f5",
-  label: "SolidWorks assembly",
+  label: "Design",
   alt: "SolidWorks render of the pulse jet engine on its frame, connected to a propane tank by a fuel line",
-  caption: "SolidWorks assembly of the engine, frame and propane supply.",
+  caption:
+    "The goal was a backyard pulse jet built to produce real, testable metrics. The engine and its rolling test frame were designed in SolidWorks, with propane as the fuel.",
 };
 
 const culliganFloat: MediaItem = {
@@ -92,9 +92,10 @@ const culliganFloat: MediaItem = {
   height: 1500,
   fit: "contain",
   matte: "#eef1f0",
-  label: "Valve float",
+  label: "Water softener valve float",
   alt: "Three panels of the injection-molded float: a photo of the black molded part, a gray 3D model, and the same model shaded green and red for comparison",
-  caption: "Float for the water softener valve: molded part, 3D model and comparison view.",
+  caption:
+    "I 3D modeled this injection-molded float and drafted its GD&T drawings. The redesign removes about $15,000 per year in reassembly costs caused by a broken part.",
 };
 
 const comancheFinished: MediaItem = {
@@ -105,7 +106,7 @@ const comancheFinished: MediaItem = {
   height: 788,
   label: "1987 Jeep Comanche",
   alt: "Charles Clark standing next to the restored 1987 Jeep Comanche in a parking lot",
-  caption: "1987 Jeep Comanche.",
+  caption: "One of the two vehicles I restored to working condition.",
 };
 
 const crutchAnimation: MediaItem = {
@@ -114,9 +115,10 @@ const crutchAnimation: MediaItem = {
   poster: "/project-videos/telescoping-crutch-animation-poster.webp",
   width: 1814,
   height: 1402,
-  label: "Telescoping animation",
+  label: "Telescoping design",
   alt: "SolidWorks animation of the crutch extending to full length and retracting",
-  caption: "SolidWorks animation of the crutch extending and retracting.",
+  caption:
+    "The crutch telescopes and has a locking mechanism, so it takes 66% less storage space. We modeled it in SolidWorks.",
   playback: "loop",
 };
 
@@ -181,39 +183,9 @@ export const projects: Project[] = [
         playback: "loop",
         label: "Build sequence",
         alt: "Slow pan across the SolidWorks assembly, then the fabricated engine, then the completed test assembly",
-        caption: "SolidWorks assembly, fabricated engine and completed test assembly.",
+        caption: "From the SolidWorks model to the finished test assembly. A test run video will replace this clip.",
       },
     },
-    sections: [
-      {
-        heading: "Team",
-        paragraphs: ["I founded the team in May 2025 and lead it as president. It has 8 members."],
-      },
-      {
-        heading: "Goal",
-        paragraphs: ["The goal was a backyard pulse jet built to produce real, testable metrics."],
-      },
-      {
-        heading: "Engine and test assembly",
-        paragraphs: [
-          "The engine is made of cold-rolled steel and runs on propane. It was designed in SolidWorks and is mounted on a rolling frame for testing.",
-        ],
-      },
-      {
-        heading: "Test bench",
-        paragraphs: ["The bench records three metrics: thrust, temperature and fuel efficiency. Thrust is measured on a tension scale."],
-      },
-      {
-        heading: "Fuel injector iterations",
-        paragraphs: [
-          "We built multiple fuel injector versions and live-tested each one. The results of each test guided the design of the next version.",
-        ],
-      },
-      {
-        heading: "Result",
-        paragraphs: ["Peak static thrust measured on the bench is about 200 N (about 45 lbf)."],
-      },
-    ],
     figures: [
       pulseJetRender,
       {
@@ -221,18 +193,20 @@ export const projects: Project[] = [
         src: "/project-photos/pulse-jet-fabricated-engine.webp",
         width: 1440,
         height: 1920,
-        label: "Fabricated engine",
+        label: "Fabrication",
         alt: "Fabricated steel pulse jet standing upright on an outdoor work table next to an angle grinder",
-        caption: "Steel engine after fabrication.",
+        caption:
+    "The engine is built from cold-rolled steel by the 8-member team I founded in May 2025 and lead as president.",
       },
       {
         type: "image",
         src: "/project-photos/pulse-jet-test-assembly.webp",
         width: 1920,
         height: 1440,
-        label: "Completed test assembly",
+        label: "Testing",
         alt: "Steel pulse jet mounted on a wheeled frame on a wooden work table, with a propane tank on the shelf below, a braided fuel line, and a red digital scale tied to the frame",
-        caption: "Completed test assembly on the rolling frame, fed from a propane tank.",
+        caption:
+    "The bench records thrust, temperature and fuel efficiency; thrust is read from a tension scale. We live-tested multiple fuel injector versions, and each result shaped the next one. Peak static thrust: about 200 N (45 lbf).",
       },
     ],
   },
@@ -252,38 +226,11 @@ export const projects: Project[] = [
     ],
     specs: [],
     cover: culliganFloat,
+    notes: {
+      label: "Not pictured",
+      items: ["Booster pump kit for a commercial hydraulic valve: water pressure up 150%"],
+    },
     confidentialNote: "This work is confidential. The images here were approved for public release, and some details are left out.",
-    sections: [
-      {
-        heading: "Water softener valve float",
-        paragraphs: [
-          "I 3D modeled an injection-molded float for a water softener valve and drafted its GD&T drawings.",
-          "The redesign removes about $15,000 per year in reassembly costs caused by a broken part.",
-        ],
-      },
-      {
-        heading: "Booster pump kit",
-        paragraphs: ["I developed a booster pump kit for a commercial hydraulic valve. The kit raised water pressure by 150%."],
-      },
-      {
-        heading: "Field-training prototype",
-        paragraphs: ["I fabricated a portable field-training prototype and sourced its parts. The prototype secured $75,000 in funding."],
-      },
-      {
-        heading: "Commercial water softener drawings",
-        paragraphs: ["I made 3D models and technical drawings for 5 commercial water softeners."],
-      },
-      {
-        heading: "Acrylic bracket FEA",
-        paragraphs: [
-          "A static structural analysis of an acrylic mounting bracket predicted a maximum von Mises stress of 2,217 psi and a factor of safety of 2.94.",
-        ],
-        metrics: [
-          { value: "2,217 psi", label: "Max von Mises stress" },
-          { value: "2.94", label: "Factor of safety" },
-        ],
-      },
-    ],
     figures: [
       culliganFloat,
       {
@@ -291,9 +238,10 @@ export const projects: Project[] = [
         src: "/project-photos/culligan-bracket-fea.webp",
         width: 1584,
         height: 993,
-        label: "Bracket FEA",
+        label: "Acrylic bracket FEA",
         alt: "Static structural FEA plot of the acrylic mounting bracket with a von Mises stress color scale, boundary conditions and a results summary",
-        caption: "Acrylic mounting bracket. Maximum von Mises stress 2,217 psi, factor of safety 2.94.",
+        caption:
+    "Static structural analysis of an acrylic mounting bracket: maximum von Mises stress of 2,217 psi and a factor of safety of 2.94.",
       },
       {
         type: "image",
@@ -302,7 +250,8 @@ export const projects: Project[] = [
         height: 2133,
         label: "Field-training prototype",
         alt: "Open hard-shell case with perforated aluminum mounting panels in the lid and base",
-        caption: "Portable field-training prototype.",
+        caption:
+    "I fabricated this portable training prototype and sourced its parts. It secured $75,000 in funding.",
       },
       {
         type: "image",
@@ -311,7 +260,7 @@ export const projects: Project[] = [
         height: 3125,
         label: "Commercial softener drawings",
         alt: "Two drawing sheets for commercial water softener systems, with orthographic views, a data table and notes",
-        caption: "Two-sheet drawing package for commercial water softeners.",
+        caption: "I made 3D models and technical drawings for 5 commercial water softeners.",
       },
     ],
   },
@@ -328,25 +277,10 @@ export const projects: Project[] = [
       { label: "Welding", value: "MIG and stick" },
     ],
     cover: comancheFinished,
-    sections: [
-      {
-        heading: "Vehicles",
-        paragraphs: ["The project covers two vehicles: a 2001 Jeep Cherokee and a 1987 Jeep Comanche. Both are restored to working condition."],
-      },
-      {
-        heading: "Work completed",
-        paragraphs: ["This list covers both vehicles together."],
-        list: [
-          "Body work: floor pans and rockers",
-          "Engine rebuild",
-          "Engine swap",
-          "Axle swap",
-          "Driveshaft machining",
-          "MIG and stick welding",
-          "Diagnostics",
-        ],
-      },
-    ],
+    notes: {
+      label: "Work across both vehicles",
+      items: ["Floor pans and rockers", "Engine rebuild", "Engine swap", "Axle swap", "Driveshaft machining", "MIG and stick welding", "Diagnostics"],
+    },
     figures: [
       comancheFinished,
       {
@@ -365,7 +299,7 @@ export const projects: Project[] = [
         height: 788,
         label: "Engine installation",
         alt: "Engine hanging from a shop crane above an open engine bay",
-        caption: "Engine installation with a shop crane.",
+        caption: "Lowering an engine in with a shop crane.",
       },
       {
         type: "image",
@@ -374,7 +308,7 @@ export const projects: Project[] = [
         height: 788,
         label: "2001 Jeep Cherokee",
         alt: "Restored red 2001 Jeep Cherokee parked in a driveway",
-        caption: "2001 Jeep Cherokee.",
+        caption: "The second vehicle, also restored to working condition.",
       },
       {
         type: "image",
@@ -402,24 +336,6 @@ export const projects: Project[] = [
       { label: "Prototyping", value: "Rapid prototypes" },
     ],
     cover: crutchAnimation,
-    sections: [
-      {
-        heading: "Problem",
-        paragraphs: ["The problem was transporting and storing a crutch when a student is injured on campus."],
-      },
-      {
-        heading: "Design",
-        paragraphs: ["The design is a telescoping crutch with a locking mechanism. It takes 66% less storage space."],
-      },
-      {
-        heading: "Process",
-        paragraphs: ["I led the team. We modeled the crutch in SolidWorks and built rapid prototypes."],
-      },
-      {
-        heading: "Scope",
-        paragraphs: ["The crutch was one part of a larger project that also included a mobile ordering app. I worked only on the crutch."],
-      },
-    ],
     figures: [
       crutchAnimation,
       {
@@ -429,16 +345,18 @@ export const projects: Project[] = [
         height: 744,
         label: "Working prototype",
         alt: "Telescoping crutch prototype built from white PVC pipe, held upright in a lab, with a green indicator light lit",
-        caption: "Working prototype with the locking indicator lit.",
+        caption:
+    "One of our rapid prototypes, with the locking indicator lit. I led the team through the design and prototyping.",
       },
       {
         type: "image",
         src: "/project-photos/crutch-accessibility-poster.webp",
         width: 2400,
         height: 1800,
-        label: "Final poster",
+        label: "The problem",
         alt: "Accessibility on Campus project poster with sections on design performance, stakeholders, the problem, the solution, limitations and recommendations",
-        caption: "Final project poster.",
+        caption:
+    "Transporting and storing a crutch is hard for a student injured on campus. The crutch was one part of a larger project that also included a mobile ordering app; I worked only on the crutch.",
       },
     ],
   },

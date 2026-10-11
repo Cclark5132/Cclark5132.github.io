@@ -2,11 +2,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BuildText } from "../components/BuildText";
-import { Figures } from "../components/Figures";
 import { projectNumber } from "../components/ProjectSheet";
 import { Readout } from "../components/Readout";
-import { SectionHead } from "../components/SectionHead";
-import { VideoSlot } from "../components/VideoSlot";
+import { SlideShow, type Slide } from "../components/SlideShow";
 import { projectMeta } from "../data/meta";
 import { projects } from "../data/portfolio";
 import { applyMeta } from "../lib/applyMeta";
@@ -26,8 +24,11 @@ export function ProjectPage() {
   const total = projects.length;
   const previous = projects[(index - 1 + total) % total];
   const next = projects[(index + 1) % total];
-  const videoMedia = project.testVideo?.media ?? null;
-  const firstFigure = videoMedia ? 2 : 1;
+  const video = project.testVideo;
+  const slides: Slide[] = [
+    ...(video ? [{ media: video.media, title: video.media?.label ?? video.label, text: video.media?.caption }] : []),
+    ...project.figures.map((figure) => ({ media: figure, title: figure.label, text: figure.caption })),
+  ];
 
   const details = [
     ...(project.org ? [{ label: "Organization", value: project.org }] : []),
@@ -65,59 +66,32 @@ export function ProjectPage() {
           )}
         </header>
 
-        <div className="project-layout">
-          <aside className="spec-rail intro" aria-label="Project details" data-reveal="rail">
-            <div className="spec-rail-inner">
-              <dl className="spec-list spec-list-rail">
-                {details.map((detail, detailIndex) => (
-                  <div className="r-fade" style={{ "--i": detailIndex } as CSSProperties} key={detail.label}>
-                    <dt>{detail.label}</dt>
-                    <dd>{detail.value}</dd>
-                  </div>
+        {/* Details and key numbers up top; the story is told slide by slide below. */}
+        <div className="project-overview intro" data-reveal="overview">
+          <dl className="spec-list project-details">
+            {details.map((detail, detailIndex) => (
+              <div className="r-fade" style={{ "--i": detailIndex } as CSSProperties} key={detail.label}>
+                <dt>{detail.label}</dt>
+                <dd>{detail.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <Readout metrics={project.metrics} layout="rows" />
+          {project.notes && (
+            <div className="project-notes">
+              <p className="project-notes-label r-fade">{project.notes.label}</p>
+              <ul>
+                {project.notes.items.map((item, itemIndex) => (
+                  <li className="r-block" style={{ "--i": itemIndex } as CSSProperties} key={item}>
+                    {item}
+                  </li>
                 ))}
-              </dl>
-              <Readout metrics={project.metrics} layout="rows" />
+              </ul>
             </div>
-          </aside>
-
-          <div className="project-body">
-            {project.testVideo && <VideoSlot label={project.testVideo.label} media={videoMedia} figureNumber={1} />}
-
-            <div className="writeup">
-              {project.sections.map((section, sectionIndex) => (
-                <section key={section.heading} aria-labelledby={`${project.slug}-s${sectionIndex}`} data-reveal="section">
-                  <span className="writeup-rule r-draw" aria-hidden="true" />
-                  <h2 className="r-fade" id={`${project.slug}-s${sectionIndex}`}>
-                    <span className="writeup-number" aria-hidden="true">
-                      {sectionIndex + 1}.
-                    </span>
-                    {section.heading}
-                  </h2>
-                  {section.paragraphs.map((paragraph, paragraphIndex) => (
-                    <p className="r-fade" style={{ "--i": paragraphIndex } as CSSProperties} key={paragraph}>
-                      {paragraph}
-                    </p>
-                  ))}
-                  {section.list && (
-                    <ul className="dash-list writeup-list">
-                      {section.list.map((item, itemIndex) => (
-                        <li className="r-pop" style={{ "--i": itemIndex } as CSSProperties} key={item}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {section.metrics && <Readout metrics={section.metrics} layout="grid" className="writeup-readout" />}
-                </section>
-              ))}
-            </div>
-
-            <section className="figures" aria-labelledby="figures-title">
-              <SectionHead number="" title="Figures" id="figures-title" className="figures-head" />
-              <Figures figures={project.figures} start={firstFigure} />
-            </section>
-          </div>
+          )}
         </div>
+
+        <SlideShow slides={slides} title={project.title} />
 
         <nav className="pager" aria-label="Other projects" data-reveal="rows">
           <Link className="pager-link r-pop" style={{ "--i": 0 } as CSSProperties} to={`/projects/${previous.slug}`}>
