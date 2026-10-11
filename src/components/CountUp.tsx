@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { isInitialMount, isInViewport, motionAllowed } from "../lib/motion";
 
 const NUMBER_PATTERN = /^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/;
-const DURATION_MS = 800;
+const DURATION_MS = 950;
 
 function parse(value: string) {
   const match = NUMBER_PATTERN.exec(value);

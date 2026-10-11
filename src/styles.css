@@ -1987,8 +1987,8 @@ a {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(9, 1fr);
 }
 
 /* The outer shadow takes the tile's own colour (currentColor) and covers sub-pixel seams between tiles. */
@@ -2000,21 +2000,28 @@ a {
     inset 0 0 0 0.5px rgb(29 26 24 / 0.14);
 }
 
-/* Column (--x) and row (--y) of each of the 60 blocks, for the sweep timing. */
-.tile:nth-child(10n + 2) { --x: 1; }
-.tile:nth-child(10n + 3) { --x: 2; }
-.tile:nth-child(10n + 4) { --x: 3; }
-.tile:nth-child(10n + 5) { --x: 4; }
-.tile:nth-child(10n + 6) { --x: 5; }
-.tile:nth-child(10n + 7) { --x: 6; }
-.tile:nth-child(10n + 8) { --x: 7; }
-.tile:nth-child(10n + 9) { --x: 8; }
-.tile:nth-child(10n + 10) { --x: 9; }
-.tile:nth-child(n + 11) { --y: 1; }
-.tile:nth-child(n + 21) { --y: 2; }
-.tile:nth-child(n + 31) { --y: 3; }
-.tile:nth-child(n + 41) { --y: 4; }
-.tile:nth-child(n + 51) { --y: 5; }
+/* Column (--x) and row (--y) of each of the 126 blocks (14 x 9), for the sweep timing. */
+.tile:nth-child(14n + 2) { --x: 1; }
+.tile:nth-child(14n + 3) { --x: 2; }
+.tile:nth-child(14n + 4) { --x: 3; }
+.tile:nth-child(14n + 5) { --x: 4; }
+.tile:nth-child(14n + 6) { --x: 5; }
+.tile:nth-child(14n + 7) { --x: 6; }
+.tile:nth-child(14n + 8) { --x: 7; }
+.tile:nth-child(14n + 9) { --x: 8; }
+.tile:nth-child(14n + 10) { --x: 9; }
+.tile:nth-child(14n + 11) { --x: 10; }
+.tile:nth-child(14n + 12) { --x: 11; }
+.tile:nth-child(14n + 13) { --x: 12; }
+.tile:nth-child(14n + 14) { --x: 13; }
+.tile:nth-child(n + 15) { --y: 1; }
+.tile:nth-child(n + 29) { --y: 2; }
+.tile:nth-child(n + 43) { --y: 3; }
+.tile:nth-child(n + 57) { --y: 4; }
+.tile:nth-child(n + 71) { --y: 5; }
+.tile:nth-child(n + 85) { --y: 6; }
+.tile:nth-child(n + 99) { --y: 7; }
+.tile:nth-child(n + 113) { --y: 8; }
 
 /* Scan line: the right edge of a full-width layer, slid from the left edge to the right edge. */
 .scan {
@@ -2164,108 +2171,108 @@ a {
 
   /* Building (scrolled in, or on page load inside .intro) */
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .build-char {
-    animation: r-char 460ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--line, 110ms) + var(--c, 0) * var(--cstep, 20ms)) both;
+    animation: r-char 540ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--line, 110ms) + var(--c, 0) * var(--cstep, 24ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-block {
-    animation: r-block 460ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
+    animation: r-block 540ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-draw {
-    animation: r-draw 450ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
+    animation: r-draw 530ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-fade {
-    animation: r-fade 380ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
+    animation: r-fade 450ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-pop {
-    animation: r-pop 380ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
+    animation: r-pop 450ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-wipe {
-    animation: r-wipe 380ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
+    animation: r-wipe 450ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .tile {
-    animation: r-tile 320ms cubic-bezier(0.5, 0, 0.75, 0) calc(var(--d, 0ms) + var(--x, 0) * 32ms + var(--y, 0) * 16ms) both;
+    animation: r-tile 380ms cubic-bezier(0.5, 0, 0.75, 0) calc(var(--d, 0ms) + var(--x, 0) * 30ms + var(--y, 0) * 14ms) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .scan {
-    animation: r-scan 420ms linear var(--d, 0ms) both;
+    animation: r-scan 520ms linear var(--d, 0ms) both;
   }
 
   /* Timing, per component */
-  .section-head h2 { --d: 60ms; }
-  .section-head .section-number { --d: 200ms; }
-  .section-head .section-aside { --d: 300ms; }
-  .contact-head h2 { --d: 60ms; }
+  .section-head h2 { --d: 70ms; }
+  .section-head .section-number { --d: 240ms; }
+  .section-head .section-aside { --d: 360ms; }
+  .contact-head h2 { --d: 70ms; }
 
-  .sheet .sheet-strip > * { --step: 60ms; }
-  .sheet .plot { --d: 80ms; }
-  .sheet .sheet-role { --d: 120ms; }
-  .sheet .sheet-summary { --d: 170ms; }
-  .sheet .readout-cell { --d: 260ms; --step: 70ms; }
-  .sheet .sheet-cta { --d: 450ms; }
+  .sheet .sheet-strip > * { --step: 70ms; }
+  .sheet .plot { --d: 95ms; }
+  .sheet .sheet-role { --d: 145ms; }
+  .sheet .sheet-summary { --d: 205ms; }
+  .sheet .readout-cell { --d: 310ms; --step: 85ms; }
+  .sheet .sheet-cta { --d: 540ms; }
 
-  .experience-item .experience-when { --d: 60ms; }
-  .experience-item h3 { --d: 90ms; }
-  .experience-item .experience-role { --d: 130ms; }
-  .experience-item .experience-project { --d: 220ms; }
-  .experience-item .dash-list li { --d: 170ms; --step: 50ms; }
+  .experience-item .experience-when { --d: 70ms; }
+  .experience-item h3 { --d: 110ms; }
+  .experience-item .experience-role { --d: 155ms; }
+  .experience-item .experience-project { --d: 265ms; }
+  .experience-item .dash-list li { --d: 205ms; --step: 60ms; }
 
   .panel .spec-list > div,
-  .panel .dash-list li { --d: 100ms; --step: 40ms; }
-  .panel .credential-list li { --d: 100ms; --step: 60ms; }
+  .panel .dash-list li { --d: 120ms; --step: 50ms; }
+  .panel .credential-list li { --d: 120ms; --step: 70ms; }
 
-  .skill-group h3 { --d: calc(var(--g, 0) * 80ms); }
-  .skill-group .skill-rule { --d: calc(60ms + var(--g, 0) * 80ms); }
-  .skill-group li { --d: calc(140ms + var(--g, 0) * 80ms); --step: 45ms; }
+  .skill-group h3 { --d: calc(var(--g, 0) * 95ms); }
+  .skill-group .skill-rule { --d: calc(70ms + var(--g, 0) * 95ms); }
+  .skill-group li { --d: calc(170ms + var(--g, 0) * 95ms); --step: 55ms; }
 
-  .contact-list > div { --step: 70ms; }
-  .contact-list dt { --d: 60ms; }
-  .contact-list dd { --d: 90ms; }
+  .contact-list > div { --step: 85ms; }
+  .contact-list dt { --d: 70ms; }
+  .contact-list dd { --d: 110ms; }
 
-  .writeup h2 { --d: 60ms; }
-  .writeup p { --d: 110ms; --step: 60ms; }
-  .writeup-list li { --d: 160ms; --step: 40ms; }
-  .writeup-readout .readout-cell { --d: 200ms; --step: 70ms; }
+  .writeup h2 { --d: 70ms; }
+  .writeup p { --d: 130ms; --step: 70ms; }
+  .writeup-list li { --d: 190ms; --step: 50ms; }
+  .writeup-readout .readout-cell { --d: 240ms; --step: 85ms; }
 
-  .figure figcaption { --d: 350ms; }
-  .pager-link { --step: 70ms; }
+  .figure figcaption { --d: 420ms; }
+  .pager-link { --step: 85ms; }
 
   /* Home hero */
-  .hero .rise-line { --d: 40ms; --line: 110ms; --cstep: 24ms; }
-  .hero .hero-status { --d: 260ms; }
-  .hero .title-cell { --d: 300ms; --step: 55ms; }
-  .hero .hero-actions li { --d: 520ms; --step: 50ms; }
-  .hero .plot { --d: 120ms; }
-  .hero .hero-figure figcaption { --d: 650ms; }
+  .hero .rise-line { --d: 50ms; --line: 130ms; --cstep: 30ms; }
+  .hero .hero-status { --d: 310ms; }
+  .hero .title-cell { --d: 360ms; --step: 65ms; }
+  .hero .hero-actions li { --d: 625ms; --step: 60ms; }
+  .hero .plot { --d: 145ms; }
+  .hero .hero-figure figcaption { --d: 780ms; }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-status::before {
-    animation: r-pop 380ms var(--ease-pop) 220ms both;
+    animation: r-pop 450ms var(--ease-pop) 310ms both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-frame::before,
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-frame::after {
-    animation: r-pop 380ms var(--ease-pop) 700ms both;
+    animation: r-pop 450ms var(--ease-pop) 1020ms both;
   }
 
   /* Project page title block, spec rail and video slot */
-  .project-head .project-index { --d: 30ms; }
-  .project-head h1 { --d: 60ms; --cstep: 18ms; }
-  .project-head .project-head-rule { --d: 120ms; }
-  .project-head .project-summary { --d: 240ms; }
-  .project-head .confidential { --d: 320ms; }
-  .spec-rail .spec-list > div { --d: 160ms; --step: 35ms; }
-  .spec-rail .readout-cell { --d: 360ms; --step: 70ms; }
-  .video-slot .video-slot-bar { --d: 120ms; }
-  .video-slot .plot { --d: 200ms; }
-  .video-slot .video-slot-caption { --d: 700ms; }
+  .project-head .project-index { --d: 35ms; }
+  .project-head h1 { --d: 70ms; --cstep: 20ms; }
+  .project-head .project-head-rule { --d: 145ms; }
+  .project-head .project-summary { --d: 290ms; }
+  .project-head .confidential { --d: 385ms; }
+  .spec-rail .spec-list > div { --d: 190ms; --step: 40ms; }
+  .spec-rail .readout-cell { --d: 430ms; --step: 85ms; }
+  .video-slot .video-slot-bar { --d: 145ms; }
+  .video-slot .plot { --d: 240ms; }
+  .video-slot .video-slot-caption { --d: 840ms; }
 
   /* Timeline markers pop when the line reaches them */
   .experience-item[data-reached="true"] .experience-node {
-    animation: r-node 400ms var(--ease-pop);
+    animation: r-node 470ms var(--ease-pop);
   }
 
   /* Hover feedback */

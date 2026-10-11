@@ -63,7 +63,7 @@ The page builds itself as it scrolls: headings build letter by letter, panels as
 | Effect | Where | Behavior |
 | --- | --- | --- |
 | Letter-by-letter headings | Hero name, section headings, project titles | Letters rise into place one after another |
-| Block-built images | Hero photo, project cards, figures, video slot | A grid of blocks covers the image; behind a sweeping orange scan line each block flashes maroon and shrinks away. The sweep waits until the image has loaded |
+| Block-built images | Hero photo, project cards, figures, video slot | A 14 × 9 grid of blocks covers the image; behind a sweeping orange scan line each block flashes maroon and shrinks away. The sweep waits until the image has loaded |
 | Assembling panels | Hero title block, project title strips, key-number panels, skills, buttons | Cells fly in from alternating sides and snap into place |
 | Count-up numbers | Key numbers | Count from zero to their value each time they scroll into view |
 | Drawn rules | Section headings, write-up sections, experience entries, contact rows | Lines extend from left to right |
