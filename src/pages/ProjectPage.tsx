@@ -3,7 +3,7 @@ import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BuildText } from "../components/BuildText";
 import { projectNumber } from "../components/ProjectSheet";
-import { Readout } from "../components/Readout";
+import { CountUp } from "../components/CountUp";
 import { SlideShow, type Slide } from "../components/SlideShow";
 import { projectMeta } from "../data/meta";
 import { projects } from "../data/portfolio";
@@ -30,68 +30,91 @@ export function ProjectPage() {
     ...project.figures.map((figure) => ({ media: figure, title: figure.label, text: figure.caption })),
   ];
 
-  const details = [
-    ...(project.org ? [{ label: "Organization", value: project.org }] : []),
+  const meta = [
     { label: "Role", value: project.role },
     { label: "Dates", value: project.dates },
     { label: "Location", value: project.location },
-    ...project.specs,
   ];
+  const specs = [...(project.org ? [{ label: "Organization", value: project.org }] : []), ...project.specs];
+  const order = (i: number) => ({ "--i": i }) as CSSProperties;
 
   return (
     <main id="main-content" tabIndex={-1} className="project-page">
-      <div className="wrap">
-        <nav className="crumbs intro" aria-label="Breadcrumb" data-reveal="crumbs">
-          <Link className="r-fade" to="/#projects">
-            <ArrowLeft size={15} aria-hidden="true" /> All projects
-          </Link>
-        </nav>
-
-        {/* The title block builds itself on page load (CSS only), like the home page hero. */}
-        <header className="project-head intro" data-reveal="title">
-          <span className="project-head-rule r-draw" aria-hidden="true" />
-          <p className="project-index r-fade">
-            Project {projectNumber(index)} <span aria-hidden="true">/</span>
-            <span className="sr-only"> of </span> {String(total).padStart(2, "0")}
-          </p>
-          <h1 tabIndex={-1} aria-label={project.title}>
-            <BuildText text={project.title} />
-          </h1>
-          <p className="project-summary r-fade">{project.summary}</p>
-          {project.confidentialNote && (
-            <p className="confidential r-wipe">
-              <strong>Confidential</strong>
-              {project.confidentialNote}
+      {/* Dark band: title, summary and key numbers, then the photo stage. Builds on load (CSS only). */}
+      <section className="project-band" aria-labelledby="project-title">
+        <div className="wrap">
+          <header className="project-hero intro" data-reveal="title">
+            <nav className="crumbs" aria-label="Breadcrumb">
+              <Link className="r-fade" to="/#projects">
+                <ArrowLeft size={15} aria-hidden="true" /> All projects
+              </Link>
+            </nav>
+            <p className="project-index r-fade">
+              Project {projectNumber(index)} <span aria-hidden="true">/</span>
+              <span className="sr-only"> of </span> {String(total).padStart(2, "0")}
             </p>
-          )}
-        </header>
+            <h1 id="project-title" tabIndex={-1} aria-label={project.title}>
+              <BuildText text={project.title} />
+            </h1>
+            <p className="project-summary r-fade">{project.summary}</p>
+            <dl className="project-meta">
+              {meta.map((item, itemIndex) => (
+                <div className="r-fade" style={order(itemIndex)} key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <dl className="project-numbers">
+              {project.metrics.map((metric, metricIndex) => (
+                <div className="r-block" style={order(metricIndex)} key={metric.label}>
+                  <dt>
+                    {metric.label}
+                    {metric.note && <span>{metric.note}</span>}
+                  </dt>
+                  <dd>{metric.count === false ? metric.value : <CountUp value={metric.value} />}</dd>
+                </div>
+              ))}
+            </dl>
+            {project.confidentialNote && (
+              <p className="confidential r-wipe">
+                <strong>Confidential</strong>
+                {project.confidentialNote}
+              </p>
+            )}
+          </header>
 
-        {/* Details and key numbers up top; the story is told slide by slide below. */}
-        <div className="project-overview intro" data-reveal="overview">
-          <dl className="spec-list project-details">
-            {details.map((detail, detailIndex) => (
-              <div className="r-fade" style={{ "--i": detailIndex } as CSSProperties} key={detail.label}>
-                <dt>{detail.label}</dt>
-                <dd>{detail.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <Readout metrics={project.metrics} layout="rows" />
-          {project.notes && (
-            <div className="project-notes">
-              <p className="project-notes-label r-fade">{project.notes.label}</p>
-              <ul>
-                {project.notes.items.map((item, itemIndex) => (
-                  <li className="r-block" style={{ "--i": itemIndex } as CSSProperties} key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <SlideShow slides={slides} title={project.title} />
         </div>
+      </section>
 
-        <SlideShow slides={slides} title={project.title} />
+      <div className="wrap">
+        {(specs.length > 0 || project.notes) && (
+          <section className="project-extra" aria-label="More details" data-reveal="extra">
+            {specs.length > 0 && (
+              <dl className="spec-list project-specs">
+                {specs.map((item, itemIndex) => (
+                  <div className="r-fade" style={order(itemIndex)} key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {project.notes && (
+              <div className="project-notes">
+                <p className="project-notes-label r-fade">{project.notes.label}</p>
+                <ul>
+                  {project.notes.items.map((item, itemIndex) => (
+                    <li className="r-block" style={order(itemIndex)} key={item}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        )}
 
         <nav className="pager" aria-label="Other projects" data-reveal="rows">
           <Link className="pager-link r-pop" style={{ "--i": 0 } as CSSProperties} to={`/projects/${previous.slug}`}>

@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, ExternalLink, Maximize2, X } from "lucide-react";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import type { MediaItem } from "../data/portfolio";
 import { BlockReveal } from "./BlockReveal";
 import { Media } from "./Media";
@@ -14,9 +14,10 @@ export interface Slide {
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * One photo at a time with its explanation underneath. Swipe or scroll sideways, use the arrows, the arrow
- * keys or the numbered tabs. Each slide is its own scroll trigger, so its blocks sweep away again every time
- * it comes into view. Images open full size in a native modal dialog.
+ * A dark presentation stage: one large photo at a time with arrows on its sides, a stepper above that fills
+ * as you move through, and the explanation underneath. Swipe or scroll sideways, use the arrows, the arrow
+ * keys or the stepper. Each slide is its own scroll trigger, so its blocks sweep away again every time it
+ * comes into view. Images open full size in a native modal dialog.
  */
 export function SlideShow({ slides, title }: { slides: Slide[]; title: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -65,80 +66,87 @@ export function SlideShow({ slides, title }: { slides: Slide[]; title: string })
   };
 
   return (
-    <section className="slideshow" aria-roledescription="carousel" aria-label={`${title} photos`}>
-      <div className="slideshow-bar">
-        <p className="slideshow-count" aria-live="polite">
-          <span className="sr-only">Slide </span>
-          {pad(active + 1)} <span aria-hidden="true">/</span>
-          <span className="sr-only"> of </span> {pad(slides.length)}
-        </p>
-        <div className="slideshow-arrows">
-          <button type="button" onClick={() => goTo(active - 1)} disabled={active === 0} aria-label="Previous slide">
-            <ChevronLeft size={20} aria-hidden="true" />
-          </button>
-          <button type="button" onClick={() => goTo(active + 1)} disabled={active === slides.length - 1} aria-label="Next slide">
-            <ChevronRight size={20} aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-
-      <ol className="slideshow-tabs">
+    <section className="stage" aria-roledescription="carousel" aria-label={`${title} photos`}>
+      <ol className="stepper" style={{ "--count": slides.length } as CSSProperties}>
         {slides.map((slide, index) => (
-          <li key={`${slide.title}-tab`}>
+          <li key={`${slide.title}-step`}>
             <button
               type="button"
               onClick={() => goTo(index)}
               aria-current={index === active ? "true" : undefined}
+              data-done={index < active ? "true" : undefined}
             >
-              <span className="slideshow-tab-number">{pad(index + 1)}</span>
-              <span className="slideshow-tab-title">{slide.title}</span>
+              <span className="stepper-bar" aria-hidden="true" />
+              <span className="stepper-number">{pad(index + 1)}</span>
+              <span className="stepper-title">{slide.title}</span>
             </button>
           </li>
         ))}
       </ol>
 
-      <div className="slideshow-track" ref={trackRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Slides. Use the arrow keys to move.">
-        {slides.map((slide, index) => (
-          <figure
-            className="slide"
-            key={`${slide.title}-${index}`}
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
-            data-reveal="slide"
-          >
-            <div className="slide-frame plot-frame">
-              {slide.media === null ? (
-                <div className="video-placeholder">
-                  <svg className="video-placeholder-icon" viewBox="0 0 48 48" aria-hidden="true">
-                    <rect x="1" y="1" width="46" height="46" fill="none" stroke="currentColor" strokeWidth="2" />
-                    <path d="M19 15 L34 24 L19 33 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  </svg>
-                  <p className="video-placeholder-title">Video not posted yet</p>
-                  <p className="video-placeholder-text">A test run video will be added here.</p>
-                </div>
-              ) : slide.media.type === "image" ? (
-                <button className="slide-zoom" type="button" onClick={() => setViewing(index)} aria-label={`Enlarge: ${slide.title}`}>
-                  <Media media={slide.media} fit="contain" sizes="(min-width: 1300px) 1240px, 100vw" />
-                  <span className="figure-zoom-hint" aria-hidden="true">
-                    <Maximize2 size={14} /> Enlarge
-                  </span>
-                </button>
-              ) : (
-                <Media media={slide.media} fit="contain" />
-              )}
-              <BlockReveal />
-            </div>
-            <figcaption className="slide-caption">
-              <span className="slide-number r-pop">{pad(index + 1)}</span>
-              <div>
-                <h2 className="slide-title r-fade">{slide.title}</h2>
-                {slide.text && <p className="slide-text r-fade">{slide.text}</p>}
+      <div className="stage-view">
+        <div className="stage-track" ref={trackRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Slides. Use the arrow keys to move.">
+          {slides.map((slide, index) => (
+            <figure
+              className="slide"
+              key={`${slide.title}-${index}`}
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
+              data-reveal="slide"
+            >
+              <div className="slide-frame plot-frame">
+                {slide.media === null ? (
+                  <div className="video-placeholder">
+                    <svg className="video-placeholder-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <rect x="1" y="1" width="46" height="46" fill="none" stroke="currentColor" strokeWidth="2" />
+                      <path d="M19 15 L34 24 L19 33 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                    </svg>
+                    <p className="video-placeholder-title">Video not posted yet</p>
+                    <p className="video-placeholder-text">A test run video will be added here.</p>
+                  </div>
+                ) : slide.media.type === "image" ? (
+                  <button className="slide-zoom" type="button" onClick={() => setViewing(index)} aria-label={`Enlarge: ${slide.title}`}>
+                    <Media media={slide.media} fit="contain" sizes="(min-width: 1300px) 1240px, 100vw" />
+                    <span className="figure-zoom-hint" aria-hidden="true">
+                      <Maximize2 size={14} /> Enlarge
+                    </span>
+                  </button>
+                ) : (
+                  <Media media={slide.media} fit="contain" />
+                )}
+                <BlockReveal />
               </div>
-            </figcaption>
-          </figure>
-        ))}
+              <figcaption className="slide-caption">
+                <span className="slide-number r-pop" aria-hidden="true">
+                  {pad(index + 1)}
+                  <small>/{pad(slides.length)}</small>
+                </span>
+                <div>
+                  <h2 className="slide-title r-fade">{slide.title}</h2>
+                  {slide.text && <p className="slide-text r-fade">{slide.text}</p>}
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <button className="stage-arrow stage-arrow-prev" type="button" onClick={() => goTo(active - 1)} disabled={active === 0} aria-label="Previous slide">
+          <ChevronLeft size={26} aria-hidden="true" />
+        </button>
+        <button
+          className="stage-arrow stage-arrow-next"
+          type="button"
+          onClick={() => goTo(active + 1)}
+          disabled={active === slides.length - 1}
+          aria-label="Next slide"
+        >
+          <ChevronRight size={26} aria-hidden="true" />
+        </button>
       </div>
 
+      <p className="sr-only" aria-live="polite">
+        Slide {active + 1} of {slides.length}: {slides[active].title}
+      </p>
 
       <dialog
         ref={dialogRef}

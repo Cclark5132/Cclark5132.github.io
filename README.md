@@ -16,7 +16,7 @@ The home page has five sections, in this order:
 
 Each project has its own page at `/projects/<slug>` (`pulse-jet`, `culligan`, `automotive-restoration`, `telescoping-crutch`).
 
-A project page opens with the title, a one-sentence summary, a details box and the key numbers. Below that, a slideshow tells the story one photo at a time: each photo's `label` in `portfolio.ts` is the slide heading and its `caption` is the explanation underneath. Facts that no photo shows go in the project's `notes` (shown as short tags under the summary).
+A project page opens on a dark band with the title, a one-sentence summary, role, dates and location, and the key numbers in large orange type. The same band holds a photo stage: one large photo at a time with arrows on its sides, a stepper above it and the explanation underneath. Each photo's `label` in `portfolio.ts` is the slide heading and its `caption` is the explanation. Specs (material, CAD and so on) and facts that no photo shows (`notes`) follow below the band.
 
 All text, numbers, captions and media references live in [`src/data/portfolio.ts`](src/data/portfolio.ts). Page titles and descriptions are built in [`src/data/meta.ts`](src/data/meta.ts).
 
@@ -71,7 +71,7 @@ The page builds itself as it scrolls: headings build letter by letter, panels as
 | Drawn rules | Section headings, experience entries, project title blocks | Lines extend from left to right |
 | Experience timeline | Experience list | A line draws down the list with scroll; each entry's marker turns orange when the line reaches it |
 | Stacking project cards | Home, desktop screens at least 1100 px wide and 740 px tall | Each card pins below the previous card's title strip, so the strips collect at the top as an index |
-| Slideshow | Project pages | One photo at a time with its explanation underneath; swipe, arrows, arrow keys or numbered tabs. Each slide builds as it comes into view |
+| Photo stage | Project pages | One large photo at a time with its explanation underneath; swipe, side arrows, arrow keys or the stepper. Each slide builds as it comes into view |
 | Scroll progress bar | Header | Thin orange bar showing position on the page |
 
 Most effects finish in well under a second. They replay: a block that scrolls well clear of the screen resets, and builds again when it comes back.
