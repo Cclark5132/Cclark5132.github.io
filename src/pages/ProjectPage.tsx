@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
+import { BuildText } from "../components/BuildText";
 import { Figures } from "../components/Figures";
 import { projectNumber } from "../components/ProjectSheet";
 import { Readout } from "../components/Readout";
@@ -39,21 +40,21 @@ export function ProjectPage() {
   return (
     <main id="main-content" tabIndex={-1} className="project-page">
       <div className="wrap">
-        <nav className="crumbs intro" aria-label="Breadcrumb">
+        <nav className="crumbs intro" aria-label="Breadcrumb" data-reveal="crumbs">
           <Link className="r-fade" to="/#projects">
             <ArrowLeft size={15} aria-hidden="true" /> All projects
           </Link>
         </nav>
 
-        {/* The title block draws itself on page load (CSS only), like the home page hero. */}
-        <header className="project-head intro">
+        {/* The title block builds itself on page load (CSS only), like the home page hero. */}
+        <header className="project-head intro" data-reveal="title">
           <span className="project-head-rule r-draw" aria-hidden="true" />
           <p className="project-index r-fade">
             Project {projectNumber(index)} <span aria-hidden="true">/</span>
             <span className="sr-only"> of </span> {String(total).padStart(2, "0")}
           </p>
-          <h1 className="r-rise" tabIndex={-1}>
-            <span className="rise-inner">{project.title}</span>
+          <h1 tabIndex={-1} aria-label={project.title}>
+            <BuildText text={project.title} />
           </h1>
           <p className="project-summary r-fade">{project.summary}</p>
           {project.confidentialNote && (
@@ -65,7 +66,7 @@ export function ProjectPage() {
         </header>
 
         <div className="project-layout">
-          <aside className="spec-rail intro" aria-label="Project details">
+          <aside className="spec-rail intro" aria-label="Project details" data-reveal="rail">
             <div className="spec-rail-inner">
               <dl className="spec-list spec-list-rail">
                 {details.map((detail, detailIndex) => (

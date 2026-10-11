@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { isInitialMount, isInViewport, motionAllowed } from "../lib/motion";
 
 const NUMBER_PATTERN = /^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/;
-const DURATION_MS = 1100;
+const DURATION_MS = 800;
 
 function parse(value: string) {
   const match = NUMBER_PATTERN.exec(value);
@@ -22,9 +22,10 @@ function parse(value: string) {
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 /**
- * Renders the final value on the server and for screen readers. In the browser, a number that is not yet on
- * screen is reset to zero and counts up once it scrolls into view. The final value stays in the layout as an
- * invisible copy, so the box never changes size while the digits run.
+ * Renders the final value on the server and for screen readers. In the browser the number counts up from
+ * zero each time it scrolls into view, and resets once it has left the screen. A number already on screen
+ * at first load starts out final. The final value stays in the layout as an invisible copy, so the box never
+ * changes size while the digits run.
  */
 export function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -35,10 +36,11 @@ export function CountUp({ value }: { value: string }) {
     const parsed = parse(value);
     setDisplay(value);
     if (!element || !parsed || !motionAllowed()) return;
-    if (isInitialMount() && isInViewport(element)) return;
 
-    setDisplay(parsed.format(0));
+    let armed = !(isInitialMount() && isInViewport(element));
+    if (armed) setDisplay(parsed.format(0));
     let frame = 0;
+
     const run = () => {
       const start = performance.now();
       const tick = (now: number) => {
@@ -51,11 +53,16 @@ export function CountUp({ value }: { value: string }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        run();
+        if (entry.intersectionRatio >= 0.6 && armed) {
+          armed = false;
+          run();
+        } else if (!entry.isIntersecting && !armed) {
+          cancelAnimationFrame(frame);
+          armed = true;
+          setDisplay(parsed.format(0));
+        }
       },
-      { threshold: 0.6 },
+      { threshold: [0, 0.6] },
     );
     observer.observe(element);
 

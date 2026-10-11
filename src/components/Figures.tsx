@@ -1,6 +1,7 @@
 import { ExternalLink, Maximize2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { MediaItem } from "../data/portfolio";
+import { BlockReveal } from "./BlockReveal";
 import { Media } from "./Media";
 
 interface FiguresProps {
@@ -31,7 +32,7 @@ export function Figures({ figures, start }: FiguresProps) {
           return (
             <li key={figure.src} data-reveal="plot">
               <figure className={`figure ${portrait ? "figure-portrait" : ""}`}>
-                <div className="figure-frame r-plot">
+                <div className="figure-frame plot-frame">
                   {figure.type === "image" ? (
                     <button
                       className="figure-zoom"
@@ -47,6 +48,7 @@ export function Figures({ figures, start }: FiguresProps) {
                   ) : (
                     <Media media={figure} fit="contain" />
                   )}
+                  <BlockReveal />
                 </div>
                 <figcaption className="r-fade">
                   <span className="figure-number">Fig. {number}</span>

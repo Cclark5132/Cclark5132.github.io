@@ -1,4 +1,5 @@
 import type { MediaItem } from "../data/portfolio";
+import { BlockReveal } from "./BlockReveal";
 import { Media } from "./Media";
 
 interface VideoSlotProps {
@@ -13,12 +14,12 @@ interface VideoSlotProps {
  */
 export function VideoSlot({ label, media, figureNumber }: VideoSlotProps) {
   return (
-    <section className="video-slot intro" aria-labelledby="video-slot-title">
+    <section className="video-slot intro" aria-labelledby="video-slot-title" data-reveal="slot">
       <div className="video-slot-bar r-wipe">
         <h2 id="video-slot-title">{label}</h2>
         <span>{media ? `Fig. ${figureNumber}` : "Pending"}</span>
       </div>
-      <div className="video-slot-frame r-plot">
+      <div className="video-slot-frame plot-frame">
         {media ? (
           <Media media={media} fit="contain" />
         ) : (
@@ -31,6 +32,7 @@ export function VideoSlot({ label, media, figureNumber }: VideoSlotProps) {
             <p className="video-placeholder-text">A test run video will be added here.</p>
           </div>
         )}
+        <BlockReveal />
       </div>
       {media?.caption && <p className="video-slot-caption r-fade">{media.caption}</p>}
     </section>
