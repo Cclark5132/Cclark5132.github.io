@@ -2,12 +2,12 @@
 
 /*
  * Palette. Contrast ratios (WCAG 2.x) for every text pairing used:
- *   ink #1d1a18 on paper #f3efe8 ............ 15.6   ink-soft #4d4640 on paper .... 8.1
+ *   ink #1d1a18 on paper #f3efe8 ............ 15.1   ink-soft #4d4640 on paper .... 8.1
  *   muted #6b625a on paper ................... 5.2    muted on paper-deep .......... 4.7
  *   maroon #861f41 on paper .................. 8.0    maroon on paper-deep ......... 7.2
- *   white on maroon .......................... 9.2    white 78% on maroon .......... 5.9
- *   orange #e5751f on ink .................... 5.7    panel-text on ink ........... 15.6
- *   panel-label #b8aea2 on ink ............... 7.9    paper on ink (hover) ........ 15.6
+ *   white on maroon .......................... 9.2    white 78% on maroon .......... 6.2
+ *   orange #e5751f on ink .................... 5.7    panel-text on ink ........... 15.1
+ *   panel-label #b8aea2 on ink ............... 7.9    paper on ink (hover) ........ 15.1
  * Orange on paper is only 2.7:1, so orange never carries text on the light background. It is used for
  * numbers on dark panels, link underlines, small markers and the focus ring (which pairs it with an ink ring).
  */
