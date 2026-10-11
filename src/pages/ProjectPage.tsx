@@ -1,222 +1,134 @@
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, LockKeyhole } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { CaseStudyGallery } from "../components/CaseStudyGallery";
-import { Metric } from "../components/Metric";
-import { ProjectMedia } from "../components/ProjectMedia";
+import { Figures } from "../components/Figures";
+import { projectNumber } from "../components/ProjectSheet";
+import { Readout } from "../components/Readout";
+import { VideoSlot } from "../components/VideoSlot";
+import { projectMeta } from "../data/meta";
 import { projects } from "../data/portfolio";
+import { applyMeta } from "../lib/applyMeta";
 import { NotFoundPage } from "./NotFoundPage";
 
 export function ProjectPage() {
   const { slug } = useParams();
-  const reduceMotion = useReducedMotion();
-  const projectIndex = projects.findIndex((item) => item.slug === slug);
-  const project = projects[projectIndex];
-  const otherProjects = projects.filter((item) => item.slug !== slug);
+  const index = projects.findIndex((item) => item.slug === slug);
+  const project = projects[index];
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-    if (project) {
-      const pageUrl = `https://charlesclark.me/projects/${project.slug}`;
-      document.title = `${project.title} | Charles T. Clark`;
-      document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", project.summary);
-      document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", pageUrl);
-      document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", `${project.title} | Charles T. Clark`);
-      document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", project.summary);
-      document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", pageUrl);
-      document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
-      document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", `${project.title} | Charles T. Clark`);
-      document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", project.summary);
-      document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
-    }
+    if (project) applyMeta(projectMeta(project));
   }, [project]);
 
   if (!project) return <NotFoundPage />;
 
-  const galleryMedia = [project.coverImage, ...project.gallery];
+  const total = projects.length;
+  const previous = projects[(index - 1 + total) % total];
+  const next = projects[(index + 1) % total];
+  const videoMedia = project.testVideo?.media ?? null;
+  const firstFigure = videoMedia ? 2 : 1;
+
+  const details = [
+    ...(project.org ? [{ label: "Organization", value: project.org }] : []),
+    { label: "Role", value: project.role },
+    { label: "Dates", value: project.dates },
+    { label: "Location", value: project.location },
+    ...project.specs,
+  ];
 
   return (
-    <motion.main
-      id="main-content"
-      className="pt-24"
-      initial={reduceMotion ? false : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={reduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      <header className="technical-grid border-b border-line py-10 md:py-14">
-        <div className="site-container">
-          <Link className="back-link" to="/?section=work"><ArrowLeft size={18} /> All projects</Link>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.48fr] lg:items-end">
-            <div>
-              <p className="technical-label text-orange">Case study / {String(projectIndex + 1).padStart(2, "0")}</p>
-              <h1 className="mt-4 max-w-5xl text-balance text-4xl font-semibold leading-[0.95] tracking-[-0.055em] text-white sm:text-5xl md:text-7xl">{project.title}</h1>
-              <p className="mt-5 max-w-3xl text-pretty text-lg leading-8 text-white/65">{project.subtitle}</p>
-              {project.confidential && (
-                <div className="mt-5 inline-flex items-center gap-2 rounded-lg border border-orange/25 bg-orange/8 px-4 py-3 text-sm text-charcoal">
-                  <LockKeyhole size={17} className="text-orange" /> Selected details are limited due to confidentiality.
-                </div>
-              )}
-            </div>
-            <dl className="project-meta">
-              <div><dt>Role</dt><dd>{project.role}</dd></div>
-              <div><dt>Duration</dt><dd>{project.duration}</dd></div>
-              <div><dt>Focus</dt><dd>{project.eyebrow.replaceAll(" / ", ", ")}</dd></div>
-            </dl>
-          </div>
-        </div>
-      </header>
+    <main id="main-content" tabIndex={-1} className="project-page">
+      <div className="wrap">
+        <nav className="crumbs" aria-label="Breadcrumb">
+          <Link to="/#projects">
+            <ArrowLeft size={15} aria-hidden="true" /> All projects
+          </Link>
+        </nav>
 
-      <section className="site-container py-8">
-        <CaseStudyGallery media={galleryMedia} title={project.title} />
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {project.metrics.map((metric) => <Metric metric={metric} key={metric.label} />)}
-        </div>
-      </section>
+        <header className="project-head">
+          <p className="project-index">
+            Project {projectNumber(index)} <span aria-hidden="true">/</span>
+            <span className="sr-only"> of </span> {String(total).padStart(2, "0")}
+          </p>
+          <h1 tabIndex={-1}>{project.title}</h1>
+          <p className="project-summary">{project.summary}</p>
+          {project.confidentialNote && (
+            <p className="confidential">
+              <strong>Confidential</strong>
+              {project.confidentialNote}
+            </p>
+          )}
+        </header>
 
-      {project.caseStudy.format === "star" ? (
-        <section className="site-container pb-12">
-          <div className="star-heading">
-            <p className="technical-label text-orange">STAR case study</p>
-            <h2>Situation. Task. Action. Result.</h2>
-          </div>
-
-          <div className="star-grid">
-            <article className="star-card">
-              <div className="star-card-heading">
-                <span className="star-letter" aria-hidden="true">S</span>
-                <div>
-                  <p className="technical-label text-orange">Situation</p>
-                  <h3>What was the context?</h3>
-                </div>
-              </div>
-              <p className="star-body">{project.summary}</p>
-            </article>
-
-            <article className="star-card">
-              <div className="star-card-heading">
-                <span className="star-letter" aria-hidden="true">T</span>
-                <div>
-                  <p className="technical-label text-orange">Task</p>
-                  <h3>What was I responsible for?</h3>
-                </div>
-              </div>
-              <p className="star-body">{project.challenge}</p>
-            </article>
-
-            <article className="star-card">
-              <div className="star-card-heading">
-                <span className="star-letter" aria-hidden="true">A</span>
-                <div>
-                  <p className="technical-label text-orange">Action</p>
-                  <h3>What did I do?</h3>
-                </div>
-              </div>
-              <ol className="star-action-list">
-                {project.process.map((step, index) => (
-                  <li key={step.title}>
-                    <span className="star-action-index">{String(index + 1).padStart(2, "0")}</span>
-                    <div>
-                      <strong>{step.title}</strong>
-                      <span>{step.description}</span>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-              <div className="star-skills">
-                {project.skills.slice(0, 5).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
-              </div>
-            </article>
-
-            <article className="star-card">
-              <div className="star-card-heading">
-                <span className="star-letter" aria-hidden="true">R</span>
-                <div>
-                  <p className="technical-label text-orange">Result</p>
-                  <h3>What changed?</h3>
-                </div>
-              </div>
-              <ul className="star-result-list">
-                {project.results.slice(0, 4).map((result) => (
-                  <li key={result}>
-                    <Check aria-hidden="true" size={18} />
-                    <span>{result}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </div>
-        </section>
-      ) : (
-        <section className="site-container pb-12">
-          <div className="case-study-heading">
-            <p className="technical-label text-orange">{project.caseStudy.label}</p>
-            <h2>{project.caseStudy.heading}</h2>
-            <p>{project.caseStudy.intro}</p>
-          </div>
-
-          <div className={`case-study-section-grid is-${project.caseStudy.sections.length}`}>
-            {project.caseStudy.sections.map((section, index) => (
-              <article className="case-study-section-card" key={section.title}>
-                <div className="case-study-section-topline">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <span aria-hidden="true" />
-                </div>
-                <h3>{section.title}</h3>
-                <p>{section.description}</p>
-                {section.bullets && (
-                  <ul>
-                    {section.bullets.map((bullet) => (
-                      <li key={bullet}>
-                        <Check aria-hidden="true" size={17} />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="other-projects-section">
-        <div className="site-container">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="technical-label text-orange">Keep exploring</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white">Other projects</h2>
-            </div>
-            <Link className="button button-secondary" to="/?section=work"><ArrowLeft size={18} /> All projects</Link>
-          </div>
-
-          <div className="other-projects-grid">
-            {otherProjects.map((otherProject) => (
-              <Link
-                className="other-project-card group"
-                to={`/projects/${otherProject.slug}`}
-                key={otherProject.slug}
-                aria-label={`View ${otherProject.title} case study`}
-              >
-                <ProjectMedia media={otherProject.coverImage} className="other-project-media" />
-                <div className="other-project-details">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="technical-label text-orange">{otherProject.eyebrow.split(" / ")[0]}</p>
-                    <ArrowRight className="other-project-arrow" size={19} aria-hidden="true" />
+        <div className="project-layout">
+          <aside className="spec-rail" aria-label="Project details">
+            <div className="spec-rail-inner">
+              <dl className="spec-list spec-list-rail">
+                {details.map((detail) => (
+                  <div key={detail.label}>
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.value}</dd>
                   </div>
-                  <h3>{otherProject.title}</h3>
-                  <p>{otherProject.role} · {otherProject.duration}</p>
-                  <div className="other-project-metric">
-                    <strong>{otherProject.metrics[0].value}</strong>
-                    <span>{otherProject.metrics[0].label}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                ))}
+              </dl>
+              <Readout metrics={project.metrics} layout="rows" />
+            </div>
+          </aside>
+
+          <div className="project-body">
+            {project.testVideo && <VideoSlot label={project.testVideo.label} media={videoMedia} figureNumber={1} />}
+
+            <div className="writeup">
+              {project.sections.map((section, sectionIndex) => (
+                <section key={section.heading} aria-labelledby={`${project.slug}-s${sectionIndex}`} data-reveal>
+                  <h2 id={`${project.slug}-s${sectionIndex}`}>
+                    <span className="writeup-number" aria-hidden="true">
+                      {sectionIndex + 1}.
+                    </span>
+                    {section.heading}
+                  </h2>
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  {section.list && (
+                    <ul className="dash-list writeup-list">
+                      {section.list.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {section.metrics && <Readout metrics={section.metrics} layout="grid" className="writeup-readout" />}
+                </section>
+              ))}
+            </div>
+
+            <section className="figures" aria-labelledby="figures-title">
+              <h2 id="figures-title" className="figures-title">
+                Figures
+              </h2>
+              <Figures figures={project.figures} start={firstFigure} />
+            </section>
           </div>
         </div>
-      </section>
-    </motion.main>
+
+        <nav className="pager" aria-label="Other projects">
+          <Link className="pager-link" to={`/projects/${previous.slug}`}>
+            <span className="pager-dir">
+              <ArrowLeft size={15} aria-hidden="true" /> Previous
+            </span>
+            <span className="pager-title">
+              <span className="pager-number">{projectNumber(projects.indexOf(previous))}</span> {previous.title}
+            </span>
+          </Link>
+          <Link className="pager-link pager-next" to={`/projects/${next.slug}`}>
+            <span className="pager-dir">
+              Next <ArrowRight size={15} aria-hidden="true" />
+            </span>
+            <span className="pager-title">
+              <span className="pager-number">{projectNumber(projects.indexOf(next))}</span> {next.title}
+            </span>
+          </Link>
+        </nav>
+      </div>
+    </main>
   );
 }

@@ -1,233 +1,233 @@
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, Download, Linkedin, Mail } from "lucide-react";
-import { useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { ProjectCard } from "../components/ProjectCard";
-import { ProjectMedia } from "../components/ProjectMedia";
-import { Reveal } from "../components/Reveal";
-import { SectionHeading } from "../components/SectionHeading";
+import { ArrowDown, ArrowUpRight, FileText, Linkedin, Mail } from "lucide-react";
+import { useEffect, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
+import { Media } from "../components/Media";
+import { ProjectSheet, projectNumber } from "../components/ProjectSheet";
+import { SectionHead } from "../components/SectionHead";
+import { homeMeta } from "../data/meta";
 import { credentials, education, experiences, profile, projects, skillGroups } from "../data/portfolio";
+import { applyMeta } from "../lib/applyMeta";
 
-const quickFacts = [
-  { value: "Virginia Tech", label: "B.S. Mechanical Engineering" },
-  { value: "3.84", label: "GPA" },
-  { value: "May 2028", label: "Expected graduation" },
-  { value: "Chicago, IL", label: "Open to relocation" },
+const heroFacts = [
+  { label: "School", value: profile.school, wide: true },
+  { label: "Degree", value: profile.degree, wide: true },
+  { label: "Expected", value: profile.graduation },
+  { label: "GPA", value: profile.gpa },
+  { label: "Location", value: profile.location },
 ];
 
-const topSkills = ["SolidWorks (CSWP)", "Finite Element Analysis", "Rapid Prototyping"];
-
-const experienceTimeline = [...experiences].sort((a, b) => {
-  const startYearA = Number(a.duration.match(/\d{4}/)?.[0] ?? 0);
-  const startYearB = Number(b.duration.match(/\d{4}/)?.[0] ?? 0);
-  return startYearB - startYearA;
-});
-
 export function HomePage() {
-  const reduceMotion = useReducedMotion();
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const description = "Third-year Virginia Tech mechanical engineering student incoming at SpaceX in Spring 2027 and seeking a Summer 2027 internship, with experience in SolidWorks, FEA, product development, fabrication, and testing.";
-    document.title = `${profile.name} | ${profile.title}`;
-    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute("content", description);
-    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", "https://charlesclark.me/");
-    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute("content", description);
-    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", "https://charlesclark.me/");
-    document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute("content", `${profile.name} | ${profile.title}`);
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute("content", description);
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')?.setAttribute("content", "https://charlesclark.me/social-preview.png");
-
-    const section = searchParams.get("section");
-    if (!section) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      return;
-    }
-    const frame = window.requestAnimationFrame(() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" }));
-    return () => window.cancelAnimationFrame(frame);
-  }, [searchParams]);
-
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  useEffect(() => applyMeta(homeMeta), []);
 
   return (
-    <motion.main
-      id="main-content"
-      className="home-page"
-      initial={reduceMotion ? false : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={reduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      <section className="hero-section pt-24">
-        <div className="site-container hero-layout">
+    <main id="main-content" tabIndex={-1}>
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="wrap hero-grid">
           <div className="hero-copy">
-            <motion.p
-              className="hero-kicker"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.25 }}
-            >
-              Mechanical engineering portfolio / Virginia Tech
-            </motion.p>
-            <motion.h1
-              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-            >
-              Charles Clark
-            </motion.h1>
-            <motion.p
-              className="hero-role"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.08, duration: 0.3 }}
-            >
-              {profile.title}
-            </motion.p>
-            <p className="availability-badge">{profile.availability}</p>
-            <motion.div
-              className="hero-actions"
-              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.16, duration: 0.3 }}
-            >
-              <button className="button button-primary" type="button" onClick={() => scrollTo("work")}>Projects <ArrowDownRight size={18} /></button>
-              <a className="button button-secondary" href={`mailto:${profile.email}`}><Mail size={18} /> Email</a>
-              <a className="button button-secondary" href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={18} /> LinkedIn</a>
-            </motion.div>
+            <h1 id="hero-title" className="hero-name" tabIndex={-1}>
+              <span>Charles</span> <span>Clark</span>
+            </h1>
+            <p className="hero-status">{profile.status}</p>
+
+            <dl className="title-block hero-facts">
+              {heroFacts.map((fact) => (
+                <div className={fact.wide ? "title-cell title-cell-wide" : "title-cell"} key={fact.label}>
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <ul className="hero-actions">
+              <li>
+                <Link className="button button-primary" to="/#projects">
+                  Projects <ArrowDown size={16} aria-hidden="true" />
+                </Link>
+              </li>
+              <li>
+                <a className="button" href={profile.resume} target="_blank" rel="noopener">
+                  <FileText size={16} aria-hidden="true" /> Resume<span className="sr-only"> (PDF)</span>
+                </a>
+              </li>
+              <li>
+                <a className="button" href={`mailto:${profile.email}`}>
+                  <Mail size={16} aria-hidden="true" /> Email
+                </a>
+              </li>
+              <li>
+                <a className="button" href={profile.linkedIn} target="_blank" rel="noopener">
+                  <Linkedin size={16} aria-hidden="true" /> LinkedIn
+                </a>
+              </li>
+            </ul>
           </div>
 
-          <Reveal className="hero-media-frame">
-            <ProjectMedia media={profile.heroMedia} eager className="hero-project-media" />
-            <div className="hero-media-label">
-              <span>Current build</span>
-              <strong>Pulse Jet Design Team</strong>
+          <figure className="hero-figure">
+            <div className="hero-frame">
+              <Media media={profile.heroMedia} priority sizes="(min-width: 1024px) 50vw, 100vw" />
             </div>
-          </Reveal>
+            <figcaption>
+              <span className="figure-number">Fig. 1</span>
+              <span>{profile.heroMedia.caption}</span>
+              <Link to="/projects/pulse-jet">
+                Project 01 <ArrowUpRight size={14} aria-hidden="true" />
+              </Link>
+            </figcaption>
+          </figure>
         </div>
+      </section>
 
-        <div className="fact-strip">
-          <div className="site-container fact-grid">
-            {quickFacts.map((fact) => (
-              <div className="fact-item" key={fact.label}>
-                <strong>{fact.value}</strong>
-                <span>{fact.label}</span>
-              </div>
+      <section id="projects" className="section section-projects" aria-labelledby="projects-title" tabIndex={-1}>
+        <div className="wrap">
+          <SectionHead number="01" title="Projects" id="projects-title" aside={`${projects.length} projects`} />
+          <div className="sheets" style={{ "--count": projects.length } as CSSProperties}>
+            {projects.map((project, index) => (
+              <ProjectSheet project={project} index={index} total={projects.length} key={project.slug} />
             ))}
           </div>
         </div>
-
-        <div className="contact-strip">
-          <div className="site-container skill-strip">
-            <span className="skill-strip-label">Core tools</span>
-            {topSkills.map((skill) => <span key={skill}>{skill}</span>)}
-          </div>
-        </div>
       </section>
 
-      <section id="work" className="section-space scroll-mt-24 work-section">
-        <div className="site-container">
-          <SectionHeading
-            index="01"
-            eyebrow="Selected work"
-            title="Projects"
-            description="Four projects covering product design, propulsion, automotive restoration, and accessibility."
-          />
-          <div className="projects-grid">
-            {projects.map((project, index) => <ProjectCard project={project} index={index + 1} key={project.slug} />)}
-          </div>
-        </div>
-      </section>
+      <section id="experience" className="section" aria-labelledby="experience-title" tabIndex={-1}>
+        <div className="wrap">
+          <SectionHead number="02" title="Experience and education" id="experience-title" />
+          <div className="experience-grid">
+            <ol className="experience-list">
+              {experiences.map((item) => {
+                const index = projects.findIndex((project) => project.slug === item.projectSlug);
+                return (
+                  <li className="experience-item" key={item.org} data-reveal>
+                    <p className="experience-when">
+                      <span>{item.dates}</span>
+                      <span>{item.location}</span>
+                    </p>
+                    <div className="experience-body">
+                      <h3>
+                        <Link to={`/projects/${item.projectSlug}`}>
+                          {item.org}
+                          <span className="experience-project">
+                            Project {projectNumber(index)} <ArrowUpRight size={14} aria-hidden="true" />
+                          </span>
+                        </Link>
+                      </h3>
+                      <p className="experience-role">{item.role}</p>
+                      <ul className="dash-list">
+                        {item.points.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
 
-      <section id="background" className="section-space scroll-mt-24 background-section">
-        <div className="site-container">
-          <SectionHeading
-            index="02"
-            eyebrow="Background"
-            title="Experience and education"
-            description="A concise version of the experience and credentials in my resume."
-          />
-
-          <div className="background-layout">
-            <div className="experience-list">
-              {experienceTimeline.map((experience) => (
-                <Link
-                  className="experience-row"
-                  to={`/projects/${experience.projectSlug}`}
-                  key={experience.company}
-                  aria-label={`View ${experience.company} case study`}
-                >
-                  <p className="experience-date">{experience.duration}</p>
-                  <div className="experience-copy">
-                    <p className="experience-location">{experience.location}</p>
-                    <h3>{experience.company}</h3>
-                    <p className="experience-role">{experience.role}</p>
-                    <p className="experience-highlight">{experience.highlights[0]}</p>
+            <aside className="education" aria-label="Education and credentials" data-reveal>
+              <div className="panel">
+                <h3 className="panel-title">Education</h3>
+                <dl className="spec-list">
+                  <div>
+                    <dt>School</dt>
+                    <dd>{education.school}</dd>
                   </div>
-                  <ArrowUpRight size={20} aria-hidden="true" />
-                </Link>
-              ))}
-            </div>
-
-            <aside className="education-panel">
-              <p className="technical-label">Education</p>
-              <h3>{education.school}</h3>
-              <p className="education-degree">{education.degree}</p>
-              <p className="education-graduation">{education.graduation}</p>
-              <ul className="education-details">
-                {education.details.map((detail) => <li key={detail}>{detail}</li>)}
-              </ul>
-
-              <div className="credential-list">
-                <p className="technical-label">Credentials</p>
-                {credentials.map((credential) => (
-                  <div key={credential.title}>
-                    <strong>{credential.title}</strong>
-                    <span>{credential.issuer} / {credential.date}</span>
+                  <div>
+                    <dt>Degree</dt>
+                    <dd>{education.degree}</dd>
                   </div>
-                ))}
+                  <div>
+                    <dt>Graduation</dt>
+                    <dd>{education.graduation}</dd>
+                  </div>
+                  <div>
+                    <dt>GPA</dt>
+                    <dd>{education.gpa}</dd>
+                  </div>
+                </dl>
+                <ul className="dash-list panel-list">
+                  {education.honors.map((honor) => (
+                    <li key={honor}>{honor}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="panel">
+                <h3 className="panel-title">Credentials</h3>
+                <ul className="credential-list">
+                  {credentials.map((credential) => (
+                    <li key={credential.title}>
+                      <strong>{credential.title}</strong>
+                      <span>
+                        {credential.issuer}, {credential.date}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </aside>
           </div>
         </div>
       </section>
 
-      <section id="skills" className="section-space scroll-mt-24 skills-section">
-        <div className="site-container">
-          <SectionHeading
-            index="03"
-            eyebrow="Technical skills"
-            title="Tools I use"
-          />
-          <div className="skills-list">
+      <section id="skills" className="section" aria-labelledby="skills-title" tabIndex={-1}>
+        <div className="wrap">
+          <SectionHead number="03" title="Skills" id="skills-title" />
+          <div className="skills-grid">
             {skillGroups.map((group) => (
-              <section className="skill-group" key={group.title}>
+              <div className="skill-group" key={group.title} data-reveal>
                 <h3>{group.title}</h3>
                 <ul>
-                  {group.skills.map((skill) => <li key={skill}>{skill}</li>)}
+                  {group.skills.map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
                 </ul>
-              </section>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="contact" className="contact-section scroll-mt-24">
-        <div className="site-container contact-layout">
-          <div>
-            <p className="technical-label">04 / Contact</p>
-            <h2>Get in touch</h2>
-            <p>Incoming at SpaceX in Spring 2027 and seeking a Summer 2027 internship. Based in Chicago and open to relocation.</p>
+      <section id="contact" className="contact" aria-labelledby="contact-title" tabIndex={-1}>
+        <div className="wrap contact-grid">
+          <div className="contact-head">
+            <span className="section-number" aria-hidden="true">
+              04
+            </span>
+            <h2 id="contact-title">Contact</h2>
           </div>
-          <div className="contact-links">
-            <a href={profile.linkedIn} target="_blank" rel="noreferrer"><Linkedin size={20} /><span><small>LinkedIn</small>charlesclarkvt</span></a>
-            <a href={`mailto:${profile.email}`}><Mail size={20} /><span><small>Email</small>{profile.email}</span></a>
-            <a href={profile.resume} target="_blank" rel="noreferrer"><Download size={20} /><span><small>Resume</small>Open PDF</span></a>
-          </div>
+          <dl className="contact-list">
+            <div>
+              <dt>Email</dt>
+              <dd>
+                <a href={`mailto:${profile.email}`}>{profile.email}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>LinkedIn</dt>
+              <dd>
+                <a href={profile.linkedIn} target="_blank" rel="noopener">
+                  {profile.linkedInLabel}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt>GitHub</dt>
+              <dd>
+                <a href={profile.github} target="_blank" rel="noopener">
+                  {profile.githubLabel}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt>Resume</dt>
+              <dd>
+                <a href={profile.resume} target="_blank" rel="noopener">
+                  Charles-Clark-Resume.pdf
+                </a>
+              </dd>
+            </div>
+          </dl>
         </div>
       </section>
-    </motion.main>
+    </main>
   );
 }

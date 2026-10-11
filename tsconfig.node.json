@@ -6,7 +6,15 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": [
+      "node"
+    ]
   },
-  "include": ["vite.config.ts", "scripts", "src/data/portfolio.ts"]
+  "include": [
+    "vite.config.ts",
+    "scripts",
+    "src/data/portfolio.ts",
+    "src/data/meta.ts"
+  ]
 }

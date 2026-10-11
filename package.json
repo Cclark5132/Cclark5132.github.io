@@ -14,7 +14,8 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "framer-motion": "^12.23.26",
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
     "lucide-react": "^0.468.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.2",
+    "@types/node": "22.20.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.3",

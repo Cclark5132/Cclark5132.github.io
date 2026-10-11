@@ -1,14 +1,21 @@
 import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { notFoundMeta } from "../data/meta";
+import { applyMeta } from "../lib/applyMeta";
 
 export function NotFoundPage() {
+  useEffect(() => applyMeta(notFoundMeta), []);
+
   return (
-    <main id="main-content" className="technical-grid grid min-h-[80vh] place-items-center px-5 pt-24 text-center">
-      <div>
-        <p className="technical-label text-orange">Error / 404</p>
-        <h1 className="mt-4 text-5xl font-semibold tracking-[-0.06em] text-white md:text-7xl">Page not found.</h1>
-        <p className="mx-auto mt-4 max-w-lg text-base leading-7 text-white/65">Return to the portfolio to see Charles's work and contact information.</p>
-        <Link className="button button-primary mt-7" to="/"><ArrowLeft size={18} /> Back to portfolio</Link>
+    <main id="main-content" tabIndex={-1} className="not-found">
+      <div className="wrap">
+        <p className="project-index">Error 404</p>
+        <h1 tabIndex={-1}>Page not found</h1>
+        <p className="project-summary">This address does not match a page on the site.</p>
+        <Link className="button button-primary" to="/">
+          <ArrowLeft size={16} aria-hidden="true" /> Home page
+        </Link>
       </div>
     </main>
   );

@@ -2,452 +2,506 @@ export type MediaType = "image" | "video" | "youtube" | "vimeo" | "cad" | "pdf";
 
 export interface MediaItem {
   type: MediaType;
+  /** File path under public/ for images and video files. For "youtube" and "vimeo", the video id or full URL. */
   src: string;
+  /** Short name used in figure captions and the full-size viewer. */
   label: string;
   alt: string;
   caption?: string;
-  captionPlacement?: "overlay" | "below";
+  /** Still image shown before a video plays. */
   poster?: string;
-  aspect?: "landscape" | "portrait" | "square" | "cinematic";
+  /** Intrinsic pixel size, so the browser reserves the right space before the file loads. */
+  width?: number;
+  height?: number;
+  /** Optional smaller copies for phones, e.g. "/a-800.webp 800w, /a.webp 1200w". */
+  srcSet?: string;
+  /** "loop" plays muted on repeat with a pause button. "controls" (the default) shows the standard player. */
   playback?: "controls" | "loop";
+  /** How the image fills a fixed frame such as a project card. "contain" keeps the whole image visible. */
   fit?: "cover" | "contain";
+  /** Background color around a contained image. Match the image's own background so the edges disappear. */
+  matte?: string;
   objectPosition?: string;
 }
 
-export interface MetricData {
+export interface Metric {
   value: string;
   label: string;
-  detail?: string;
+  note?: string;
+  /** Numbers count up when they scroll into view. Set false for values such as years. */
+  count?: boolean;
 }
 
-export interface CaseStudySection {
-  title: string;
-  description: string;
-  bullets?: string[];
+export interface Spec {
+  label: string;
+  value: string;
 }
 
-export type CaseStudyContent =
-  | { format: "star" }
-  | {
-      format: "sections";
-      label: string;
-      heading: string;
-      intro: string;
-      sections: CaseStudySection[];
-    };
+export interface WriteUpSection {
+  heading: string;
+  paragraphs: string[];
+  list?: string[];
+  metrics?: Metric[];
+}
 
 export interface Project {
   slug: string;
   title: string;
-  eyebrow: string;
-  subtitle: string;
+  /** Organization, when it differs from the title. */
+  org?: string;
   role: string;
-  duration: string;
-  location?: string;
+  dates: string;
+  location: string;
+  /** One sentence. Used on the project card and as the page description. */
   summary: string;
-  challenge: string;
-  process: { title: string; description: string }[];
-  results: string[];
-  future: string[];
-  metrics: MetricData[];
-  skills: string[];
-  coverImage: MediaItem;
-  gallery: MediaItem[];
-  confidential?: boolean;
-  featured: boolean;
-  caseStudy: CaseStudyContent;
+  metrics: Metric[];
+  specs: Spec[];
+  cover: MediaItem;
+  /**
+   * Test video slot, shown near the top of the project page. While `media` is null the page shows a
+   * labeled placeholder. To publish a video, set `media` to one of:
+   *   { type: "video", src: "/project-videos/pulse-jet-test.mp4", poster: "/project-photos/…webp", … }
+   *   { type: "youtube", src: "dQw4w9WgXcQ", … }   (id or full YouTube URL)
+   *   { type: "vimeo", src: "76979871", … }        (id or full Vimeo URL)
+   */
+  testVideo?: { label: string; media: MediaItem | null };
+  sections: WriteUpSection[];
+  /** Figures on the project page, in order. */
+  figures: MediaItem[];
+  confidentialNote?: string;
 }
+
+const pulseJetRender: MediaItem = {
+  type: "image",
+  src: "/project-photos/pulse-jet-assembly-render.webp",
+  srcSet: "/project-photos/pulse-jet-assembly-render-800.webp 800w, /project-photos/pulse-jet-assembly-render.webp 1600w",
+  width: 1600,
+  height: 1000,
+  fit: "contain",
+  matte: "#f5f5f5",
+  label: "SolidWorks assembly",
+  alt: "SolidWorks render of the pulse jet engine on its frame, connected to a propane tank by a fuel line",
+  caption: "SolidWorks assembly of the engine, frame and propane supply.",
+};
+
+const culliganFloat: MediaItem = {
+  type: "image",
+  src: "/project-photos/culligan-float-system.webp",
+  srcSet: "/project-photos/culligan-float-system-800.webp 800w, /project-photos/culligan-float-system.webp 2400w",
+  width: 2400,
+  height: 1500,
+  fit: "contain",
+  matte: "#eef1f0",
+  label: "Valve float",
+  alt: "Three panels of the injection-molded float: a photo of the black molded part, a gray 3D model, and the same model shaded green and red for comparison",
+  caption: "Float for the water softener valve: molded part, 3D model and comparison view.",
+};
+
+const comancheFinished: MediaItem = {
+  type: "image",
+  src: "/project-photos/automotive-comanche-finished.webp",
+  srcSet: "/project-photos/automotive-comanche-finished-800.webp 800w, /project-photos/automotive-comanche-finished.webp 1400w",
+  width: 1400,
+  height: 788,
+  label: "1987 Jeep Comanche",
+  alt: "Charles Clark standing next to the restored 1987 Jeep Comanche in a parking lot",
+  caption: "1987 Jeep Comanche.",
+};
+
+const crutchAnimation: MediaItem = {
+  type: "video",
+  src: "/project-videos/telescoping-crutch-animation.mp4",
+  poster: "/project-videos/telescoping-crutch-animation-poster.webp",
+  width: 1814,
+  height: 1402,
+  label: "Telescoping animation",
+  alt: "SolidWorks animation of the crutch extending to full length and retracting",
+  caption: "SolidWorks animation of the crutch extending and retracting.",
+  playback: "loop",
+};
 
 export const profile = {
   name: "Charles T. Clark",
-  title: "Third-Year Mechanical Engineering Student",
+  shortName: "Charles Clark",
+  status: "Incoming at SpaceX",
+  school: "Virginia Tech",
+  degree: "B.S. Mechanical Engineering",
+  graduation: "May 2028",
+  gpa: "3.84",
+  location: "Chicago, IL",
   email: "charlesclark@vt.edu",
-  location: "Chicago, Illinois",
-  availability: "Incoming at SpaceX Spring 2027 + Seeking Summer 2027 Internship",
   resume: "/Charles-Clark-Resume.pdf",
   linkedIn: "https://linkedin.com/in/charlesclarkvt",
+  linkedInLabel: "linkedin.com/in/charlesclarkvt",
   github: "https://github.com/Cclark5132",
+  githubLabel: "github.com/Cclark5132",
   heroMedia: {
-    type: "image" as const,
+    type: "image",
     src: "/project-photos/pulse-jet-test-assembly-hero.webp",
-    label: "Completed Pulse Jet Test Assembly",
-    alt: "Fabricated steel pulse-jet engine mounted on a rolling test frame and connected to a propane cylinder",
-    caption: "Fabricated engine and rolling test frame",
-    aspect: "landscape" as const,
-    fit: "cover" as const,
-  },
+    srcSet:
+      "/project-photos/pulse-jet-test-assembly-hero-600.webp 600w, /project-photos/pulse-jet-test-assembly-hero-800.webp 800w, /project-photos/pulse-jet-test-assembly-hero.webp 1200w",
+    width: 1200,
+    height: 900,
+    label: "Pulse jet test assembly",
+    alt: "Steel pulse jet mounted on a wheeled frame on a wooden work table, fed by a propane tank on the shelf below",
+    caption: "Pulse jet test assembly on its rolling frame.",
+  } satisfies MediaItem,
 };
 
 export const projects: Project[] = [
   {
     slug: "pulse-jet",
     title: "Pulse Jet Design Team",
-    eyebrow: "Propulsion / Team Leadership / Test Engineering",
-    subtitle: "Designed, fabricated, and measured on the test bench.",
     role: "Founder and President",
-    duration: "May 2025 - Present",
-    location: "Blacksburg, Virginia",
-    summary: "I founded and lead an eight-member Virginia Tech team that designs, fabricates, instruments, and tests pulse jet engines, with a focus on measurable, repeatable performance.",
-    challenge: "As founder and president, I needed to organize the team, design and fabricate a manufacturable steel propane-fueled engine, and create a safe bench for measuring thrust, temperature, and fuel efficiency.",
-    process: [
-      { title: "Define", description: "Set propulsion goals, team roles, operating constraints, and a safe validation plan." },
-      { title: "Model", description: "Developed the steel, propane-fueled engine geometry and assembly in SolidWorks." },
-      { title: "Fabricate", description: "Converted the design into a buildable system through hands-on metal fabrication and team coordination." },
-      { title: "Instrument", description: "Created a dedicated bench for thrust, temperature, and fuel-efficiency readings." },
-      { title: "Test", description: "Ran controlled bench tests and recorded approximately 200 N of peak static thrust." },
-    ],
-    results: [
-      "Founded and now leads an eight-member engine design team.",
-      "Designed and fabricated a functioning steel, propane-fueled pulse jet.",
-      "Measured approximately 200 N of peak static thrust during bench testing.",
-      "Built an instrumented test bench for repeatable performance measurements.",
-    ],
-    future: [
-      "Expand the test dataset across operating conditions.",
-      "Refine instrumentation and measurement repeatability.",
-      "Use test evidence to guide the next geometry iteration.",
-    ],
+    dates: "May 2025 – Present",
+    location: "Blacksburg, VA",
+    summary:
+      "I founded and lead an 8-member team that built a propane-fueled pulse jet from cold-rolled steel, with a test bench that records thrust, temperature and fuel efficiency.",
     metrics: [
-      { value: "~200 N", label: "Peak static thrust", detail: "About 45 lbf, bench-tested" },
-      { value: "8", label: "Team members", detail: "Founded and led" },
-      { value: "3", label: "Measured outputs", detail: "Thrust / temperature / fuel" },
+      { value: "~200 N", label: "Peak static thrust", note: "About 45 lbf" },
+      { value: "8", label: "Team members" },
+      { value: "3", label: "Bench metrics", note: "Thrust, temperature, fuel efficiency" },
     ],
-    skills: ["SolidWorks", "Propulsion", "Test engineering", "Instrumentation", "Fabrication", "Team leadership"],
-    coverImage: {
-      type: "image",
-      src: "/project-photos/pulse-jet-assembly-render.webp",
-      label: "Pulse Jet Test Assembly",
-      alt: "SolidWorks assembly rendering of the pulse jet engine, propane cylinder, fuel line, and wheeled support frame",
-      caption: "Complete SolidWorks assembly of the pulse jet engine and test setup",
-      aspect: "landscape",
-    },
-    gallery: [
+    specs: [
+      { label: "Material", value: "Cold-rolled steel" },
+      { label: "Fuel", value: "Propane" },
+      { label: "CAD", value: "SolidWorks" },
+      { label: "Thrust gauge", value: "Tension scale" },
+    ],
+    cover: pulseJetRender,
+    testVideo: { label: "Test run video", media: null },
+    sections: [
+      {
+        heading: "Team",
+        paragraphs: ["I founded the team in May 2025 and lead it as president. It has 8 members."],
+      },
+      {
+        heading: "Goal",
+        paragraphs: ["The goal was a backyard pulse jet built to produce real, testable metrics."],
+      },
+      {
+        heading: "Engine and test assembly",
+        paragraphs: [
+          "The engine is made of cold-rolled steel and runs on propane. It was designed in SolidWorks and is mounted on a rolling frame for testing.",
+        ],
+      },
+      {
+        heading: "Test bench",
+        paragraphs: ["The bench records three metrics: thrust, temperature and fuel efficiency. Thrust is measured on a tension scale."],
+      },
+      {
+        heading: "Fuel injector iterations",
+        paragraphs: [
+          "We built multiple fuel injector versions and live-tested each one. The results of each test guided the design of the next version.",
+        ],
+      },
+      {
+        heading: "Result",
+        paragraphs: ["Peak static thrust measured on the bench is about 200 N (about 45 lbf)."],
+      },
+    ],
+    figures: [
+      pulseJetRender,
       {
         type: "image",
         src: "/project-photos/pulse-jet-fabricated-engine.webp",
-        label: "Fabricated Pulse-Jet Engine",
-        alt: "Fabricated steel pulse-jet engine standing on an outdoor workshop table with fabrication tools nearby",
-        caption: "Fabricated steel engine during workshop assembly and finishing.",
-        aspect: "portrait",
-        fit: "contain",
+        width: 1440,
+        height: 1920,
+        label: "Fabricated engine",
+        alt: "Fabricated steel pulse jet standing upright on an outdoor work table next to an angle grinder",
+        caption: "Steel engine after fabrication.",
       },
       {
         type: "image",
         src: "/project-photos/pulse-jet-test-assembly.webp",
-        label: "Completed Test Assembly",
-        alt: "Completed steel pulse-jet engine mounted horizontally on a rolling test frame and connected to a propane cylinder",
-        caption: "Completed propane-fueled engine mounted on the rolling test frame.",
-        aspect: "landscape",
-        fit: "contain",
+        width: 1920,
+        height: 1440,
+        label: "Completed test assembly",
+        alt: "Steel pulse jet mounted on a wheeled frame on a wooden work table, with a propane tank on the shelf below, a braided fuel line, and a red digital scale tied to the frame",
+        caption: "Completed test assembly on the rolling frame, fed from a propane tank.",
       },
     ],
-    featured: true,
-    caseStudy: {
-      format: "sections",
-      label: "Team / Goals / Contributions",
-      heading: "Building a student propulsion team.",
-      intro: "The project combines team leadership with hands-on engine design, fabrication, instrumentation, and testing.",
-      sections: [
-        {
-          title: "The team",
-          description: "I founded the eight-member Virginia Tech Pulse Jet Design Team in May 2025 and now lead its design, fabrication, and testing work. I organize roles, coordinate the work, and keep the team aligned around safe, measurable progress.",
-        },
-        {
-          title: "Our goals",
-          description: "Our goal is to develop a functional steel, propane-fueled pulse jet and a repeatable test program around it. We measure static thrust, temperature, and fuel efficiency so future design decisions can be based on test evidence.",
-        },
-        {
-          title: "What I specifically did",
-          description: "I helped move the project from an initial concept to a functioning engine and instrumented test setup.",
-          bullets: [
-            "Founded the team and established roles, constraints, and a safe validation plan.",
-            "Designed the steel engine geometry and assembly in SolidWorks.",
-            "Contributed to hands-on fabrication and assembly.",
-            "Built the test bench and ran controlled tests that recorded approximately 200 N of peak static thrust.",
-          ],
-        },
-      ],
-    },
   },
   {
     slug: "culligan",
-    title: "Culligan Product Design Work",
-    eyebrow: "Product Design / Prototyping / Engineering Drawings",
-    subtitle: "Four projects spanning product design, prototyping, and documentation.",
+    title: "Culligan International",
     role: "Mechanical Engineering Design Intern",
-    duration: "May 2026 - August 2026",
-    location: "Rosemont, Illinois",
-    summary: "At Culligan International, I designed, developed, and built water-treatment components across four selected workstreams.",
-    challenge: "As a Mechanical Engineering Design Intern, I developed practical, manufacturable solutions across cost reduction, commercial hydraulic performance, field training, and engineering documentation while protecting confidential product details.",
-    process: [
-      { title: "Define", description: "Translated residential, commercial hydraulic, and field-training needs into clear engineering requirements." },
-      { title: "Design", description: "3D modeled an injection-molded float and developed a booster pump kit for a commercial hydraulic valve." },
-      { title: "Validate", description: "Reviewed component performance and manufacturability to support design decisions." },
-      { title: "Build + document", description: "Fabricated and sourced a portable field-training prototype, modeled 3D systems, and drafted commercial engineering drawings." },
-    ],
-    results: [
-      "3D modeled and drafted GD&T drawings for an injection-molded float, reducing costs by $15,000.",
-      "Developed a booster pump kit that increased water pressure by 150% for a commercial hydraulic valve.",
-      "Fabricated and sourced a portable field-training prototype that secured $75,000 in funding.",
-      "Modeled 3D systems and drafted technical engineering drawings for five commercial water softeners.",
-    ],
-    future: ["Selected project details and visuals are intentionally limited due to confidentiality."],
+    dates: "May – Aug 2026",
+    location: "Rosemont, IL",
+    summary:
+      "Design internship with four workstreams: a float redesign for a water softener valve, a booster pump kit, a field-training prototype, and drawings for 5 commercial water softeners.",
     metrics: [
-      { value: "$15K", label: "Cost reduction", detail: "Injection-molded float" },
-      { value: "150%", label: "Pressure increase", detail: "Commercial booster pump kit" },
-      { value: "$75K", label: "Funding secured", detail: "Field-training prototype" },
-      { value: "5", label: "Systems documented", detail: "Commercial water softeners" },
+      { value: "$15K/yr", label: "Reassembly cost removed", note: "Float redesign" },
+      { value: "150%", label: "Water pressure increase", note: "Booster pump kit" },
+      { value: "$75K", label: "Funding secured", note: "Field-training prototype" },
+      { value: "5", label: "Commercial softeners", note: "3D models and drawings" },
     ],
-    skills: ["SolidWorks", "Injection-molded part design", "Prototype development", "Engineering drawings (GD&T)", "FEA"],
-    coverImage: {
-      type: "image",
-      src: "/project-photos/culligan-float-system.webp",
-      label: "Residential Float System",
-      alt: "Three side-by-side views of the residential float system: physical prototype, SolidWorks model, and design comparison",
-      caption: "Physical prototype, SolidWorks model, and design-comparison view of the injection-molded residential float system.",
-      captionPlacement: "below",
-      aspect: "landscape",
-      fit: "contain",
-    },
-    gallery: [
+    specs: [],
+    cover: culliganFloat,
+    confidentialNote: "This work is confidential. The images here were approved for public release, and some details are left out.",
+    sections: [
+      {
+        heading: "Water softener valve float",
+        paragraphs: [
+          "I 3D modeled an injection-molded float for a water softener valve and drafted its GD&T drawings.",
+          "The redesign removes about $15,000 per year in reassembly costs caused by a broken part.",
+        ],
+      },
+      {
+        heading: "Booster pump kit",
+        paragraphs: ["I developed a booster pump kit for a commercial hydraulic valve. The kit raised water pressure by 150%."],
+      },
+      {
+        heading: "Field-training prototype",
+        paragraphs: ["I fabricated a portable field-training prototype and sourced its parts. The prototype secured $75,000 in funding."],
+      },
+      {
+        heading: "Commercial water softener drawings",
+        paragraphs: ["I made 3D models and technical drawings for 5 commercial water softeners."],
+      },
+      {
+        heading: "Acrylic bracket FEA",
+        paragraphs: [
+          "A static structural analysis of an acrylic mounting bracket predicted a maximum von Mises stress of 2,217 psi and a factor of safety of 2.94.",
+        ],
+        metrics: [
+          { value: "2,217 psi", label: "Max von Mises stress" },
+          { value: "2.94", label: "Factor of safety" },
+        ],
+      },
+    ],
+    figures: [
+      culliganFloat,
       {
         type: "image",
         src: "/project-photos/culligan-bracket-fea.webp",
-        label: "Acrylic Mounting-Bracket FEA",
-        alt: "Static structural FEA results for the acrylic mounting bracket, including loading, stress distribution, factor of safety, and conclusions",
-        caption: "Static structural analysis predicted 2,217 psi maximum von Mises stress and a 2.94 factor of safety.",
-        captionPlacement: "below",
-        aspect: "landscape",
-        fit: "contain",
+        width: 1584,
+        height: 993,
+        label: "Bracket FEA",
+        alt: "Static structural FEA plot of the acrylic mounting bracket with a von Mises stress color scale, boundary conditions and a results summary",
+        caption: "Acrylic mounting bracket. Maximum von Mises stress 2,217 psi, factor of safety 2.94.",
       },
       {
         type: "image",
         src: "/project-photos/culligan-training-suitcase.webp",
-        label: "Field-Training Suitcase Prototype",
-        alt: "Open portable field-training suitcase prototype with machined aluminum mounting panels installed",
-        caption: "Machined aluminum mounting panels installed in the portable field-training suitcase prototype.",
-        captionPlacement: "below",
-        aspect: "portrait",
-        fit: "contain",
+        width: 1600,
+        height: 2133,
+        label: "Field-training prototype",
+        alt: "Open hard-shell case with perforated aluminum mounting panels in the lid and base",
+        caption: "Portable field-training prototype.",
       },
       {
         type: "image",
         src: "/project-photos/culligan-commercial-drawings.webp",
-        label: "Commercial Drawing Package",
-        alt: "Both sheets of the commercial water-softener general-arrangement drawing package stacked vertically",
-        caption: "Two-sheet general-arrangement drawing package stacked vertically for full-width review.",
-        captionPlacement: "below",
-        aspect: "landscape",
-        fit: "contain",
+        width: 2400,
+        height: 3125,
+        label: "Commercial softener drawings",
+        alt: "Two drawing sheets for commercial water softener systems, with orthographic views, a data table and notes",
+        caption: "Two-sheet drawing package for commercial water softeners.",
       },
     ],
-    confidential: true,
-    featured: true,
-    caseStudy: {
-      format: "sections",
-      label: "Four selected projects",
-      heading: "Product design work at Culligan.",
-      intro: "My internship covered residential products, commercial hydraulic systems, field training, and technical documentation. The summaries below match my current resume; selected details remain limited because the work is confidential.",
-      sections: [
-        {
-          title: "Residential float system",
-          description: "3D modeled an injection-molded float in SolidWorks and drafted its GD&T engineering drawings, contributing to a $15,000 cost reduction.",
-        },
-        {
-          title: "Commercial booster pump kit",
-          description: "Developed a booster pump kit that increased water pressure by 150% for a commercial hydraulic valve.",
-        },
-        {
-          title: "Field-training prototype",
-          description: "Fabricated and sourced a portable field-training prototype that secured $75,000 in funding for continued development.",
-        },
-        {
-          title: "Commercial drawing packages",
-          description: "Modeled 3D systems and drafted technical engineering drawings for five commercial water softeners, translating the designs into clear manufacturing documentation.",
-        },
-      ],
-    },
   },
   {
     slug: "automotive-restoration",
     title: "Automotive Restoration",
-    eyebrow: "Fabrication / Diagnostics / Independent Build",
-    subtitle: "Two vehicles returned to working condition.",
-    role: "Independent Project",
-    duration: "August 2020 - Present",
-    location: "Libertyville, Illinois",
-    summary: "I restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche through engine rebuild and swap work, an axle swap, a new wiring harness, welding, machining, and diagnostics.",
-    challenge: "Working independently, I needed to diagnose each vehicle, prioritize and sequence repairs, and restore both systems safely using machining, welding, and hands-on repair skills.",
-    process: [
-      { title: "Diagnose", description: "Worked from symptoms and inspection findings to isolate mechanical and structural problems." },
-      { title: "Plan", description: "Sequenced repairs around safety, system dependencies, and parts availability." },
-      { title: "Restore", description: "Applied welding, machining, repair, and assembly skills across both vehicles." },
-      { title: "Verify", description: "Tested repaired systems and used new evidence to resolve remaining issues." },
+    role: "Independent project",
+    dates: "Aug 2020 – Present",
+    location: "Libertyville, IL",
+    summary: "I restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche to working condition, including body, engine and drivetrain work.",
+    metrics: [{ value: "2", label: "Vehicles restored", note: "To working condition" }],
+    specs: [
+      { label: "Vehicles", value: "2001 Jeep Cherokee, 1987 Jeep Comanche" },
+      { label: "Welding", value: "MIG and stick" },
     ],
-    results: [
-      "Completed an engine rebuild and engine swap.",
-      "Completed an axle swap.",
-      "Installed a new wiring harness.",
-      "Returned a 2001 Jeep Cherokee and a 1987 Jeep Comanche to working condition.",
+    cover: comancheFinished,
+    sections: [
+      {
+        heading: "Vehicles",
+        paragraphs: ["The project covers two vehicles: a 2001 Jeep Cherokee and a 1987 Jeep Comanche. Both are restored to working condition."],
+      },
+      {
+        heading: "Work completed",
+        paragraphs: ["This list covers both vehicles together."],
+        list: [
+          "Body work: floor pans and rockers",
+          "Engine rebuild",
+          "Engine swap",
+          "Axle swap",
+          "Driveshaft machining",
+          "MIG and stick welding",
+          "Diagnostics",
+        ],
+      },
     ],
-    future: ["Continue documenting system-by-system restoration decisions.", "Add a complete walk-around video and final system checks."],
-    metrics: [
-      { value: "2", label: "Vehicles restored", detail: "Cherokee + Comanche" },
-      { value: "2020", label: "Project began", detail: "Independent restoration work" },
+    figures: [
+      comancheFinished,
+      {
+        type: "image",
+        src: "/project-photos/automotive-garage-teardown.webp",
+        width: 1400,
+        height: 788,
+        label: "Teardown",
+        alt: "Jeep on jack stands in a garage with the engine, transmission and axle removed and parts on the floor",
+        caption: "Teardown in the garage.",
+      },
+      {
+        type: "image",
+        src: "/project-photos/automotive-engine-install.webp",
+        width: 1400,
+        height: 788,
+        label: "Engine installation",
+        alt: "Engine hanging from a shop crane above an open engine bay",
+        caption: "Engine installation with a shop crane.",
+      },
+      {
+        type: "image",
+        src: "/project-photos/automotive-cherokee-finished.webp",
+        width: 1400,
+        height: 788,
+        label: "2001 Jeep Cherokee",
+        alt: "Restored red 2001 Jeep Cherokee parked in a driveway",
+        caption: "2001 Jeep Cherokee.",
+      },
+      {
+        type: "image",
+        src: "/project-photos/automotive-engine-bay-wiring.webp",
+        width: 1400,
+        height: 788,
+        label: "Engine bay",
+        alt: "Engine bay with the engine, hoses and air intake installed",
+        caption: "Engine bay during the restoration.",
+      },
     ],
-    skills: ["MIG welding", "Stick welding", "Machining", "Automotive diagnostics"],
-    coverImage: { type: "image", src: "/project-photos/automotive-comanche-finished.webp", label: "Restored 1987 Jeep Comanche", alt: "Charles Clark standing beside the restored 1987 Jeep Comanche", caption: "1987 Jeep Comanche returned to working condition", aspect: "landscape" },
-    gallery: [
-      { type: "image", src: "/project-photos/automotive-garage-teardown.webp", label: "Drivetrain and Axle Teardown", alt: "Jeep Comanche on jack stands with the engine, transmission, axle, and suspension components removed", caption: "Engine, transmission, axle, and suspension work in progress", aspect: "landscape" },
-      { type: "image", src: "/project-photos/automotive-engine-install.webp", label: "Engine Rebuild and Swap", alt: "Engine being installed into the red Jeep Cherokee with a shop crane", caption: "Engine installation using a shop crane", aspect: "landscape" },
-      { type: "image", src: "/project-photos/automotive-cherokee-finished.webp", label: "Restored 2001 Jeep Cherokee", alt: "Restored red 2001 Jeep Cherokee photographed in a driveway", caption: "2001 Jeep Cherokee returned to working condition", aspect: "landscape" },
-      { type: "image", src: "/project-photos/automotive-engine-bay-wiring.webp", label: "Engine Bay and Wiring Harness", alt: "Jeep engine bay showing the engine, hoses, and wiring-harness work", caption: "Engine-bay assembly and new wiring-harness work", aspect: "landscape" },
-    ],
-    featured: true,
-    caseStudy: {
-      format: "sections",
-      label: "Major restoration work",
-      heading: "Rebuilding the systems that made the vehicles run.",
-      intro: "The 2001 Jeep Cherokee and 1987 Jeep Comanche restorations required major mechanical, drivetrain, and electrical work—not just cosmetic changes.",
-      sections: [
-        {
-          title: "Engine rebuild + swap",
-          description: "Rebuilt an engine and completed an engine swap as part of returning the vehicles to working condition. The work required mechanical diagnosis, careful repair sequencing, and hands-on installation.",
-        },
-        {
-          title: "Axle swap",
-          description: "Removed the existing axle assembly and completed an axle swap, using fabrication and mechanical repair skills to restore the drivetrain system.",
-        },
-        {
-          title: "New wiring harness",
-          description: "Installed a new wiring harness and worked through the electrical connections and diagnostic checks needed to restore reliable vehicle operation.",
-        },
-      ],
-    },
   },
   {
     slug: "telescoping-crutch",
     title: "Telescoping Accessibility Crutch",
-    eyebrow: "Accessibility / Rapid Prototyping / Design Leadership",
-    subtitle: "A telescoping concept with 66% less storage space.",
+    org: "Virginia Tech Engineering Education Department",
     role: "Accessibility Design Project Leader",
-    duration: "August 2024 - May 2025",
-    location: "Blacksburg, Virginia",
-    summary: "A full-length crutch is difficult to store and transport because its fixed length requires substantial space.",
-    challenge: "As project leader, I needed to guide a student team in creating a compact telescoping concept that preserved the crutch's essential function while meeting deadlines and clearly demonstrating the design.",
-    process: [
-      { title: "Frame", description: "Defined the storage problem and translated accessibility needs into a compacting mechanism goal." },
-      { title: "Model", description: "Used SolidWorks to develop telescoping concepts and communicate the device architecture." },
-      { title: "Prototype", description: "Built rapid prototypes to demonstrate the mechanism and device capabilities." },
-      { title: "Lead", description: "Ran meetings, established deadlines, coordinated work, and reported progress." },
+    dates: "Aug 2024 – May 2025",
+    location: "Blacksburg, VA",
+    summary: "I led a team that designed a telescoping crutch with a locking mechanism that takes 66% less storage space.",
+    metrics: [{ value: "66%", label: "Less storage space" }],
+    specs: [
+      { label: "Mechanism", value: "Telescoping, with a lock" },
+      { label: "CAD", value: "SolidWorks" },
+      { label: "Prototyping", value: "Rapid prototypes" },
     ],
-    results: [
-      "Reduced required storage space by 66%.",
-      "Produced SolidWorks models and rapid prototypes demonstrating the concept.",
-      "Led project meetings, deadlines, progress reporting, and team coordination.",
-    ],
-    future: ["Refine mechanism durability and ergonomics.", "Expand user testing and document design-validation results."],
-    metrics: [{ value: "66%", label: "Storage-space reduction", detail: "Telescoping concept" }],
-    skills: ["SolidWorks", "Accessibility design", "Rapid prototyping", "Project leadership", "Design communication"],
-    coverImage: {
-      type: "video",
-      src: "/project-videos/telescoping-crutch-animation.mp4",
-      label: "Telescoping Accessibility Crutch",
-      alt: "Looping demonstration of the telescoping accessibility crutch prototype",
-      caption: "Compact mobility-aid concept with 66% storage-space reduction",
-      aspect: "landscape",
-      playback: "loop",
-      fit: "contain",
-    },
-    gallery: [
+    cover: crutchAnimation,
+    sections: [
       {
-        type: "image",
-        src: "/project-photos/crutch-accessibility-poster.webp",
-        label: "Accessibility on Campus Project Poster",
-        alt: "Complete Accessibility on Campus presentation poster showing design performance, stakeholders, research, solution overview, limitations, and recommendations",
-        caption: "Final project poster documenting the research, design decisions, performance, and recommendations",
-        aspect: "landscape",
-        fit: "contain",
+        heading: "Problem",
+        paragraphs: ["The problem was transporting and storing a crutch when a student is injured on campus."],
       },
+      {
+        heading: "Design",
+        paragraphs: ["The design is a telescoping crutch with a locking mechanism. It takes 66% less storage space."],
+      },
+      {
+        heading: "Process",
+        paragraphs: ["I led the team. We modeled the crutch in SolidWorks and built rapid prototypes."],
+      },
+      {
+        heading: "Scope",
+        paragraphs: ["The crutch was one part of a larger project that also included a mobile ordering app. I worked only on the crutch."],
+      },
+    ],
+    figures: [
+      crutchAnimation,
       {
         type: "image",
         src: "/project-photos/crutch-prototype.webp",
-        label: "Working Telescoping Crutch Prototype",
-        alt: "Physical telescoping crutch prototype with PVC frame, wiring, sensors, and a green status light",
-        caption: "Physical prototype with the locking indicator illuminated",
-        aspect: "portrait",
-        fit: "contain",
+        width: 419,
+        height: 744,
+        label: "Working prototype",
+        alt: "Telescoping crutch prototype built from white PVC pipe, held upright in a lab, with a green indicator light lit",
+        caption: "Working prototype with the locking indicator lit.",
+      },
+      {
+        type: "image",
+        src: "/project-photos/crutch-accessibility-poster.webp",
+        width: 2400,
+        height: 1800,
+        label: "Final poster",
+        alt: "Accessibility on Campus project poster with sections on design performance, stakeholders, the problem, the solution, limitations and recommendations",
+        caption: "Final project poster.",
       },
     ],
-    featured: true,
-    caseStudy: { format: "star" },
   },
 ];
 
-export const experiences = [
+export interface Experience {
+  org: string;
+  projectSlug: string;
+  role: string;
+  dates: string;
+  location: string;
+  points: string[];
+}
+
+export const experiences: Experience[] = [
   {
-    company: "Culligan International",
+    org: "Culligan International",
     projectSlug: "culligan",
     role: "Mechanical Engineering Design Intern",
-    location: "Rosemont, Illinois",
-    duration: "May 2026 - August 2026",
-    summary: "Designed, developed, and built water-treatment components using SolidWorks, prototyping, and technical documentation.",
-    highlights: ["3D modeled and drafted GD&T drawings for an injection-molded float, reducing costs by $15,000", "Developed a booster pump kit that increased water pressure by 150% for a commercial hydraulic valve", "Fabricated and sourced a portable field-training prototype that secured $75,000 in funding", "Modeled 3D systems and drafted technical engineering drawings for five commercial water softeners"],
+    dates: "May – Aug 2026",
+    location: "Rosemont, IL",
+    points: [
+      "3D modeled an injection-molded float for a water softener valve and drafted its GD&T drawings. The redesign removes about $15,000 per year in reassembly costs.",
+      "Developed a booster pump kit that raised water pressure by 150% for a commercial hydraulic valve.",
+      "Fabricated and sourced a portable field-training prototype that secured $75,000 in funding.",
+      "Made 3D models and technical drawings for 5 commercial water softeners.",
+    ],
   },
   {
-    company: "Pulse Jet Design Team",
+    org: "Pulse Jet Design Team",
     projectSlug: "pulse-jet",
     role: "Founder and President",
-    location: "Blacksburg, Virginia",
-    duration: "May 2025 - Present",
-    summary: "Founded and lead an eight-member team that designs, fabricates, instruments, and tests pulse jet engines.",
-    highlights: ["Designed and tested a steel, propane-fueled pulse jet producing approximately 200 N of peak static thrust", "Created a testing bench for three metrics: thrust, temperature, and fuel efficiency"],
+    dates: "May 2025 – Present",
+    location: "Blacksburg, VA",
+    points: [
+      "Lead an 8-member team that built a propane-fueled pulse jet from cold-rolled steel.",
+      "Peak static thrust of about 200 N (45 lbf), measured on a test bench that records thrust, temperature and fuel efficiency.",
+    ],
   },
   {
-    company: "Automotive Restoration",
+    org: "Automotive Restoration",
     projectSlug: "automotive-restoration",
-    role: "Independent Project",
-    location: "Libertyville, Illinois",
-    duration: "August 2020 - Present",
-    summary: "Rebuilt and restored two vehicles through diagnostics, welding, machining, and repair planning.",
-    highlights: ["Rebuilt and restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche", "Applied welding, machining, and diagnostic problem-solving to restore both vehicles to working condition"],
+    role: "Independent project",
+    dates: "Aug 2020 – Present",
+    location: "Libertyville, IL",
+    points: ["Restored a 2001 Jeep Cherokee and a 1987 Jeep Comanche to working condition."],
   },
   {
-    company: "Virginia Tech Engineering Education Department",
+    org: "Virginia Tech Engineering Education Department",
     projectSlug: "telescoping-crutch",
     role: "Accessibility Design Project Leader",
-    location: "Blacksburg, Virginia",
-    duration: "August 2024 - May 2025",
-    summary: "Led a rapid-prototyping team through the design of a telescoping accessibility crutch, combining CAD development with deadlines, demonstrations, and structured progress reporting.",
-    highlights: ["Led a team to design and prototype a telescoping crutch, reducing storage space by 66%", "Utilized CAD and rapid prototyping to create models and demonstrate the device's capabilities"],
+    dates: "Aug 2024 – May 2025",
+    location: "Blacksburg, VA",
+    points: ["Led the team that designed a telescoping crutch with a locking mechanism that takes 66% less storage space."],
   },
-];
-
-export const skillGroups = [
-  { title: "CAD + analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings (GD&T)", "MATLAB"] },
-  { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
-  { title: "Manufacturing + fabrication", skills: ["MIG welding", "Stick welding", "3D printing", "CNC machining", "Forklift certification"] },
 ];
 
 export const education = {
   school: "Virginia Tech",
-  degree: "Bachelor of Science in Mechanical Engineering",
-  graduation: "Expected Graduation: May 2028",
-  details: ["GPA: 3.84", "Dean's List every semester", "Mechanical Engineering Undergraduate Student Ambassador", "Raymond & Shirley Lynn Merit Scholarship recipient"],
-  coursework: ["Dynamics", "Thermodynamics", "Differential Equations", "Mechanics of Bodies", "Electrical Theory"],
+  degree: "B.S. Mechanical Engineering",
+  graduation: "Expected May 2028",
+  gpa: "3.84",
+  honors: [
+    "Dean's List every semester",
+    "Mechanical Engineering Undergraduate Student Ambassador",
+    "Raymond & Shirley Lynn Merit Scholarship recipient",
+  ],
 };
 
 export const credentials = [
   { title: "Certified SolidWorks Professional (CSWP)", issuer: "Dassault Systèmes", date: "July 2026" },
-  { title: "Finite Element Analysis (FEA) Certification", issuer: "GoEngineer", date: "July 2026" },
+  { title: "FEA Certification", issuer: "GoEngineer", date: "July 2026" },
   { title: "Eagle Scout", issuer: "Boy Scouts of America", date: "July 2023" },
 ];
 
-export const processSteps = [
-  { number: "01", title: "Define", text: "Turn the need into clear constraints and success criteria." },
-  { number: "02", title: "Model", text: "Develop geometry, interfaces, and manufacturable assemblies in CAD." },
-  { number: "03", title: "Analyze", text: "Use calculations and FEA to challenge the design before fabrication." },
-  { number: "04", title: "Prototype", text: "Build quickly enough to learn from the physical system." },
-  { number: "05", title: "Test", text: "Instrument, measure, and compare the result to the requirement." },
-  { number: "06", title: "Refine", text: "Use evidence from testing to make the next version stronger." },
+export const skillGroups = [
+  { title: "CAD and analysis", skills: ["SolidWorks (CSWP)", "Finite Element Analysis", "Engineering drawings (GD&T)", "MATLAB"] },
+  { title: "Product development", skills: ["Rapid prototyping", "Injection-molded part design", "Design validation"] },
+  { title: "Fabrication", skills: ["MIG and stick welding", "3D printing", "CNC machining"] },
 ];
