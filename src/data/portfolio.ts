@@ -169,7 +169,21 @@ export const projects: Project[] = [
       { label: "Thrust gauge", value: "Tension scale" },
     ],
     cover: pulseJetRender,
-    testVideo: { label: "Test run video", media: null },
+    // Filler clip made from the three photos below. Replace it with a test run video when one exists (see README).
+    testVideo: {
+      label: "Build sequence",
+      media: {
+        type: "video",
+        src: "/project-videos/pulse-jet-build-sequence.mp4",
+        poster: "/project-videos/pulse-jet-build-sequence-poster.webp",
+        width: 1280,
+        height: 720,
+        playback: "loop",
+        label: "Build sequence",
+        alt: "Slow pan across the SolidWorks assembly, then the fabricated engine, then the completed test assembly",
+        caption: "SolidWorks assembly, fabricated engine and completed test assembly.",
+      },
+    },
     sections: [
       {
         heading: "Team",

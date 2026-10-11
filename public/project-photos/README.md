@@ -26,6 +26,7 @@ Keep each published image under about 600 KB. The home page loads the hero and t
 | Culligan International | `culligan-float-system.webp` (cover), `culligan-bracket-fea.webp`, `culligan-training-suitcase.webp`, `culligan-commercial-drawings.webp` |
 | Automotive Restoration | `automotive-comanche-finished.webp` (cover), `automotive-garage-teardown.webp`, `automotive-engine-install.webp`, `automotive-cherokee-finished.webp`, `automotive-engine-bay-wiring.webp` |
 | Telescoping Accessibility Crutch | `crutch-prototype.webp`, `crutch-accessibility-poster.webp`; the cover is `../project-videos/telescoping-crutch-animation.mp4` with the poster frame `telescoping-crutch-animation-poster.webp` |
+| Pulse jet video slot (filler) | `../project-videos/pulse-jet-build-sequence.mp4` and `../project-videos/pulse-jet-build-sequence-poster.webp`, made from the three pulse jet photos |
 | Phone-size copies | `pulse-jet-test-assembly-hero-600.webp`, `pulse-jet-test-assembly-hero-800.webp`, `pulse-jet-assembly-render-800.webp`, `culligan-float-system-800.webp`, `automotive-comanche-finished-800.webp` |
 
 Only publish Culligan images that Culligan has approved for public release, with confidential dimensions, part numbers, customer information and internal documents removed.

@@ -20,7 +20,9 @@ All text, numbers, captions and media references live in [`src/data/portfolio.ts
 
 ## Adding the pulse jet test video
 
-The pulse jet page has a reserved slot for a test video. Until a video is added it shows a labeled placeholder. To publish one, edit the `testVideo` entry of the `pulse-jet` project in `src/data/portfolio.ts` and replace `media: null` with one of the following.
+The pulse jet page has a reserved slot for a test video near the top. It currently holds a filler: a 10-second muted loop made from the three existing pulse jet photos (`public/project-videos/pulse-jet-build-sequence.mp4`), labeled "Build sequence". With `media: null` the slot shows a labeled "Pending" placeholder instead.
+
+To publish a test video, edit the `testVideo` entry of the `pulse-jet` project in `src/data/portfolio.ts`: set `label` to `"Test run video"` and replace `media` with one of the following.
 
 A video file (put the file in `public/project-videos/`; MP4 with H.264 plays everywhere):
 
