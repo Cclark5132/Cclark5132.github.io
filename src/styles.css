@@ -767,11 +767,12 @@ a {
   text-decoration: none;
 }
 
-.sheet-link::after {
+/* Full-size link layer over a card. It sits outside the animated elements, whose transforms would
+   otherwise trap a stretched link inside them. */
+.card-cover {
   position: absolute;
   inset: 0;
   z-index: 1;
-  content: "";
 }
 
 .sheet-link:focus-visible {
@@ -1079,8 +1080,13 @@ a {
   text-underline-offset: 5px;
 }
 
-.experience-body h3 a:hover {
+.experience-body h3 a:hover,
+.experience-item:hover h3 a {
   text-decoration-color: var(--color-orange);
+}
+
+.experience-item:has(.card-cover:hover) .experience-node {
+  border-color: var(--color-orange);
 }
 
 .experience-project {
@@ -1275,52 +1281,79 @@ a {
   color: #fff;
 }
 
-.contact-list > div {
-  position: relative;
+/* Contact: one tile per channel with its icon; the whole tile is the link. */
+.contact-links {
+  display: grid;
+  gap: 12px;
+}
+
+.contact-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 76px;
+  padding: 14px 18px 14px 14px;
+  border: 1.5px solid rgb(255 255 255 / 0.5);
+  color: #fff;
+  text-decoration: none;
+}
+
+.contact-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  background: #fff;
+  color: var(--color-maroon);
+}
+
+.contact-text {
   display: grid;
   gap: 2px;
-  padding: 14px 0;
+  min-width: 0;
 }
 
-.contact-rule {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: rgb(255 255 255 / 0.35);
-  transform-origin: 0 50%;
-}
-
-.contact-list > div:last-child {
-  border-bottom: 1px solid rgb(255 255 255 / 0.35);
-}
-
-.contact-list dt {
+.contact-text small {
   color: rgb(255 255 255 / 0.78);
-  font: 500 0.75rem/1.5 var(--font-mono);
+  font: 500 0.75rem/1.3 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.contact-list a {
-  font-size: clamp(1.125rem, 2.4vw, 1.5rem);
+.contact-text span {
+  font-size: clamp(1.0625rem, 2vw, 1.25rem);
   font-weight: 600;
+  line-height: 1.3;
   overflow-wrap: anywhere;
-  text-decoration: underline;
-  text-decoration-color: var(--color-orange);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
 }
 
-.contact-list a:hover {
-  text-decoration-color: #fff;
+.contact-action {
+  color: var(--color-orange);
+}
+
+.contact-link:hover {
+  border-color: #fff;
+  background: #fff;
+  color: var(--color-maroon);
+}
+
+.contact-link:hover .contact-icon {
+  background: var(--color-maroon);
+  color: #fff;
+}
+
+.contact-link:hover small {
+  color: var(--color-ink-soft);
+}
+
+.contact-link:hover .contact-action {
+  color: var(--color-maroon);
 }
 
 @media (min-width: 640px) {
-  .contact-list > div {
-    grid-template-columns: 7.5rem minmax(0, 1fr);
-    align-items: baseline;
+  .contact-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -2229,9 +2262,7 @@ a {
   .skill-group .skill-rule { --d: calc(70ms + var(--g, 0) * 95ms); }
   .skill-group li { --d: calc(170ms + var(--g, 0) * 95ms); --step: 55ms; }
 
-  .contact-list > div { --step: 85ms; }
-  .contact-list dt { --d: 70ms; }
-  .contact-list dd { --d: 110ms; }
+  .contact-links li { --d: 60ms; --step: 85ms; }
 
   .writeup h2 { --d: 70ms; }
   .writeup p { --d: 130ms; --step: 70ms; }
@@ -2281,6 +2312,8 @@ a {
   .menu-button,
   .sheet,
   .pager-link,
+  .contact-link,
+  .contact-icon,
   .media-toggle,
   .figure-zoom-hint {
     transition:

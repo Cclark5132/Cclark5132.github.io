@@ -123,10 +123,10 @@ const crutchAnimation: MediaItem = {
 export const profile = {
   name: "Charles T. Clark",
   shortName: "Charles Clark",
-  status: "Incoming at SpaceX",
+  status: "Incoming SpaceX Intern, 2027",
   school: "Virginia Tech",
   degree: "B.S. Mechanical Engineering",
-  graduation: "May 2028",
+  graduation: "Dec 2028",
   gpa: "3.84",
   location: "Chicago, IL",
   email: "charlesclark@vt.edu",
@@ -499,7 +499,7 @@ export const experiences: Experience[] = [
 export const education = {
   school: "Virginia Tech",
   degree: "B.S. Mechanical Engineering",
-  graduation: "Expected May 2028",
+  graduation: "Expected December 2028",
   gpa: "3.84",
   honors: [
     "Dean's List every semester",

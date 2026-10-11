@@ -71,6 +71,8 @@ export function ExperienceTimeline() {
           const index = projects.findIndex((project) => project.slug === item.projectSlug);
           return (
             <li className="experience-item" key={item.org} data-reveal="entry">
+              {/* Makes the whole entry clickable; the heading link is the one keyboards and screen readers use. */}
+              <Link className="card-cover" to={`/projects/${item.projectSlug}`} tabIndex={-1} aria-hidden="true" />
               <span className="experience-rule r-draw" aria-hidden="true" />
               <span className="experience-node" aria-hidden="true" />
               <p className="experience-when r-fade">

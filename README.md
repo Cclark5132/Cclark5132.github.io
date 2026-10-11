@@ -1,6 +1,6 @@
 # Charles T. Clark Engineering Portfolio
 
-Portfolio site for Charles T. Clark: Virginia Tech, B.S. Mechanical Engineering (expected May 2028), incoming at SpaceX.
+Portfolio site for Charles T. Clark: Virginia Tech, B.S. Mechanical Engineering (expected December 2028), incoming SpaceX intern for 2027.
 
 Live site: [charlesclark.me](https://charlesclark.me)
 

@@ -10,9 +10,9 @@ export interface PageMeta {
 
 /** Shared by the build-time prerenderer and the client so every page's tags match. */
 export const homeMeta: PageMeta = {
-  title: "Charles Clark | Mechanical Engineering | Incoming at SpaceX",
+  title: "Charles Clark | Mechanical Engineering | Incoming SpaceX Intern 2027",
   description:
-    "Charles T. Clark, Virginia Tech mechanical engineering student (B.S. expected May 2028), incoming at SpaceX. Projects: a propane pulse jet, product design at Culligan, two Jeep restorations and a telescoping crutch.",
+    "Charles T. Clark, Virginia Tech mechanical engineering student (B.S. expected December 2028), incoming SpaceX intern for 2027. Projects: a propane pulse jet, product design at Culligan, two Jeep restorations and a telescoping crutch.",
   url: `${SITE_URL}/`,
 };
 

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight, FileText, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Download, FileText, Github, Linkedin, Mail } from "lucide-react";
 import { useEffect, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { BlockReveal } from "../components/BlockReveal";
@@ -13,11 +13,11 @@ import { applyMeta } from "../lib/applyMeta";
 
 const order = (index: number) => ({ "--i": index }) as CSSProperties;
 
-const contactRows = [
-  { label: "Email", href: `mailto:${profile.email}`, text: profile.email, external: false },
-  { label: "LinkedIn", href: profile.linkedIn, text: profile.linkedInLabel, external: true },
-  { label: "GitHub", href: profile.github, text: profile.githubLabel, external: true },
-  { label: "Resume", href: profile.resume, text: "Charles-Clark-Resume.pdf", external: true },
+const contactLinks = [
+  { label: "Email", href: `mailto:${profile.email}`, text: profile.email, icon: Mail, action: ArrowUpRight, external: false },
+  { label: "LinkedIn", href: profile.linkedIn, text: "charlesclarkvt", icon: Linkedin, action: ArrowUpRight, external: true },
+  { label: "GitHub", href: profile.github, text: "Cclark5132", icon: Github, action: ArrowUpRight, external: true },
+  { label: "Resume", href: profile.resume, text: "Open PDF", icon: FileText, action: Download, external: true },
 ];
 
 const heroFacts = [
@@ -189,19 +189,22 @@ export function HomePage() {
               <BuildText text="Contact" />
             </h2>
           </div>
-          <dl className="contact-list" data-reveal="rows">
-            {contactRows.map((row, index) => (
-              <div style={order(index)} key={row.label}>
-                <span className="contact-rule r-draw" aria-hidden="true" />
-                <dt className="r-fade">{row.label}</dt>
-                <dd className="r-fade">
-                  <a href={row.href} {...(row.external ? { target: "_blank", rel: "noopener" } : {})}>
-                    {row.text}
-                  </a>
-                </dd>
-              </div>
+          <ul className="contact-links" data-reveal="rows">
+            {contactLinks.map(({ label, href, text, icon: Icon, action: Action, external }, index) => (
+              <li className="r-block" style={order(index)} key={label}>
+                <a className="contact-link" href={href} {...(external ? { target: "_blank", rel: "noopener" } : {})}>
+                  <span className="contact-icon" aria-hidden="true">
+                    <Icon size={22} />
+                  </span>
+                  <span className="contact-text">
+                    <small>{label}</small>
+                    <span>{text}</span>
+                  </span>
+                  <Action className="contact-action" size={20} aria-hidden="true" />
+                </a>
+              </li>
             ))}
-          </dl>
+          </ul>
         </div>
       </section>
     </main>

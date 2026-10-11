@@ -25,6 +25,8 @@ export function ProjectSheet({ project, index, total }: ProjectSheetProps) {
 
   return (
     <article className="sheet" style={{ "--stack": index } as CSSProperties} aria-labelledby={`sheet-${project.slug}`} data-reveal="sheet">
+      {/* Makes the whole card clickable. The title link below is the one keyboards and screen readers use. */}
+      <Link className="card-cover" to={`/projects/${project.slug}`} tabIndex={-1} aria-hidden="true" />
       <header className="sheet-strip">
         <span className="sheet-number r-block">
           <span className="sr-only">Project </span>
