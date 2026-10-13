@@ -21,7 +21,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="site-header" id="top">
+    <header className="site-header">
       <div className="wrap header-bar">
         <Link to="/" className="brand">
           <span className="brand-mark">CTC</span>

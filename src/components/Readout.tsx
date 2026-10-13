@@ -11,13 +11,13 @@ interface ReadoutProps {
 
 /**
  * Key numbers on a dark panel, where the orange values meet AA contrast.
- * Its cells slide in from alternating sides and snap together into the panel.
+ * Its cells fade in one after another.
  */
 export function Readout({ metrics, layout = "grid", className = "" }: ReadoutProps) {
   return (
     <dl className={`readout readout-${layout} ${className}`} data-count={metrics.length}>
       {metrics.map((metric, index) => (
-        <div className="readout-cell r-block" style={{ "--i": index } as CSSProperties} key={metric.label}>
+        <div className="readout-cell r-fade" style={{ "--i": index } as CSSProperties} key={metric.label}>
           <dt>
             <span className="readout-label">{metric.label}</span>
             {metric.note && <span className="readout-note">{metric.note}</span>}

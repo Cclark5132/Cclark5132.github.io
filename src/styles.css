@@ -466,15 +466,6 @@ a {
   display: block;
 }
 
-.build-word,
-.build-char {
-  display: inline-block;
-}
-
-/* Letters rise from behind the bottom edge of their word. */
-.build-word {
-  clip-path: inset(-0.6em -0.3em -0.08em -0.3em);
-}
 
 .hero-status {
   display: flex;
@@ -753,6 +744,13 @@ a {
   letter-spacing: 0.02em;
   line-height: 1.15;
   text-transform: uppercase;
+}
+
+/* Title links sit above the full-card link layer, so hovering them behaves like a normal link. */
+.sheet-link,
+.experience-body h3 a {
+  position: relative;
+  z-index: 2;
 }
 
 .sheet-link {
@@ -1404,8 +1402,6 @@ a {
 
 /* Dark band: the project's title, summary and numbers, then the photo stage. */
 .project-band {
-  --tile-base: #2b2724;
-  --tile-line: rgb(255 255 255 / 0.07);
   padding: 4px 0 56px;
   background: var(--color-ink);
   color: var(--color-panel-text);
@@ -2154,102 +2150,18 @@ a {
 
 /* ---------- Motion ----------
  *
- * The page builds itself as it scrolls. An element with `data-reveal` is a trigger; src/lib/reveal.ts sets
- * data-reveal-state="pending" while it waits off screen and "in" once it scrolls into view, and puts it back
- * to "pending" when it scrolls well away, so everything builds again on the way back. Blocks with class
- * `intro` (hero, project title block) also play on page load, before the script runs. What builds:
- *   .build-char  letters of a heading rise one after another (BuildText)
- *   .plot        blocks over an image shrink away behind an orange scan line (BlockReveal)
- *   .r-block     blocks fly in from alternating sides and snap together
- *   .r-draw      a line extends from the left        .r-wipe  wipes in from the left
- *   .r-fade      fades up a few pixels                .r-pop   scales up with a small overshoot
+ * Kept deliberately quiet. An element with `data-reveal` is a trigger; src/lib/reveal.ts sets
+ * data-reveal-state="pending" while it waits below the fold and "in" the first time it scrolls into view.
+ * Blocks with class `intro` (hero, project title) play on page load instead. Children say how they appear:
+ *   .r-fade  fades up a few pixels        .r-draw  a line extends from the left
  * --d is a delay, --i a place in a sequence, --step the gap between places.
  * All of it is off under prefers-reduced-motion, and nothing is hidden without the script.
  */
 
-.plot {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: none;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.tiles {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(14, 1fr);
-  grid-template-rows: repeat(9, 1fr);
-}
-
-/* The outer shadow takes the tile's own colour (currentColor) and covers sub-pixel seams between tiles. */
-.tile {
-  color: var(--tile-base, var(--color-paper-deep));
-  background-color: currentColor;
-  box-shadow:
-    0 0 0 0.75px currentColor,
-    inset 0 0 0 0.5px var(--tile-line, rgb(29 26 24 / 0.14));
-}
-
-/* Column (--x) and row (--y) of each of the 126 blocks (14 x 9), for the sweep timing. */
-.tile:nth-child(14n + 2) { --x: 1; }
-.tile:nth-child(14n + 3) { --x: 2; }
-.tile:nth-child(14n + 4) { --x: 3; }
-.tile:nth-child(14n + 5) { --x: 4; }
-.tile:nth-child(14n + 6) { --x: 5; }
-.tile:nth-child(14n + 7) { --x: 6; }
-.tile:nth-child(14n + 8) { --x: 7; }
-.tile:nth-child(14n + 9) { --x: 8; }
-.tile:nth-child(14n + 10) { --x: 9; }
-.tile:nth-child(14n + 11) { --x: 10; }
-.tile:nth-child(14n + 12) { --x: 11; }
-.tile:nth-child(14n + 13) { --x: 12; }
-.tile:nth-child(14n + 14) { --x: 13; }
-.tile:nth-child(n + 15) { --y: 1; }
-.tile:nth-child(n + 29) { --y: 2; }
-.tile:nth-child(n + 43) { --y: 3; }
-.tile:nth-child(n + 57) { --y: 4; }
-.tile:nth-child(n + 71) { --y: 5; }
-.tile:nth-child(n + 85) { --y: 6; }
-.tile:nth-child(n + 99) { --y: 7; }
-.tile:nth-child(n + 113) { --y: 8; }
-
-/* Scan line: the right edge of a full-width layer, slid from the left edge to the right edge. */
-.scan {
-  position: absolute;
-  inset: 0;
-  border-right: 2px solid var(--color-orange);
-  background: linear-gradient(90deg, transparent 78%, rgb(229 117 31 / 0.22));
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-.r-block:nth-child(odd) {
-  --bx: -22px;
-  --by: -14px;
-}
-
-.r-block:nth-child(even) {
-  --bx: 22px;
-  --by: 14px;
-}
-
-.sheet-strip > :nth-child(2) { --i: 1; }
-.sheet-strip > :nth-child(3) { --i: 2; }
-.sheet-strip > :nth-child(4) { --i: 3; }
-
-@keyframes r-char {
-  from {
-    transform: translateY(110%);
-  }
-}
-
-@keyframes r-block {
+@keyframes r-fade {
   from {
     opacity: 0;
-    transform: translate(var(--bx, 0px), var(--by, 16px)) scale(0.7);
+    transform: translateY(10px);
   }
 }
 
@@ -2259,94 +2171,8 @@ a {
   }
 }
 
-@keyframes r-fade {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
-@keyframes r-pop {
-  0% {
-    opacity: 0;
-    transform: translateY(8px) scale(0.85);
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes r-wipe {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-/* A block flashes maroon as the scan line reaches it, then shrinks away to show the image beneath. */
-@keyframes r-tile {
-  0% {
-    color: var(--tile-base, var(--color-paper-deep));
-    transform: scale(1);
-  }
-
-  28% {
-    color: var(--color-maroon);
-    transform: scale(1);
-  }
-
-  100% {
-    color: var(--color-maroon);
-    transform: scale(0);
-  }
-}
-
-@keyframes r-scan {
-  0% {
-    opacity: 1;
-    transform: translateX(-100%);
-  }
-
-  90% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(0);
-  }
-}
-
-@keyframes r-node {
-  0% {
-    transform: scale(0.4);
-  }
-
-  60% {
-    transform: scale(1.4);
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  :root {
-    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-snap: cubic-bezier(0.2, 0.9, 0.25, 1);
-  }
-
-  /* Blocks covering images: shown while waiting and while building, gone once static. */
-  :is([data-reveal-state="pending"], [data-reveal-state="in"], .intro:not([data-reveal-state])) .plot {
-    display: block;
-  }
-
-  /* Waiting off screen */
-  [data-reveal-state="pending"] :is(.r-fade, .r-pop, .r-block),
-  [data-reveal-state="pending"] .hero-status::before,
-  [data-reveal-state="pending"] .hero-frame::before,
-  [data-reveal-state="pending"] .hero-frame::after {
+  [data-reveal-state="pending"] .r-fade {
     opacity: 0;
   }
 
@@ -2354,114 +2180,52 @@ a {
     transform: scaleX(0);
   }
 
-  [data-reveal-state="pending"] .build-char {
-    transform: translateY(110%);
-  }
-
-  [data-reveal-state="pending"] .r-wipe {
-    clip-path: inset(0 100% 0 0);
-  }
-
-  /* Building (scrolled in, or on page load inside .intro) */
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .build-char {
-    animation: r-char 540ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--line, 110ms) + var(--c, 0) * var(--cstep, 24ms)) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-block {
-    animation: r-block 540ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
+  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-fade {
+    animation: r-fade 600ms var(--ease) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
   }
 
   :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-draw {
-    animation: r-draw 530ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-fade {
-    animation: r-fade 450ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-pop {
-    animation: r-pop 450ms var(--ease-pop) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .r-wipe {
-    animation: r-wipe 450ms var(--ease-snap) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 60ms)) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .tile {
-    animation: r-tile 380ms cubic-bezier(0.5, 0, 0.75, 0) calc(var(--d, 0ms) + var(--x, 0) * 30ms + var(--y, 0) * 14ms) both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .scan {
-    animation: r-scan 520ms linear var(--d, 0ms) both;
+    animation: r-draw 700ms var(--ease) calc(var(--d, 0ms) + var(--i, 0) * var(--step, 50ms)) both;
   }
 
   /* Timing, per component */
-  .section-head h2 { --d: 70ms; }
-  .section-head .section-number { --d: 240ms; }
-  .section-head .section-aside { --d: 360ms; }
-  .contact-head h2 { --d: 70ms; }
+  .hero .rise-line { --step: 80ms; }
+  .hero .hero-status { --d: 160ms; }
+  .hero .title-cell { --d: 220ms; --step: 40ms; }
+  .hero .hero-actions li { --d: 320ms; --step: 40ms; }
+  .hero .hero-figure figcaption { --d: 400ms; }
 
-  .sheet .sheet-strip > * { --step: 70ms; }
-  .sheet .plot { --d: 95ms; }
-  .sheet .sheet-role { --d: 145ms; }
-  .sheet .sheet-summary { --d: 205ms; }
-  .sheet .readout-cell { --d: 310ms; --step: 85ms; }
-  .sheet .sheet-cta { --d: 540ms; }
+  .section-head h2 { --d: 80ms; }
+  .section-head .section-aside,
+  .contact-head h2 { --d: 120ms; }
 
-  .experience-item .experience-when { --d: 70ms; }
-  .experience-item h3 { --d: 110ms; }
-  .experience-item .experience-role { --d: 155ms; }
-  .experience-item .experience-project { --d: 265ms; }
-  .experience-item .dash-list li { --d: 205ms; --step: 60ms; }
+  .sheet .sheet-summary { --d: 60ms; }
+  .sheet .readout-cell { --d: 120ms; --step: 50ms; }
+  .sheet .sheet-cta { --d: 220ms; }
+
+  .experience-item h3 { --d: 40ms; }
+  .experience-item .experience-role { --d: 70ms; }
+  .experience-item .dash-list li { --d: 100ms; --step: 40ms; }
 
   .panel .spec-list > div,
-  .panel .dash-list li { --d: 120ms; --step: 50ms; }
-  .panel .credential-list li { --d: 120ms; --step: 70ms; }
+  .panel .dash-list li,
+  .panel .credential-list li { --d: 60ms; --step: 30ms; }
 
-  .skill-group h3 { --d: calc(var(--g, 0) * 95ms); }
-  .skill-group .skill-rule { --d: calc(70ms + var(--g, 0) * 95ms); }
-  .skill-group li { --d: calc(170ms + var(--g, 0) * 95ms); --step: 55ms; }
+  .skill-group h3 { --d: calc(var(--g, 0) * 60ms); }
+  .skill-group li { --d: calc(80ms + var(--g, 0) * 60ms); --step: 30ms; }
 
-  .contact-links li { --d: 60ms; --step: 85ms; }
+  .contact-links li { --step: 50ms; }
 
-
-  .pager-link { --step: 85ms; }
-
-  /* Home hero */
-  .hero .rise-line { --d: 50ms; --line: 130ms; --cstep: 30ms; }
-  .hero .hero-status { --d: 310ms; }
-  .hero .title-cell { --d: 360ms; --step: 65ms; }
-  .hero .hero-actions li { --d: 625ms; --step: 60ms; }
-  .hero .plot { --d: 145ms; }
-  .hero .hero-figure figcaption { --d: 780ms; }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-status::before {
-    animation: r-pop 450ms var(--ease-pop) 310ms both;
-  }
-
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-frame::before,
-  :is([data-reveal-state="in"], .intro:not([data-reveal-state])) .hero-frame::after {
-    animation: r-pop 450ms var(--ease-pop) 1020ms both;
-  }
-
-  /* Project page title block, spec rail and video slot */
-  .project-hero .project-index { --d: 40ms; }
-  .project-hero h1 { --d: 70ms; --cstep: 22ms; }
-  .project-hero .project-summary { --d: 300ms; }
-  .project-hero .project-meta > div { --d: 380ms; --step: 70ms; }
-  .project-hero .project-numbers > div { --d: 480ms; --step: 90ms; }
-  .project-hero .confidential { --d: 560ms; }
-  .project-specs > div { --d: 60ms; --step: 45ms; }
-  .project-notes li { --d: 420ms; --step: 50ms; }
-  .slide .plot { --d: 40ms; }
-  .slide .slide-number { --d: 200ms; }
-  .slide .slide-title { --d: 240ms; }
-  .slide .slide-text { --d: 320ms; }
-
-  /* Timeline markers pop when the line reaches them */
-  .experience-item[data-reached="true"] .experience-node {
-    animation: r-node 470ms var(--ease-pop);
-  }
+  .project-hero h1 { --d: 60ms; }
+  .project-hero .project-summary { --d: 140ms; }
+  .project-hero .project-meta > div { --d: 200ms; --step: 40ms; }
+  .project-hero .project-numbers > div { --d: 260ms; --step: 60ms; }
+  .project-hero .confidential { --d: 320ms; }
+  .slide .slide-title { --d: 60ms; }
+  .slide .slide-text { --d: 100ms; }
+  .project-specs > div { --step: 30ms; }
+  .project-notes li { --d: 60ms; --step: 40ms; }
+  .pager-link { --step: 60ms; }
 
   /* Hover feedback */
   .button,
@@ -2472,11 +2236,15 @@ a {
   .contact-link,
   .contact-icon,
   .media-toggle,
-  .figure-zoom-hint {
+  .figure-zoom-hint,
+  .experience-node,
+  .stage-arrow,
+  .stepper-bar::after {
     transition:
       background-color 150ms ease,
       border-color 150ms ease,
-      color 150ms ease;
+      color 150ms ease,
+      transform 250ms var(--ease);
   }
 
   .sheet-cta svg,

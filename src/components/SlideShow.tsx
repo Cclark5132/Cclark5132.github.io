@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight, ExternalLink, Maximize2, X } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import type { MediaItem } from "../data/portfolio";
-import { BlockReveal } from "./BlockReveal";
 import { Media } from "./Media";
 
 export interface Slide {
@@ -16,8 +15,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /**
  * A dark presentation stage: one large photo at a time with arrows on its sides, a stepper above that fills
  * as you move through, and the explanation underneath. Swipe or scroll sideways, use the arrows, the arrow
- * keys or the stepper. Each slide is its own scroll trigger, so its blocks sweep away again every time it
- * comes into view. Images open full size in a native modal dialog.
+ * keys or the stepper. Images open full size in a native modal dialog.
  */
 export function SlideShow({ slides, title }: { slides: Slide[]; title: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -94,7 +92,7 @@ export function SlideShow({ slides, title }: { slides: Slide[]; title: string })
               aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
               data-reveal="slide"
             >
-              <div className="slide-frame plot-frame">
+              <div className="slide-frame">
                 {slide.media === null ? (
                   <div className="video-placeholder">
                     <svg className="video-placeholder-icon" viewBox="0 0 48 48" aria-hidden="true">
@@ -114,10 +112,9 @@ export function SlideShow({ slides, title }: { slides: Slide[]; title: string })
                 ) : (
                   <Media media={slide.media} fit="contain" />
                 )}
-                <BlockReveal />
               </div>
               <figcaption className="slide-caption">
-                <span className="slide-number r-pop" aria-hidden="true">
+                <span className="slide-number r-fade" aria-hidden="true">
                   {pad(index + 1)}
                   <small>/{pad(slides.length)}</small>
                 </span>
@@ -145,7 +142,7 @@ export function SlideShow({ slides, title }: { slides: Slide[]; title: string })
       </div>
 
       <p className="sr-only" aria-live="polite">
-        Slide {active + 1} of {slides.length}: {slides[active].title}
+        Slide {active + 1} of {slides.length}: {slides[active]?.title}
       </p>
 
       <dialog

@@ -12,7 +12,7 @@ import { ProjectPage } from "./pages/ProjectPage";
 
 /** Moves the reader to the right place after each navigation and gives keyboard focus a matching start point. */
 function ScrollManager() {
-  const { pathname, hash, search } = useLocation();
+  const { pathname, hash, search, key } = useLocation();
   const navigationType = useNavigationType();
   const firstRun = useRef(true);
   const previousPath = useRef(pathname);
@@ -41,7 +41,8 @@ function ScrollManager() {
     }
     window.scrollTo({ top: 0, behavior: "instant" });
     focusWithoutScroll(document.querySelector<HTMLElement>("main h1"));
-  }, [pathname, hash, search, navigationType]);
+    // `key` changes on every navigation, so clicking the same section link twice still scrolls.
+  }, [pathname, hash, search, navigationType, key]);
 
   return null;
 }

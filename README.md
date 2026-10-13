@@ -60,25 +60,21 @@ YouTube and Vimeo players load only after the visitor presses play, so the page 
 
 ## Motion
 
-The page builds itself as it scrolls: headings build letter by letter, panels assemble from blocks that fly in from alternating sides, and images are uncovered block by block behind an orange scan line. Everything rebuilds when it scrolls back into view.
+Motion is kept quiet: text and panels fade up a few pixels the first time they scroll into view, section rules draw from left to right, and key numbers count up once.
 
 | Effect | Where | Behavior |
 | --- | --- | --- |
-| Letter-by-letter headings | Hero name, section headings, project titles | Letters rise into place one after another |
-| Block-built images | Hero photo, project cards, project page slides | A 14 × 9 grid of blocks covers the image; behind a sweeping orange scan line each block flashes maroon and shrinks away. The sweep waits until the image has loaded |
-| Assembling panels | Hero title block, project title strips, key-number panels, skills, buttons | Cells fly in from alternating sides and snap into place |
-| Count-up numbers | Key numbers | Count from zero to their value each time they scroll into view |
-| Drawn rules | Section headings, experience entries, project title blocks | Lines extend from left to right |
+| Fade-in | Text, panels and list items | Fades up the first time it scrolls into view. The hero and project title play on page load |
+| Count-up numbers | Key numbers | Count from zero to their value the first time they scroll into view |
+| Drawn rules | Section headings, experience entries | Lines extend from left to right |
 | Experience timeline | Experience list | A line draws down the list with scroll; each entry's marker turns orange when the line reaches it |
 | Stacking project cards | Home, desktop screens at least 1100 px wide and 740 px tall | Each card pins below the previous card's title strip, so the strips collect at the top as an index |
-| Photo stage | Project pages | One large photo at a time with its explanation underneath; swipe, side arrows, arrow keys or the stepper. Each slide builds as it comes into view |
+| Photo stage | Project pages | One large photo at a time with its explanation underneath; swipe, side arrows, arrow keys or the stepper |
 | Scroll progress bar | Header | Thin orange bar showing position on the page |
 
-Most effects finish in well under a second. They replay: a block that scrolls well clear of the screen resets, and builds again when it comes back.
+How it works: an element with `data-reveal` is a trigger, and [`src/lib/reveal.ts`](src/lib/reveal.ts) marks it the first time it enters the screen. Its children carry `r-fade` or `r-draw`. Timing is set per component at the end of [`src/styles.css`](src/styles.css).
 
-How it works: an element with `data-reveal` is a trigger, and [`src/lib/reveal.ts`](src/lib/reveal.ts) marks it as it enters and leaves the screen. Its children carry classes that say how they build (`r-block`, `r-draw`, `r-fade`, `r-pop`, `r-wipe`); headings use [`BuildText`](src/components/BuildText.tsx) and images use [`BlockReveal`](src/components/BlockReveal.tsx). The hero and project title blocks (class `intro`) also play on page load from CSS alone. Timing is set per component at the end of [`src/styles.css`](src/styles.css).
-
-All of it is off when the visitor's system asks for reduced motion: everything is shown in its final state, cards and the rail scroll normally, the timeline is drawn in full, the progress bar is hidden and the crutch and build-sequence clips do not autoplay. Nothing stays hidden when JavaScript is off. On phones and short screens the project cards are a plain list. Animations use transforms, opacity and clip-path only, and every image has its size set, so nothing shifts while the page loads.
+All of it is off when the visitor's system asks for reduced motion: everything is shown in its final state, cards scroll normally, the timeline is drawn in full, the progress bar is hidden and the crutch and build-sequence clips do not autoplay. Nothing stays hidden when JavaScript is off. Animations use transforms and opacity only, and every image has its size set, so nothing shifts while the page loads.
 
 ## Media
 

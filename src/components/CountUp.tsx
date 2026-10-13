@@ -22,9 +22,9 @@ function parse(value: string) {
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 /**
- * Renders the final value on the server and for screen readers. In the browser the number counts up from
- * zero each time it scrolls into view, and resets once it has left the screen. A number already on screen
- * at first load starts out final. The final value stays in the layout as an invisible copy, so the box never
+ * Renders the final value on the server and for screen readers. In the browser a number that is not yet on
+ * screen counts up from zero the first time it scrolls into view. A number already on screen at first load
+ * stays final. The final value stays in the layout as an invisible copy, so the box never
  * changes size while the digits run.
  */
 export function CountUp({ value }: { value: string }) {
@@ -37,8 +37,8 @@ export function CountUp({ value }: { value: string }) {
     setDisplay(value);
     if (!element || !parsed || !motionAllowed()) return;
 
-    let armed = !(isInitialMount() && isInViewport(element));
-    if (armed) setDisplay(parsed.format(0));
+    if (isInitialMount() && isInViewport(element)) return;
+    setDisplay(parsed.format(0));
     let frame = 0;
 
     const run = () => {
@@ -53,16 +53,11 @@ export function CountUp({ value }: { value: string }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.intersectionRatio >= 0.6 && armed) {
-          armed = false;
-          run();
-        } else if (!entry.isIntersecting && !armed) {
-          cancelAnimationFrame(frame);
-          armed = true;
-          setDisplay(parsed.format(0));
-        }
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        run();
       },
-      { threshold: [0, 0.6] },
+      { threshold: 0.6 },
     );
     observer.observe(element);
 

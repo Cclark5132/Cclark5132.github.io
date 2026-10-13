@@ -1,8 +1,6 @@
 import { ArrowDown, ArrowUpRight, Download, FileText, Github, Linkedin, Mail } from "lucide-react";
 import { useEffect, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { BlockReveal } from "../components/BlockReveal";
-import { BuildText } from "../components/BuildText";
 import { ExperienceTimeline } from "../components/ExperienceTimeline";
 import { Media } from "../components/Media";
 import { ProjectSheet } from "../components/ProjectSheet";
@@ -33,24 +31,23 @@ export function HomePage() {
 
   return (
     <main id="main-content" tabIndex={-1}>
-      {/* The hero builds itself on page load (CSS only, so it also runs before the app hydrates), and again
-          whenever it scrolls back into view. */}
+      {/* The hero fades in on page load (CSS only, so it also runs before the app hydrates). */}
       <section className="hero intro" aria-labelledby="hero-title" data-reveal="hero">
         <div className="wrap hero-grid">
           <div className="hero-copy">
-            <h1 id="hero-title" className="hero-name" tabIndex={-1} aria-label={profile.shortName}>
-              <span className="rise-line" style={order(0)}>
-                <BuildText text="Charles" />
+            <h1 id="hero-title" className="hero-name" tabIndex={-1}>
+              <span className="rise-line r-fade" style={order(0)}>
+                Charles
               </span>{" "}
-              <span className="rise-line" style={order(1)}>
-                <BuildText text="Clark" />
+              <span className="rise-line r-fade" style={order(1)}>
+                Clark
               </span>
             </h1>
             <p className="hero-status r-fade">{profile.status}</p>
 
             <dl className="title-block hero-facts">
               {heroFacts.map((fact, index) => (
-                <div className={`title-cell r-block ${fact.wide ? "title-cell-wide" : ""}`} style={order(index)} key={fact.label}>
+                <div className={`title-cell r-fade ${fact.wide ? "title-cell-wide" : ""}`} style={order(index)} key={fact.label}>
                   <dt>{fact.label}</dt>
                   <dd>{fact.value}</dd>
                 </div>
@@ -58,22 +55,22 @@ export function HomePage() {
             </dl>
 
             <ul className="hero-actions">
-              <li className="r-block" style={order(0)}>
+              <li className="r-fade" style={order(0)}>
                 <Link className="button button-primary" to="/#projects">
                   Projects <ArrowDown size={16} aria-hidden="true" />
                 </Link>
               </li>
-              <li className="r-block" style={order(1)}>
+              <li className="r-fade" style={order(1)}>
                 <a className="button" href={profile.resume} target="_blank" rel="noopener">
                   <FileText size={16} aria-hidden="true" /> Resume<span className="sr-only"> (PDF)</span>
                 </a>
               </li>
-              <li className="r-block" style={order(2)}>
+              <li className="r-fade" style={order(2)}>
                 <a className="button" href={`mailto:${profile.email}`}>
                   <Mail size={16} aria-hidden="true" /> Email
                 </a>
               </li>
-              <li className="r-block" style={order(3)}>
+              <li className="r-fade" style={order(3)}>
                 <a className="button" href={profile.linkedIn} target="_blank" rel="noopener">
                   <Linkedin size={16} aria-hidden="true" /> LinkedIn
                 </a>
@@ -82,9 +79,8 @@ export function HomePage() {
           </div>
 
           <figure className="hero-figure">
-            <div className="hero-frame plot-frame">
+            <div className="hero-frame">
               <Media media={profile.heroMedia} priority sizes="(min-width: 1024px) 50vw, 100vw" />
-              <BlockReveal />
             </div>
             <figcaption className="r-fade">
               <span className="figure-number">Fig. 1</span>
@@ -116,7 +112,7 @@ export function HomePage() {
 
             <aside className="education" aria-label="Education and credentials">
               <div className="panel" data-reveal="panel">
-                <h3 className="panel-title r-wipe">Education</h3>
+                <h3 className="panel-title r-fade">Education</h3>
                 <dl className="spec-list">
                   {[
                     ["School", education.school],
@@ -140,10 +136,10 @@ export function HomePage() {
               </div>
 
               <div className="panel" data-reveal="panel">
-                <h3 className="panel-title r-wipe">Credentials</h3>
+                <h3 className="panel-title r-fade">Credentials</h3>
                 <ul className="credential-list">
                   {credentials.map((credential, index) => (
-                    <li className="r-pop" style={order(index)} key={credential.title}>
+                    <li className="r-fade" style={order(index)} key={credential.title}>
                       <strong>{credential.title}</strong>
                       <span>
                         {credential.issuer}, {credential.date}
@@ -167,7 +163,7 @@ export function HomePage() {
                 <span className="skill-rule r-draw" aria-hidden="true" />
                 <ul>
                   {group.skills.map((skill, index) => (
-                    <li className="r-block" style={order(index)} key={skill}>
+                    <li className="r-fade" style={order(index)} key={skill}>
                       {skill}
                     </li>
                   ))}
@@ -182,16 +178,16 @@ export function HomePage() {
         <div className="wrap contact-grid">
           <div className="contact-head" data-reveal="head">
             <span className="section-rule r-draw" aria-hidden="true" />
-            <span className="section-number r-pop" aria-hidden="true">
+            <span className="section-number r-fade" aria-hidden="true">
               04
             </span>
-            <h2 id="contact-title" aria-label="Contact">
-              <BuildText text="Contact" />
+            <h2 id="contact-title" className="r-fade">
+              Contact
             </h2>
           </div>
           <ul className="contact-links" data-reveal="rows">
             {contactLinks.map(({ label, href, text, icon: Icon, action: Action, external }, index) => (
-              <li className="r-block" style={order(index)} key={label}>
+              <li className="r-fade" style={order(index)} key={label}>
                 <a className="contact-link" href={href} {...(external ? { target: "_blank", rel: "noopener" } : {})}>
                   <span className="contact-icon" aria-hidden="true">
                     <Icon size={22} />

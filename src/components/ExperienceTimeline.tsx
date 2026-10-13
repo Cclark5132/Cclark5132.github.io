@@ -83,7 +83,7 @@ export function ExperienceTimeline() {
                 <h3 className="r-fade">
                   <Link to={`/projects/${item.projectSlug}`}>
                     {item.org}
-                    <span className="experience-project r-pop">
+                    <span className="experience-project r-fade">
                       Project {projectNumber(index)} <ArrowUpRight size={14} aria-hidden="true" />
                     </span>
                   </Link>
