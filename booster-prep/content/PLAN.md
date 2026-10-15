@@ -87,7 +87,7 @@ Setup is Day 1 only. Then Week 1 starts the next morning at full intensity.
 - Start the dated **engineering notebook**. Page 1 is your goals and how you'll track your time. Date every page; this habit matters at SpaceX.
 - Skim the Roadmap and Week 1 on this site.
 
-**On a Mac:** Ansys Student and the NX student edition are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.
+**On a Mac:** Ansys Student and Siemens Designcenter Student Edition (includes NX) are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.
 
 ---
 
@@ -316,8 +316,8 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 - Worked example: R = 4500 mm, t = 4 mm, E = 193 GPa
   - σ_cr = 0.605 × 193,000 × 4 / 4500 ≈ **103.8 MPa**
   - φ = √1125 / 16 ≈ 2.10
-  - γ = 1 − 0.901 × (1 − e^(−2.10)) ≈ **0.21**
-  - σ_design = 0.21 × 103.8 ≈ **21.8 MPa**
+  - γ = 1 − 0.901 × (1 − e^(−2.10)) ≈ **0.210**
+  - σ_design = 0.210 × 103.8 ≈ **21.8 MPa**
 
   An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.
 - **Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load. With pressure relief, the buckling FS goes on the applied load only and the pressure is taken at its minimum, unfactored:

@@ -68,7 +68,9 @@ To refresh the committed copy yourself instead:
 
 ```bash
 cd booster-prep
-BOOSTER_PREP_PASSWORD='your long password' pnpm publish-page   # writes ../public/booster-prep/index.html
+read -rs -p "Password: " BOOSTER_PREP_PASSWORD && export BOOSTER_PREP_PASSWORD   # typed at a prompt, so it stays out of shell history
+pnpm publish-page                                                                # writes ../public/booster-prep/index.html
+unset BOOSTER_PREP_PASSWORD
 ```
 
 ## Content rules

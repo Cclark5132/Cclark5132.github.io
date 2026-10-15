@@ -92,7 +92,7 @@ export const baseWeeks: Week[] = [
       "**Hour 2.** Finish the installs and launch Ansys, NX and MATLAB once each to confirm the licenses work. If NX won't work out, ask the VT ME department which labs or remote desktops carry NX.",
       "**Hour 2.** Start the dated **engineering notebook**. Page 1 is your goals and how you'll track your time. Date every page; this habit matters at SpaceX.",
       "**Hour 2.** Skim the Roadmap and Week 1 on this site.",
-      "**On a Mac:** Ansys Student and the NX student edition are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.",
+      "**On a Mac:** Ansys Student and Siemens Designcenter Student Edition (includes NX) are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.",
     ],
   },
   {
@@ -423,7 +423,7 @@ export const baseWeeks: Week[] = [
     structures: [
       "Classical buckling stress of a thin cylinder under axial compression.",
       "Real cylinders buckle far below this because of tiny shape imperfections. NASA SP-8007 (free online) gives a **knockdown factor γ**.",
-      "Worked example: $R = 4500$ mm, $t = 4$ mm, $E = 193$ GPa gives $\\sigma_{cr} \\approx$ **103.8 MPa**, $\\phi \\approx 2.10$, $\\gamma \\approx$ **0.21**, $\\sigma_\\text{design} \\approx$ **21.8 MPa**. An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.",
+      "Worked example: $R = 4500$ mm, $t = 4$ mm, $E = 193$ GPa gives $\\sigma_{cr} \\approx$ **103.8 MPa**, $\\phi \\approx 2.10$, $\\gamma \\approx$ **0.210**, $\\sigma_\\text{design} \\approx$ **21.8 MPa**. An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.",
       "**Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load. The buckling FS goes on the applied load only; the relieving pressure is taken at its minimum, unfactored.",
       "**FEA vs. SP-8007:** linear buckling of a perfect cylinder lands near the classical value; a nonlinear run with a seeded imperfection (Week 11 stretch) collapses between SP-8007 and classical.",
     ],

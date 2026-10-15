@@ -206,7 +206,7 @@ export const toolTracks: ToolTrack[] = [
       {
         week: 6,
         title: "cylinder_buckling()",
-        steps: ["Write `cylinder_buckling(R, t, E)` returning σ_cr, γ, σ_design.", "Test it against R = 4500, t = 4, E = 193000: 103.8, 0.21, 21.8."],
+        steps: ["Write `cylinder_buckling(R, t, E)` returning σ_cr, γ, σ_design.", "Test it against R = 4500, t = 4, E = 193000: 103.8, 0.210, 21.8."],
         check: "Deliverable: the buckling function.",
       },
       {
