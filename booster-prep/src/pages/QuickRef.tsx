@@ -1,7 +1,105 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckItem } from "../components/Checks";
 import { Formula } from "../components/Formula";
-import { Rich } from "../components/Tex";
+import { Rich, Tex } from "../components/Tex";
+import { formulaNotes } from "../data/formulaNotes";
+import { formulasFromSource, startedWeeks } from "../lib/cards";
+import { localToday } from "../lib/schedule";
+import { lessons } from "../lessons";
+
+/** Every lesson <Formula>, grouped by week, for the printable sheet. */
+export const sheet = lessons
+  .map((lesson) => ({ week: lesson.week, title: lesson.title, formulas: formulasFromSource(lesson.source) }))
+  .sort((a, b) => a.week - b.week);
+const sheetWeeks = sheet.map((s) => s.week);
+
+function SheetFormula({ label, tex, vars }: { label: string; tex: string; vars: [string, string, string][] }) {
+  return (
+    <div className="sheet-f">
+      <div className="sheet-f-head">
+        <strong>{label}</strong>
+        {formulaNotes[label] && <span className="sheet-use"> · {formulaNotes[label]}</span>}
+      </div>
+      <Tex tex={tex} display />
+      {vars.length > 0 && (
+        <div className="sheet-vars">
+          {vars.map(([sym, meaning, unit]) => (
+            <span key={sym + meaning}>
+              <Tex tex={sym} />
+              <span className="sheet-meaning"> {meaning}</span>
+              {unit && unit !== "—" ? ` [${unit}]` : ""}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** The one-page (two-sided) printable formula sheet, with a week filter. */
+function FormulaSheet() {
+  const today = localToday();
+  const started = startedWeeks(today);
+  const startedList = sheetWeeks.filter((w) => started.has(w));
+  const [chosen, setChosen] = useState<number[]>(sheetWeeks);
+  const toggle = (w: number) => setChosen((list) => (list.includes(w) ? list.filter((x) => x !== w) : [...list, w].sort((a, b) => a - b)));
+  const shown = sheet.filter((s) => chosen.includes(s.week));
+  return (
+    <section aria-labelledby="sheet-h" className="formula-sheet-wrap">
+      <div className="row no-print" style={{ justifyContent: "space-between", alignItems: "flex-end", marginBottom: 12 }}>
+        <h2 id="sheet-h" className="section-h" style={{ margin: 0 }}>
+          Formula sheet
+        </h2>
+        <button type="button" className="btn primary" onClick={() => window.print()}>
+          Print / Save as PDF
+        </button>
+      </div>
+      <div className="row no-print sheet-filter" role="group" aria-label="Weeks to print">
+        <span className="eyebrow">Weeks</span>
+        {sheetWeeks.map((w) => (
+          <button key={w} type="button" className={`btn small${chosen.includes(w) ? "" : " ghost"}`} aria-pressed={chosen.includes(w)} onClick={() => toggle(w)}>
+            {w}
+          </button>
+        ))}
+        <button type="button" className="btn small ghost" onClick={() => setChosen(sheetWeeks)}>
+          All
+        </button>
+        <button type="button" className="btn small ghost" disabled={!startedList.length} onClick={() => setChosen(startedList)}>
+          Weeks so far
+        </button>
+      </div>
+      <p className="hint no-print" style={{ margin: "8px 0 14px" }}>
+        Every lesson formula, with symbols, units and when to use it. Prints on two sides of US Letter; in the print dialog, choose Letter and default margins.
+      </p>
+      <div className="print-only sheet-title">
+        Booster Prep formula sheet · Weeks {shown.map((s) => s.week).join(", ")}
+      </div>
+      <div className="formula-sheet" data-testid="formula-sheet">
+        {shown.map((s) => (
+          <section key={s.week} className="sheet-week">
+            <h3>
+              Week {s.week} · {s.title}
+            </h3>
+            {s.formulas.map((f) => (
+              <SheetFormula key={f.label} label={f.label} tex={f.tex} vars={f.vars} />
+            ))}
+          </section>
+        ))}
+        <section className="sheet-week print-only">
+          <h3>Unit conversions</h3>
+          <div className="sheet-vars sheet-conv">
+            {conversions.map(([a, b]) => (
+              <span key={a}>
+                {a} = {b}
+              </span>
+            ))}
+          </div>
+        </section>
+      </div>
+    </section>
+  );
+}
 
 /** Conversions an engineer moving between SI hand calcs and US-customary drawings uses every day. */
 const conversions: [string, string][] = [
@@ -62,16 +160,18 @@ const ready: { text: string; to: string; where: string }[] = [
 export function QuickRef() {
   return (
     <div className="content">
-      <header className="page-head">
+      <header className="page-head no-print">
         <span className="eyebrow">Quick reference</span>
-        <h1>Cheat sheet for day one</h1>
+        <h1>Cheat sheet and formula sheet</h1>
         <p className="lede">
-          Units, margins, beam and shell formulas, and 304L properties in one place, plus a checklist of what you should be able to do by January 11.
+          Every lesson formula on a printable two-sided sheet, plus units, margins, beam and shell formulas, 304L properties, and a checklist of what you should be able to do by January 11.
         </p>
       </header>
 
       <div className="stack-lg">
-        <section className="card" aria-labelledby="ready-h">
+        <FormulaSheet />
+
+        <section className="card no-print" aria-labelledby="ready-h">
           <div className="card-title">
             <h2 id="ready-h">Ready by January 11</h2>
             <span className="eyebrow">without notes</span>
@@ -83,7 +183,7 @@ export function QuickRef() {
           ))}
         </section>
 
-        <section aria-labelledby="margins-h">
+        <section aria-labelledby="margins-h" className="no-print">
           <h2 id="margins-h" className="section-h">
             Margins and pressure terms
           </h2>
@@ -104,7 +204,7 @@ export function QuickRef() {
           </p>
         </section>
 
-        <section aria-labelledby="beams-h">
+        <section aria-labelledby="beams-h" className="no-print">
           <h2 id="beams-h" className="section-h">
             Beams, torsion and the booster as a beam
           </h2>
@@ -146,7 +246,7 @@ export function QuickRef() {
         </section>
 
         <div className="grid-auto">
-          <section className="card" aria-labelledby="units-h">
+          <section className="card no-print" aria-labelledby="units-h">
             <div className="card-title">
               <h2 id="units-h">Unit conversions</h2>
             </div>
@@ -164,7 +264,7 @@ export function QuickRef() {
             </div>
           </section>
 
-          <section className="card" aria-labelledby="fea-units-h">
+          <section className="card no-print" aria-labelledby="fea-units-h">
             <div className="card-title">
               <h2 id="fea-units-h">Consistent units for FEA</h2>
             </div>
@@ -194,7 +294,7 @@ export function QuickRef() {
           </section>
         </div>
 
-        <section className="card" aria-labelledby="steel-h">
+        <section className="card no-print" aria-labelledby="steel-h">
           <div className="card-title">
             <h2 id="steel-h">304L stainless at room temperature</h2>
           </div>

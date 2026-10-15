@@ -1986,3 +1986,164 @@ ol.bullets {
 .tile-link:hover {
   border-color: var(--accent);
 }
+
+/* Printable formula sheet */
+.print-only {
+  display: none;
+}
+.sheet-filter {
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sheet-filter .btn.small {
+  min-width: 40px;
+}
+.formula-sheet-wrap {
+  min-width: 0;
+}
+.formula-sheet {
+  columns: 2 320px;
+  column-gap: 20px;
+}
+.sheet-week {
+  break-inside: auto;
+}
+.sheet-week h3 {
+  font-size: 0.95rem;
+  margin: 10px 0 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line-strong);
+  break-after: avoid;
+}
+.sheet-f {
+  break-inside: avoid;
+  padding: 6px 0 8px;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.86rem;
+}
+.sheet-f .katex-display {
+  margin: 4px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.sheet-use {
+  color: var(--muted);
+}
+.sheet-vars {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.sheet-vars > span + span::before {
+  content: " · ";
+  color: var(--muted);
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.3in;
+  }
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+    --ink: #000;
+    --ink-soft: #222;
+    --muted: #444;
+    --line: #bbb;
+    --line-strong: #666;
+    --surface: #fff;
+    --surface-2: #fff;
+    --bg: #fff;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .sidebar,
+  .topbar,
+  .no-print,
+  .toast-region,
+  .skip-link,
+  .pager {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  .shell,
+  .main,
+  .content {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .stack-lg {
+    display: block !important;
+  }
+  .sheet-title {
+    font: 600 9pt/1.2 var(--font-sans, sans-serif);
+    margin-bottom: 4px;
+  }
+  .formula-sheet {
+    columns: 3;
+    column-gap: 12px;
+    column-rule: 0.5px solid #ccc;
+  }
+  .sheet-week h3,
+  .formula-sheet h3 {
+    font-size: 7.5pt !important;
+    margin: 4px 0 2px;
+    padding-bottom: 1px;
+  }
+  .sheet-f {
+    font-size: 6.6pt;
+    line-height: 1.2;
+    padding: 1px 0 2px;
+  }
+  .sheet-f .katex-display {
+    margin: 1px 0;
+    overflow: visible;
+  }
+  .sheet-f .katex-display > .katex {
+    font-size: 1.05em;
+  }
+  .sheet-vars {
+    font-size: 6.2pt;
+    line-height: 1.25;
+  }
+  .sheet-conv {
+    font-size: 6.6pt;
+  }
+  .sheet-vars .katex {
+    font-size: 1em;
+  }
+  /* Symbols and units only on paper; the meanings are on screen and in the lessons. */
+  .sheet-meaning {
+    display: none;
+  }
+  .print-compact {
+    break-inside: avoid;
+    border: 0 !important;
+    padding: 0 !important;
+    font-size: 6.6pt;
+    margin-top: 4px;
+  }
+  .print-compact h2 {
+    font-size: 8pt;
+  }
+  .print-compact table.data td {
+    font-size: 6.6pt !important;
+    padding: 0 8px 0 0 !important;
+    line-height: 1.25;
+  }
+  .grid-auto {
+    display: block !important;
+  }
+  .print-compact .table-wrap {
+    overflow: visible;
+  }
+}

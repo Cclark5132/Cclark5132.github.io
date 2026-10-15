@@ -20,6 +20,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | `#/flashcards` | Spaced repetition deck | `pages/Flashcards.tsx`, `lib/cards.ts` |
 | `#/resources`, `#/glossary`, `#/launch` | Reference table, glossary, launch prep | `pages/Reference.tsx` |
 | `#/focus/:id` | Focus mode for one session: link to the exact lesson section or tool step, 60-minute or 25/5 timer, Done logs minutes | `pages/Focus.tsx`, `lib/timer.ts` |
+| `#/reference` | Printable formula sheet (every lesson `<Formula>` by week, with symbols, units and a use-when note from `data/formulaNotes.ts`; print CSS fits two sides of US Letter), plus units, 304L and the ready-by checklist | `pages/QuickRef.tsx` |
 | `#/backup` | Storage status, export / import (merge or replace), daily backups, Gist sync settings | `pages/Backup.tsx` |
 
 ## Content
