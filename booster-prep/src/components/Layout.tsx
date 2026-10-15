@@ -78,7 +78,11 @@ export function Layout({ children }: { children: ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const { pathname } = useLocation();
 
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  // Braces matter: newer browsers return a Promise from scrollTo, and React would call a returned
+  // value as the effect's cleanup on the next route change, crashing the app.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {

@@ -18,7 +18,9 @@
         var root = document.getElementById("root");
         if (!root || root.childElementCount) return;
         root.style.cssText = "padding:24px;font:15px/1.5 system-ui,sans-serif;color:#e7ecf3;background:#0a1120;min-height:100vh";
-        root.textContent = "Booster Prep couldn't start in this browser. Try reloading, or send Claude this message: " + event.message + " | " + navigator.userAgent;
+        var where = (event.filename || "") + ":" + event.lineno + ":" + event.colno;
+        var stack = event.error && event.error.stack ? String(event.error.stack).slice(0, 600) : "";
+        root.textContent = "Booster Prep couldn't start in this browser. Try reloading, or send Claude this message: " + event.message + " @ " + where + " | " + stack + " | " + navigator.userAgent;
       });
     </script>
   </head>
