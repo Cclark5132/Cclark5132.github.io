@@ -9,7 +9,9 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
   const results = useMemo(() => search(query), [query]);
 
-  useEffect(() => inputRef.current?.focus(), []);
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const go = (to: string) => {
     onClose();

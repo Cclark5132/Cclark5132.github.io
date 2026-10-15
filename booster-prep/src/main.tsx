@@ -12,7 +12,7 @@ const root = document.getElementById("root")!;
 
 /** If the app crashes outright, say so on screen instead of leaving a blank page. */
 function showCrash(error: unknown) {
-  const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  const message = error instanceof Error ? `${error.name}: ${error.message}\n${(error.stack ?? "").slice(0, 600)}` : String(error);
   const box = document.createElement("div");
   box.style.cssText = "max-width:720px;margin:48px auto;padding:24px;font:15px/1.6 system-ui,sans-serif;color:#e7ecf3";
   const title = document.createElement("h1");
