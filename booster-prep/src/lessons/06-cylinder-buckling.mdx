@@ -1,0 +1,376 @@
+export const meta = {
+  slug: "cylinder-buckling",
+  title: "Thin-cylinder buckling and knockdown factors",
+  week: 6,
+  summary: "Classical axial buckling stress of a thin cylinder, imperfection sensitivity, NASA SP-8007 knockdown factors, pressure stabilization and axial load capacity.",
+};
+
+Last week a column buckled close to its Euler load. A thin cylinder under axial compression does not behave that well. Theory gives a high buckling stress, but real shells buckle at a fraction of it, and the fraction gets worse as the wall gets thinner. This lesson covers the classical number, why real cylinders miss it, the **knockdown factor** that designers use to bridge the gap, and how **internal pressure** buys some of that strength back. A propellant tank barrel is exactly this kind of shell, so this is one of the central hand calcs for booster structures.
+
+## 1. Classical buckling stress
+
+Take a perfect cylinder of mean radius $R$ and wall thickness $t$, made of a linear elastic material, loaded by a uniform axial compressive stress. Small-deflection shell theory says it buckles when the stress reaches:
+
+<Formula
+  label="Classical axial buckling stress"
+  tex="\sigma_{cr} = \frac{E}{\sqrt{3(1 - \nu^2)}}\,\frac{t}{R} \approx 0.605\,\frac{E\,t}{R}"
+  vars="\sigma_{cr} | classical (perfect-shell) axial buckling stress | MPa; E | Young's modulus (193,000 MPa for 304L) | MPa; \nu | Poisson's ratio (0.3 gives the 0.605 coefficient) | —; t | wall thickness | mm; R | mean radius | mm"
+/>
+
+Some things to notice:
+
+- The stress depends on $t/R$, not on the cylinder's length. For a cylinder of moderate length the buckles are short waves, much smaller than the length, so the ends don't matter much.
+- The coefficient $1/\sqrt{3(1-\nu^2)}$ is $0.605$ for $\nu = 0.3$ and $0.603$ for $\nu = 0.29$. The difference is negligible next to what comes next.
+- The formula is only meaningful when $\sigma_{cr}$ is below the proportional limit. For thin tank walls ($R/t$ in the hundreds or more) it is far below yield, so elastic buckling governs.
+
+## 2. Why real cylinders buckle much lower
+
+Tests on real cylinders since the 1930s have scattered widely below $\sigma_{cr}$, often reaching only a half to a fifth of it, with the thinnest shells at the low end. Two facts explain this:
+
+- **Unstable post-buckling.** A column that buckles can still carry close to its buckling load as it bends. A cylinder cannot. Once it buckles, the load it can carry drops sharply and the wall snaps into a pattern of inward dents. Structures with this kind of falling post-buckling path are **imperfection sensitive**: a tiny initial deviation lets the shell slide onto that falling path long before the classical load.
+- **Imperfections the size of the wall thickness matter.** A dent or out-of-roundness with amplitude of only a fraction of $t$ to about one $t$ is enough to cut the buckling load in half or more. On a 9 m diameter barrel with a 4 mm wall, a 4 mm waviness is invisible to the eye but large in buckling terms. Weld seams, rolling flat spots and ring mismatch all create imperfections like this.
+
+<Figure caption="Left: a thin cylinder under axial load P buckles into a diamond-shaped pattern of inward dents. Right: an imperfection of amplitude w0, on the order of the wall thickness t, is enough to drop the buckling load far below the classical value.">
+<svg viewBox="0 0 560 360" role="img" aria-label="Thin cylinder under axial compression with a diamond buckle pattern, and a wall profile showing an imperfection of amplitude w0 compared with the wall thickness t">
+  <defs>
+    <marker id="l6-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l6-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <path d="M90 80 L90 290 A 90 18 0 0 0 270 290 L270 80" className="dg-fill" />
+  <ellipse cx="180" cy="80" rx="90" ry="18" className="dg-fill-soft" />
+  <path d="M90 170 L120 150 L150 170 L180 150 L210 170 L240 150 L270 170" className="dg-line" />
+  <path d="M90 170 L120 190 L150 170 L180 190 L210 170 L240 190 L270 170" className="dg-line" />
+  <path d="M90 210 L120 190 L150 210 L180 190 L210 210 L240 190 L270 210" className="dg-line" />
+  <path d="M90 210 L120 230 L150 210 L180 230 L210 210 L240 230 L270 210" className="dg-line" />
+  <line x1="130" y1="22" x2="130" y2="66" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <line x1="180" y1="22" x2="180" y2="66" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <line x1="230" y1="22" x2="230" y2="66" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <text x="244" y="34" className="dg-text-accent">P</text>
+  <line x1="130" y1="348" x2="130" y2="314" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <line x1="180" y1="348" x2="180" y2="314" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <line x1="230" y1="348" x2="230" y2="314" className="dg-accent" markerEnd="url(#l6-arrow)" />
+  <text x="244" y="340" className="dg-text-accent">P</text>
+  <line x1="180" y1="80" x2="270" y2="80" className="dg-dash" />
+  <text x="208" y="102" className="dg-text">R</text>
+  <text x="96" y="262" className="dg-text-muted">diamond buckles</text>
+  <line x1="380" y1="60" x2="380" y2="300" className="dg-dash" />
+  <line x1="400" y1="60" x2="400" y2="300" className="dg-dash" />
+  <path d="M380 60 Q350 120 380 180 Q410 240 380 300" className="dg-accent" />
+  <path d="M400 60 Q370 120 400 180 Q430 240 400 300" className="dg-accent" />
+  <line x1="365" y1="120" x2="380" y2="120" className="dg-line" markerEnd="url(#l6-arrow-ink)" />
+  <text x="300" y="116" className="dg-text">w0 ≈ t</text>
+  <line x1="380" y1="320" x2="400" y2="320" className="dg-line" />
+  <text x="384" y="340" className="dg-text">t</text>
+  <text x="420" y="80" className="dg-text-muted">dashed: perfect wall</text>
+  <text x="420" y="100" className="dg-text-accent">solid: real wall</text>
+</svg>
+</Figure>
+
+## 3. The NASA SP-8007 knockdown factor
+
+Designers don't try to predict the exact imperfections. Instead they multiply the classical stress by an empirical **knockdown factor** $\gamma$ that sits below nearly all of the test data. NASA SP-8007 (*Buckling of Thin-Walled Circular Cylinders*, 1965, revised 1968, free online) gives this lower-bound curve for axial compression:
+
+<Formula
+  label="SP-8007 knockdown factor (axial compression)"
+  tex="\gamma = 1 - 0.901\left(1 - e^{-\phi}\right), \qquad \phi = \frac{1}{16}\sqrt{\frac{R}{t}}"
+  vars="\gamma | knockdown factor applied to the classical buckling stress | —; \phi | thinness parameter | —; R | mean radius | mm; t | wall thickness | mm"
+/>
+
+SP-8007 states this curve for $R/t$ less than 1500. As $R/t$ grows, $\phi$ grows and $\gamma$ approaches $1 - 0.901 = 0.099$. Thicker shells get less knockdown: at $R/t = 100$, $\gamma = 0.58$.
+
+<Formula
+  label="Design buckling stress and axial load capacity"
+  tex="\sigma_\text{design} = \gamma\,\sigma_{cr}, \qquad P_\text{allow} = 2\pi R t\,\sigma_\text{design}"
+  vars="\sigma_\text{design} | knocked-down buckling stress used for design | MPa; \gamma | SP-8007 knockdown factor | —; \sigma_{cr} | classical buckling stress | MPa; P_\text{allow} | axial compressive load the wall can carry before buckling (no pressure) | N; R | mean radius | mm; t | wall thickness | mm"
+/>
+
+The load capacity scales like $t^2$ (one $t$ from the area, one from $\sigma_{cr}$), and $\gamma$ also improves as $t$ grows. That's why a small increase in wall thickness buys a large increase in buckling capacity.
+
+<Figure caption="SP-8007 knockdown factor γ versus R/t. The marked point is the 4500 mm radius, 4 mm wall barrel from Example 1 (R/t = 1125, γ ≈ 0.21).">
+<svg viewBox="0 0 560 340" role="img" aria-label="Plot of knockdown factor gamma versus R over t from 0 to 1500, falling from 1 to about 0.18, with the point R over t 1125, gamma 0.21 marked">
+  <line x1="70" y1="270" x2="520" y2="270" className="dg-line" />
+  <line x1="70" y1="30" x2="70" y2="270" className="dg-line" />
+  <line x1="70" y1="150" x2="510" y2="150" className="dg-dash" />
+  <line x1="70" y1="90" x2="510" y2="90" className="dg-dash" />
+  <line x1="70" y1="210" x2="510" y2="210" className="dg-dash" />
+  <line x1="70" y1="30" x2="510" y2="30" className="dg-dash" />
+  <text x="40" y="34" className="dg-text-muted">1.0</text>
+  <text x="40" y="94" className="dg-text-muted">0.75</text>
+  <text x="40" y="154" className="dg-text-muted">0.5</text>
+  <text x="40" y="214" className="dg-text-muted">0.25</text>
+  <text x="54" y="274" className="dg-text-muted">0</text>
+  <text x="66" y="290" className="dg-text-muted">0</text>
+  <text x="202" y="290" className="dg-text-muted">500</text>
+  <text x="348" y="290" className="dg-text-muted">1000</text>
+  <text x="494" y="290" className="dg-text-muted">1500</text>
+  <text x="270" y="318" className="dg-text">R / t</text>
+  <text x="12" y="20" className="dg-text">γ</text>
+  <polyline points="70,30 71,58 77,88 85,107 99,130 114,146 129,157 158,173 187,184 217,193 246,199 290,207 334,213 363,216 400,220 437,223 510,227" className="dg-accent" />
+  <line x1="400" y1="220" x2="400" y2="270" className="dg-dash" />
+  <circle cx="400" cy="220" r="5" className="dg-ink-fill" />
+  <text x="352" y="196" className="dg-text">(1125, 0.21)</text>
+  <text x="120" y="80" className="dg-text-accent">γ = 1 − 0.901(1 − e^−φ)</text>
+</svg>
+</Figure>
+
+<Callout kind="note" title="Newer knockdown factors">
+SP-8007's curve is deliberately conservative because it was fit below scattered 1930s to 1960s test data. NASA's more recent Shell Buckling Knockdown Factor (SBKF) project used testing and imperfection-based analysis to justify higher factors for specific, well-built shells. In an internship you will use whatever the program's design criteria specify. SP-8007 is the standard starting point and the one to know cold.
+</Callout>
+
+## 4. Pressure stabilization
+
+A pressurized tank buckles much less easily than an empty one, for two separate reasons.
+
+**Reason 1: pressure end load.** Internal pressure $p$ pushes on the domes and puts the barrel wall in axial tension of $pR/(2t)$. In force terms, the pressure end load $p\pi R^2$ subtracts directly from any applied axial compression:
+
+<Formula
+  label="Net axial compression with internal pressure"
+  tex="P_\text{net} = P - p\,\pi R^2"
+  vars="P_\text{net} | net axial compressive force the wall must carry | N; P | applied axial compressive force (thrust, inertia, bending equivalent) | N; p | internal (ullage) pressure, gauge | MPa; R | mean radius | mm"
+/>
+
+If $P_\text{net}$ is zero or negative, the wall is in net axial tension and cannot buckle axially at that station. If it is positive, compare it with $P_\text{allow}$.
+
+**Reason 2: pressure reduces imperfection sensitivity.** Pressure tends to pull out the inward dents and stiffens the wall against the buckle pattern. SP-8007 credits this with an **increase in the knockdown factor**, $\Delta\gamma$, read from a design chart against a pressure parameter of the form $(p/E)(R/t)^2$. The increase grows with pressure and levels off at high pressure. There is no simple closed-form version in the monograph, so read the chart rather than inventing a fit. In this lesson's hand calcs we take credit only for Reason 1, which is conservative.
+
+<Callout kind="mistake" title="Taking credit for pressure you can't guarantee">
+Pressure relief only helps when the pressure is actually there. Use the **minimum** pressure the tank is guaranteed to have in that load case, never the maximum, and don't apply a factor of safety that increases it. An unpressurized case (ground handling, a pressure system failure) must be checked on its own.
+</Callout>
+
+<Example title="Knockdown on a 9 m barrel (from the plan)">
+
+A barrel has $R = 4500$ mm, $t = 4$ mm and $E = 193$ GPa (304L-type stainless). Find the classical buckling stress, the SP-8007 knockdown and the design buckling stress.
+
+**Step 1.** Classical buckling stress (convert $E$ to MPa: $193$ GPa $= 193{,}000$ MPa):
+
+$$
+\sigma_{cr} = 0.605 \times \frac{193{,}000 \times 4}{4500} = 0.605 \times 171.6 = 103.8 \text{ MPa}
+$$
+
+**Step 2.** Check the range and find $\phi$:
+
+$$
+\frac{R}{t} = \frac{4500}{4} = 1125 \;(\text{less than } 1500, \text{ so SP-8007 applies}), \qquad \phi = \frac{\sqrt{1125}}{16} = \frac{33.54}{16} = 2.10
+$$
+
+**Step 3.** Knockdown factor:
+
+$$
+\gamma = 1 - 0.901\left(1 - e^{-2.10}\right) = 1 - 0.901\,(1 - 0.123) = 1 - 0.790 = 0.210
+$$
+
+**Step 4.** Design buckling stress:
+
+$$
+\sigma_\text{design} = 0.210 \times 103.8 = 21.8 \text{ MPa}
+$$
+
+**Step 5.** Axial load capacity with no pressure:
+
+$$
+P_\text{allow} = 2\pi \times 4500 \times 4 \times 21.8 = 2.46 \times 10^6 \text{ N} = 2.46 \text{ MN}
+$$
+
+**Result:** almost **80% of the classical strength is lost** to the knockdown factor. The design buckling stress, 21.8 MPa, is tiny next to the yield strength of stainless steel. Buckling, not yielding, sets the unpressurized axial capacity of a thin barrel.
+
+</Example>
+
+<Example title="Pressure relief on the same barrel">
+
+The same barrel ($R = 4500$ mm, $t = 4$ mm, $P_\text{allow} = 2.46$ MN from Example 1) carries a practice factored axial compression of $P = 30$ MN. The guaranteed minimum ullage pressure is $p = 0.35$ MPa. Take credit only for the pressure end load (no $\Delta\gamma$).
+
+**Step 1.** Unpressurized margin, for reference:
+
+$$
+MS = \frac{P_\text{allow}}{P} - 1 = \frac{2.46}{30} - 1 = -0.92
+$$
+
+Empty, the barrel would buckle at less than a tenth of the load.
+
+**Step 2.** Pressure end load:
+
+$$
+p\,\pi R^2 = 0.35 \times \pi \times 4500^2 = 0.35 \times 6.362 \times 10^7 = 2.227 \times 10^7 \text{ N} = 22.27 \text{ MN}
+$$
+
+**Step 3.** Net compression and the stress it causes:
+
+$$
+P_\text{net} = 30 - 22.27 = 7.73 \text{ MN}, \qquad \sigma_\text{net} = \frac{7.73 \times 10^6}{2\pi \times 4500 \times 4} = \frac{7.73 \times 10^6}{113{,}097} = 68.4 \text{ MPa}
+$$
+
+**Step 4.** Margin with pressure relief:
+
+$$
+MS = \frac{2.46}{7.73} - 1 = -0.68
+$$
+
+**Step 5.** Minimum pressure that would close the gap by end-load relief alone:
+
+$$
+p_\text{min} = \frac{P - P_\text{allow}}{\pi R^2} = \frac{30 \times 10^6 - 2.46 \times 10^6}{6.362 \times 10^7} = 0.433 \text{ MPa}
+$$
+
+**Result:** pressure takes three quarters of the load off the wall, but end-load relief alone is not enough at 0.35 MPa. The options are more pressure (0.43 MPa), taking credit for $\Delta\gamma$ from the SP-8007 chart, a thicker wall, or stiffening (stringers and ring frames). Note also that 68.4 MPa is below the classical 103.8 MPa; the knockdown factor is what makes this fail.
+
+</Example>
+
+<Callout kind="context" title="Why boosters fly pressurized">
+Stainless steel propellant tanks like those on Super Heavy carry axial load through their walls, and the tanks are pressurized in flight. Pressure stabilization is a big part of why a thin metal tank can carry large thrust loads. The highest axial compression typically occurs near liftoff, around max-Q (where bending adds to it on one side) and late in the burn when acceleration is highest, so each of those moments needs a buckling check at the pressure guaranteed at that time. Specific SpaceX wall thicknesses, pressures and design criteria are not public, so keep your numbers labeled as practice values.
+</Callout>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Using the classical stress as the allowable">
+$0.605\,Et/R$ is what a perfect shell does. No real shell gets there. Always apply a knockdown factor, and say which one you used.
+</Callout>
+
+<Callout kind="mistake" title="Using a column formula on a shell">
+Euler's $\pi^2 EI/(KL)^2$ treats the whole tube as a beam. For a short, fat, thin-walled tank, the wall buckles locally long before the tube buckles as a column. Check both, but expect the shell mode to govern.
+</Callout>
+
+<Callout kind="mistake" title="Forgetting that γ depends on R/t">
+The knockdown isn't a fixed 0.2 or 0.5. Recompute it each time $t$ or $R$ changes, and check that $R/t$ is within the curve's range (less than 1500 for SP-8007).
+</Callout>
+
+<Callout kind="mistake" title="Double-counting pressure">
+The pressure end load $p\pi R^2$ relieves compression. Don't also add the axial tensile stress $pR/(2t)$ to the wall stress on top of that. They are the same effect, once as a force and once as a stress.
+</Callout>
+
+<Callout kind="mistake" title="Mixing GPa and MPa">
+$E = 193$ GPa is $193{,}000$ MPa. With $E$ in GPa by accident, $\sigma_{cr}$ comes out 1000 times too small.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A stainless cylinder has $R = 1000$ mm, $t = 2$ mm and $E = 193$ GPa. Find $\sigma_{cr}$, $\gamma$, $\sigma_\text{design}$ and the unpressurized load capacity.
+
+<Solution>
+**Classical stress:**
+
+$$
+\sigma_{cr} = 0.605 \times \frac{193{,}000 \times 2}{1000} = 233.5 \text{ MPa}
+$$
+
+**Knockdown** ($R/t = 500$, within range):
+
+$$
+\phi = \frac{\sqrt{500}}{16} = \frac{22.36}{16} = 1.398, \qquad \gamma = 1 - 0.901\left(1 - e^{-1.398}\right) = 1 - 0.901 \times 0.753 = 0.322
+$$
+
+**Design stress and capacity:**
+
+$$
+\sigma_\text{design} = 0.3217 \times 233.5 = 75.1 \text{ MPa}
+$$
+
+$$
+P_\text{allow} = 2\pi \times 1000 \times 2 \times 75.1 = 9.44 \times 10^5 \text{ N} = 0.944 \text{ MN}
+$$
+</Solution>
+</Problem>
+
+<Problem n={2}>
+The Example 1 barrel ($R = 4500$ mm, $E = 193$ GPa) has its wall doubled from 4 mm to 8 mm. By what factor does the unpressurized axial capacity grow?
+
+<Solution>
+**New classical stress** (doubles with $t$):
+
+$$
+\sigma_{cr} = 0.605 \times \frac{193{,}000 \times 8}{4500} = 207.6 \text{ MPa}
+$$
+
+**New knockdown** ($R/t = 562.5$):
+
+$$
+\phi = \frac{\sqrt{562.5}}{16} = 1.482, \qquad \gamma = 1 - 0.901\left(1 - e^{-1.482}\right) = 0.304
+$$
+
+**New capacity:**
+
+$$
+\sigma_\text{design} = 0.3036 \times 207.6 = 63.0 \text{ MPa}, \qquad P_\text{allow} = 2\pi \times 4500 \times 8 \times 63.0 = 14.3 \text{ MN}
+$$
+
+**Ratio:**
+
+$$
+\frac{14.3}{2.46} = 5.8
+$$
+
+Doubling the wall multiplies capacity by about 5.8: a factor of 4 from $t^2$, and about 1.45 more because $\gamma$ improved from 0.210 to 0.304. Mass only doubled.
+</Solution>
+</Problem>
+
+<Problem n={3}>
+A barrel with $R = 4500$ mm carries a practice axial compression of 15 MN. What minimum internal pressure puts the wall in net axial tension, so it cannot buckle axially?
+
+<Solution>
+Set the net compression to zero:
+
+$$
+P - p\,\pi R^2 = 0 \quad\Rightarrow\quad p = \frac{P}{\pi R^2} = \frac{15 \times 10^6}{\pi \times 4500^2} = \frac{15 \times 10^6}{6.362 \times 10^7} = 0.236 \text{ MPa}
+$$
+
+Any guaranteed pressure above about 0.24 MPa keeps this station in net tension for this load case.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+An aluminum test cylinder has $R = 500$ mm, $t = 1.5$ mm, $E = 70$ GPa and $\nu = 0.33$. (a) Find the exact classical coefficient and $\sigma_{cr}$. (b) Find the SP-8007 design load. (c) The test cylinder buckled at 0.40 MN. Was the prediction conservative?
+
+<Solution>
+**(a)** Coefficient and classical stress:
+
+$$
+\frac{1}{\sqrt{3(1 - 0.33^2)}} = \frac{1}{\sqrt{2.673}} = 0.6116, \qquad \sigma_{cr} = 0.6116 \times \frac{70{,}000 \times 1.5}{500} = 128.4 \text{ MPa}
+$$
+
+**(b)** Knockdown ($R/t = 333.3$) and load:
+
+$$
+\phi = \frac{\sqrt{333.3}}{16} = 1.141, \qquad \gamma = 1 - 0.901\left(1 - e^{-1.141}\right) = 0.387
+$$
+
+$$
+\sigma_\text{design} = 0.387 \times 128.4 = 49.7 \text{ MPa}, \qquad P_\text{allow} = 2\pi \times 500 \times 1.5 \times 49.7 = 2.34 \times 10^5 \text{ N} = 0.234 \text{ MN}
+$$
+
+**(c)** The test reached 0.40 MN, which is $0.40/0.234 = 1.71$ times the prediction. Yes, it was conservative, as a lower-bound curve should be. The test reached $0.40 \times 10^6 / (2\pi \times 500 \times 1.5) = 84.9$ MPa, or 66% of the classical value: a well-made specimen.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+In words: why does a thin cylinder lose so much more strength to imperfections than an Euler column does? Name two sources of imperfection in a welded tank barrel.
+
+<Solution>
+**Post-buckling behavior.** A column has a stable (or nearly flat) post-buckling path: after it buckles it keeps carrying about its buckling load, so a small initial crookedness just makes it bend gradually as it approaches $P_{cr}$. A cylinder's post-buckling path falls steeply. An imperfection lets the shell jump onto that falling path early, so the peak load drops sharply. Imperfections of only about one wall thickness can halve the load.
+
+**Sources in a welded barrel:** weld shrinkage and distortion along seams, mismatch (offset) between rings at circumferential welds, flat spots or out-of-roundness from rolling, dents from handling, and thickness variation in the sheet.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+The Example 1 barrel ($P_\text{allow} = 2.46$ MN unpressurized) sees a practice factored compression of 24 MN with a guaranteed minimum pressure of 0.35 MPa. Using end-load relief only, find the margin.
+
+<Solution>
+**Net compression** (pressure end load from Example 2 is 22.27 MN):
+
+$$
+P_\text{net} = 24 - 22.27 = 1.73 \text{ MN}
+$$
+
+**Margin:**
+
+$$
+MS = \frac{2.46}{1.73} - 1 = +0.42
+$$
+
+The barrel passes. Without pressure the margin would be $2.46/24 - 1 = -0.90$, so this case depends entirely on the tank being pressurized. That dependence should be stated in the analysis.
+</Solution>
+</Problem>

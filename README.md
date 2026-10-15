@@ -117,6 +117,10 @@ Pushing to `main` publishes the site through GitHub Actions ([`.github/workflows
 
 The build fails if a project page is missing from [`public/sitemap.xml`](public/sitemap.xml). When adding a project, add its URL there.
 
+## Booster Prep (private page)
+
+[`booster-prep/`](booster-prep) is a separate study site served at `/booster-prep/` behind a password. Its entrance is the small orange square after the name in the footer. The published page is encrypted, so the password is needed to read it. See [`booster-prep/README.md`](booster-prep/README.md) for how it is built and how to change the password.
+
 ## Repository structure
 
 ```text
@@ -134,6 +138,7 @@ src/
   lib/                  Motion helpers, head-tag updates
   pages/                Home, project page, 404
 source-photos/          Originals, not published
+booster-prep/           Private study site (own package; built and encrypted into public/booster-prep/)
 ```
 
 ## Content rules

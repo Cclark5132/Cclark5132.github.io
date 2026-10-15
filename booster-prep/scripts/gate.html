@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Restricted area</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --bg: #0a1120;
+        --surface: #101a2e;
+        --line: #3a4c74;
+        --ink: #e7ecf3;
+        --muted: #8d9bb2;
+        --accent: #ff8a33;
+        --accent-ink: #1a0e03;
+        --bad: #ff6b6b;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #eef1f6;
+          --surface: #ffffff;
+          --line: #b5c1d3;
+          --ink: #0e1a2e;
+          --muted: #56647d;
+          --accent: #b34d00;
+          --accent-ink: #ffffff;
+          --bad: #be2f2f;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--ink);
+        font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 16px;
+      }
+      form {
+        width: min(380px, 100%);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 26px 22px;
+        display: grid;
+        gap: 14px;
+      }
+      .eyebrow {
+        font: 500 0.72rem/1.4 ui-monospace, Menlo, Consolas, monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.35rem;
+      }
+      input[type="password"] {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--bg);
+        color: var(--ink);
+        font: inherit;
+      }
+      label.remember {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      input[type="checkbox"] {
+        accent-color: var(--accent);
+        width: 18px;
+        height: 18px;
+      }
+      button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font: 600 1rem system-ui, sans-serif;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.7;
+        cursor: progress;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      #msg {
+        min-height: 1.4em;
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--bad);
+      }
+      a {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="gate" autocomplete="on">
+      <span class="eyebrow">Restricted area</span>
+      <h1>Password required</h1>
+      <input type="text" name="username" value="booster-prep" autocomplete="username" hidden />
+      <input id="pw" type="password" name="password" autocomplete="current-password" aria-label="Password" placeholder="Password" required autofocus />
+      <label class="remember"><input id="remember" type="checkbox" /> Remember on this device</label>
+      <button id="go" type="submit">Unlock</button>
+      <p id="msg" role="alert"></p>
+      <a href="/">Back to charlesclark.me</a>
+    </form>
+    <script>
+      (function () {
+        var P = __PAYLOAD__;
+        var KEY = "booster-prep:key";
+        var b64 = function (s) {
+          return Uint8Array.from(atob(s), function (c) {
+            return c.charCodeAt(0);
+          });
+        };
+        var toB64 = function (buf) {
+          return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+        };
+        var msg = document.getElementById("msg");
+        var go = document.getElementById("go");
+
+        if (!window.crypto || !crypto.subtle || typeof DecompressionStream === "undefined") {
+          msg.textContent = "This browser can't unlock the page. Try a current version of Chrome, Safari, Firefox or Edge.";
+          go.disabled = true;
+          return;
+        }
+
+        function deriveKey(password) {
+          return crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]).then(function (base) {
+            return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(P.salt), iterations: P.iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+          });
+        }
+
+        function open(key) {
+          return crypto.subtle
+            .decrypt({ name: "AES-GCM", iv: b64(P.iv) }, key, b64(P.data))
+            .then(function (zipped) {
+              var stream = new Blob([zipped]).stream().pipeThrough(new DecompressionStream("gzip"));
+              return new Response(stream).text();
+            })
+            .then(function (html) {
+              document.open();
+              document.write(html);
+              document.close();
+            });
+        }
+
+        // A key remembered on this device unlocks without asking.
+        try {
+          var saved = localStorage.getItem(KEY);
+          if (saved) {
+            crypto.subtle
+              .importKey("raw", b64(saved), "AES-GCM", false, ["decrypt"])
+              .then(open)
+              .catch(function () {
+                localStorage.removeItem(KEY);
+              });
+          }
+        } catch (e) {}
+
+        document.getElementById("gate").addEventListener("submit", function (event) {
+          event.preventDefault();
+          var password = document.getElementById("pw").value;
+          var remember = document.getElementById("remember").checked;
+          go.disabled = true;
+          go.textContent = "Unlocking…";
+          msg.textContent = "";
+          var derived;
+          deriveKey(password)
+            .then(function (key) {
+              derived = key;
+              return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(P.iv) }, key, b64(P.data));
+            })
+            .then(function () {
+              if (!remember) return;
+              return crypto.subtle.exportKey("raw", derived).then(function (raw) {
+                try {
+                  localStorage.setItem(KEY, toB64(raw));
+                } catch (e) {}
+              });
+            })
+            .then(function () {
+              return open(derived);
+            })
+            .catch(function () {
+              go.disabled = false;
+              go.textContent = "Unlock";
+              msg.textContent = "Wrong password.";
+              document.getElementById("pw").select();
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

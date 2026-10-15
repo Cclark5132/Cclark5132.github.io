@@ -1,0 +1,360 @@
+export const meta = {
+  slug: "stress-and-margins",
+  title: "Stress, loads and margins",
+  week: 1,
+  summary: "Free body diagrams of a vertical stage, stress and strain, principal and von Mises stress, factor of safety and margin of safety.",
+};
+
+Every structures task ends with the same question: **does the part have positive margin for every load case?** This lesson builds the vocabulary for answering it: loads on a stage, stress and strain, combining stresses into one number, and turning that number into a margin.
+
+## 1. Loads on a vertical rocket stage
+
+Draw the free body diagram before you calculate anything. For a stage flying vertically, four kinds of load act on it:
+
+- **Thrust** $T$ from the engines, pushing up at the thrust structure.
+- **Weight** $W = mg$ acting down through the center of gravity.
+- **Inertia.** When the stage accelerates upward at $a$, every kilogram of structure and propellant "pushes back" with $m\,a$. It is convenient to combine gravity and acceleration into a **load factor** $n$ (in g's).
+- **Aerodynamic loads.** Drag acts along the axis. A side gust or angle of attack makes a normal force $N$ that bends the vehicle, worst near max-Q (maximum dynamic pressure).
+
+<Figure caption="Free body diagram of a vertical stage, cut at a station. The material above the cut is held up by an internal axial force P and bending moment M in the wall.">
+<svg viewBox="0 0 560 360" role="img" aria-label="Rocket stage free body diagram with thrust, weight, aerodynamic normal force and a section cut showing internal axial force and bending moment">
+  <defs>
+    <marker id="l1-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l1-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <path d="M110 70 Q130 30 150 70 L150 290 L110 290 Z" className="dg-fill" />
+  <line x1="95" y1="150" x2="165" y2="150" className="dg-dash" />
+  <text x="172" y="154" className="dg-text-muted">section cut</text>
+  <circle cx="130" cy="200" r="5" className="dg-ink-fill" />
+  <text x="80" y="204" className="dg-text-muted">CG</text>
+  <line x1="130" y1="320" x2="130" y2="296" className="dg-accent" markerEnd="url(#l1-arrow)" />
+  <line x1="130" y1="350" x2="130" y2="322" className="dg-accent" />
+  <text x="140" y="342" className="dg-text-accent">T (thrust)</text>
+  <line x1="130" y1="205" x2="130" y2="255" className="dg-line" markerEnd="url(#l1-arrow-ink)" />
+  <text x="160" y="240" className="dg-text">W + m·a</text>
+  <line x1="40" y1="110" x2="104" y2="110" className="dg-accent" markerEnd="url(#l1-arrow)" />
+  <text x="16" y="100" className="dg-text-accent">N (aero)</text>
+  <path d="M330 120 Q370 60 410 120 L410 200 L330 200 Z" className="dg-fill" />
+  <line x1="320" y1="200" x2="420" y2="200" className="dg-dash" />
+  <line x1="350" y1="250" x2="350" y2="206" className="dg-accent" markerEnd="url(#l1-arrow)" />
+  <line x1="390" y1="250" x2="390" y2="206" className="dg-accent" markerEnd="url(#l1-arrow)" />
+  <text x="430" y="234" className="dg-text-accent">P (axial)</text>
+  <path d="M300 230 A 30 30 0 0 1 300 170" className="dg-line" markerEnd="url(#l1-arrow-ink)" />
+  <text x="262" y="166" className="dg-text">M</text>
+  <text x="330" y="96" className="dg-text-muted">upper part</text>
+  <text x="300" y="290" className="dg-text-muted">internal loads at the cut</text>
+</svg>
+</Figure>
+
+Cut the stage at any station and keep the part above the cut. The wall at the cut must carry an **axial force** $P$ that accelerates everything above it, and a **bending moment** $M$ from the aerodynamic normal force. For mass $m_\text{above}$ above the cut:
+
+<Formula
+  label="Axial compression at a station"
+  tex="P = m_\text{above}\, n\, g, \qquad n = \frac{a + g}{g}"
+  vars="P | axial compressive force carried by the wall at the cut | N; m_\text{above} | mass of everything above the cut | kg; n | axial load factor | g's; a | upward acceleration of the vehicle | m/s²; g | gravitational acceleration, 9.81 | m/s²"
+/>
+
+The thin wall of radius $R$ and thickness $t$ turns these into stress. Axial force spreads around the circumference; bending adds tension on one side and compression on the other:
+
+<Formula
+  label="Wall stress from axial force and bending"
+  tex="\sigma_\text{axial} = \frac{P}{2\pi R t}, \qquad \sigma_\text{bending} = \frac{M}{\pi R^2 t}"
+  vars="\sigma_\text{axial} | uniform axial stress in the wall | MPa; \sigma_\text{bending} | peak bending stress (thin-wall tube) | MPa; P | axial force | N; M | bending moment | N·mm; R | mean radius | mm; t | wall thickness | mm"
+/>
+
+## 2. Stress, strain and Hooke's law
+
+Stress is force per area, $\sigma = F/A$. Strain is stretch per length, $\varepsilon = \Delta L / L$ (dimensionless). In the elastic range they are proportional:
+
+<Formula
+  label="Hooke's law (uniaxial)"
+  tex="\sigma = E\,\varepsilon"
+  vars="\sigma | normal stress | MPa; E | Young's modulus (193 GPa = 193,000 MPa for 304L) | MPa; \varepsilon | normal strain | mm/mm"
+/>
+
+A tank wall is loaded in two directions at once (hoop and axial). Poisson's ratio $\nu$ couples them: stretching in one direction shrinks the other.
+
+<Formula
+  label="Hooke's law (biaxial, plane stress)"
+  tex="\varepsilon_x = \frac{\sigma_x - \nu\,\sigma_y}{E}, \qquad \varepsilon_y = \frac{\sigma_y - \nu\,\sigma_x}{E}"
+  vars="\varepsilon_x, \varepsilon_y | normal strains in x and y | mm/mm; \sigma_x, \sigma_y | normal stresses in x and y | MPa; \nu | Poisson's ratio (about 0.29 for 304L) | —; E | Young's modulus | MPa"
+/>
+
+This is what a strain gauge measures: strain, not stress. You convert to stress with these equations.
+
+## 3. Principal stresses and Mohr's circle
+
+At any point, a 2D stress state $(\sigma_x, \sigma_y, \tau_{xy})$ can be rotated to the **principal directions**, where the shear stress is zero and the normal stresses are the largest and smallest possible:
+
+<Formula
+  label="Principal stresses (2D)"
+  tex="\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}"
+  vars="\sigma_1, \sigma_2 | maximum and minimum principal stresses | MPa; \sigma_x, \sigma_y | normal stresses on the x and y faces | MPa; \tau_{xy} | shear stress | MPa"
+/>
+
+Mohr's circle draws this. Its center is at $C = (\sigma_x + \sigma_y)/2$ and its radius is $R_M = \sqrt{((\sigma_x - \sigma_y)/2)^2 + \tau_{xy}^2}$. The circle crosses the horizontal axis at $\sigma_1 = C + R_M$ and $\sigma_2 = C - R_M$, and the radius is the maximum in-plane shear stress.
+
+<Figure caption="Mohr's circle for σx = 120 MPa, σy = 40 MPa, τxy = 30 MPa. Center 80 MPa, radius 50 MPa, so σ1 = 130 MPa and σ2 = 30 MPa.">
+<svg viewBox="0 0 620 300" role="img" aria-label="Mohr's circle with center at 80 MPa and radius 50 MPa">
+  <line x1="30" y1="150" x2="600" y2="150" className="dg-thin" />
+  <line x1="60" y1="20" x2="60" y2="280" className="dg-thin" />
+  <text x="586" y="140" className="dg-text-muted">σ</text>
+  <text x="68" y="32" className="dg-text-muted">τ</text>
+  <circle cx="300" cy="150" r="120" className="dg-accent" />
+  <line x1="204" y1="222" x2="396" y2="78" className="dg-line" />
+  <circle cx="396" cy="78" r="5" className="dg-ink-fill" />
+  <circle cx="204" cy="222" r="5" className="dg-ink-fill" />
+  <text x="404" y="74" className="dg-text">(σx, τxy) = (120, 30)</text>
+  <text x="190" y="246" textAnchor="end" className="dg-text">(σy, −τxy) = (40, −30)</text>
+  <circle cx="300" cy="150" r="4" className="dg-ink-fill" />
+  <text x="282" y="172" className="dg-text-muted">C = 80</text>
+  <circle cx="420" cy="150" r="5" className="dg-accent-fill" />
+  <circle cx="180" cy="150" r="5" className="dg-accent-fill" />
+  <text x="426" y="170" className="dg-text-accent">σ1 = 130</text>
+  <text x="122" y="170" className="dg-text-accent">σ2 = 30</text>
+  <line x1="300" y1="150" x2="300" y2="30" className="dg-dash" />
+  <text x="310" y="20" className="dg-text-muted">τmax = R = 50</text>
+</svg>
+</Figure>
+
+## 4. Von Mises equivalent stress
+
+A ductile metal yields when its distortion energy reaches a limit. Von Mises combines a multi-axial stress state into one number you can compare with the uniaxial yield strength:
+
+<Formula
+  label="Von Mises (2D, principal stresses)"
+  tex="\sigma_{vm} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}"
+  vars="\sigma_{vm} | von Mises equivalent stress | MPa; \sigma_1, \sigma_2 | in-plane principal stresses | MPa"
+/>
+
+<Formula
+  label="Von Mises (2D, any axes)"
+  tex="\sigma_{vm} = \sqrt{\sigma_x^2 - \sigma_x\sigma_y + \sigma_y^2 + 3\tau_{xy}^2}"
+  vars="\sigma_x, \sigma_y | normal stresses | MPa; \tau_{xy} | shear stress | MPa"
+/>
+
+Both forms give the same answer, so you can skip finding principal stresses when you only need $\sigma_{vm}$.
+
+## 5. Factor of safety and margin of safety
+
+The **factor of safety** (FS) is a required multiplier on the load, set by the program's requirements (for example 1.25 on yield and 1.4 on ultimate). The **margin of safety** (MS) says how much capability is left over *after* the factor of safety is applied:
+
+<Formula
+  label="Margin of safety"
+  tex="MS = \frac{\sigma_\text{allowable}}{FS \times \sigma_\text{applied}} - 1"
+  vars="MS | margin of safety (pass when MS ≥ 0) | —; \sigma_\text{allowable} | material allowable (yield or ultimate) | MPa; FS | required factor of safety | —; \sigma_\text{applied} | applied (limit) stress | MPa"
+/>
+
+- $MS = 0$: exactly meets the requirement.
+- $MS = +0.25$: could take 25% more load and still meet the requirement.
+- $MS < 0$: does **not** meet the requirement. It doesn't mean the part will break, but it can't be signed off.
+
+Aerospace reports use margins because zero is always the pass line, whichever factor of safety or failure mode applies. You can line up yield, ultimate, buckling and joint margins in one table and the smallest one is the one that matters.
+
+<Example title="Margin from the Week 1 self-check">
+
+A part has $\sigma_\text{allowable} = 300$ MPa, $\sigma_\text{applied} = 200$ MPa and $FS = 1.4$.
+
+**Step 1.** Apply the factor of safety to the applied stress:
+
+$$
+FS \times \sigma_\text{applied} = 1.4 \times 200 = 280 \text{ MPa}
+$$
+
+**Step 2.** Divide the allowable by that and subtract one:
+
+$$
+MS = \frac{300}{280} - 1 = 1.0714 - 1 = +0.071
+$$
+
+**Result:** $MS \approx +0.07$. The part passes with a 7% reserve.
+
+</Example>
+
+<Example title="Biaxial tank wall element">
+
+A tank wall element sees $\sigma_x = 100$ MPa (axial) and $\sigma_y = 200$ MPa (hoop), with no shear. The practice yield allowable is 500 MPa with $FS = 1.25$. Find the yield margin.
+
+**Step 1.** With no shear, these are already principal stresses: $\sigma_1 = 200$ MPa and $\sigma_2 = 100$ MPa.
+
+**Step 2.** Von Mises:
+
+$$
+\sigma_{vm} = \sqrt{200^2 - (200)(100) + 100^2} = \sqrt{40{,}000 - 20{,}000 + 10{,}000} = \sqrt{30{,}000} = 173.2 \text{ MPa}
+$$
+
+**Step 3.** Margin on yield:
+
+$$
+MS = \frac{500}{1.25 \times 173.2} - 1 = \frac{500}{216.5} - 1 = +1.31
+$$
+
+**Result:** $MS = +1.31$. Notice that $\sigma_{vm}$ (173 MPa) is *less* than the hoop stress (200 MPa). Biaxial tension is slightly kinder than uniaxial tension under von Mises.
+
+</Example>
+
+<Example title="Principal stresses with shear">
+
+A point has $\sigma_x = 120$ MPa, $\sigma_y = 40$ MPa and $\tau_{xy} = 30$ MPa (the Mohr's circle above).
+
+**Step 1.** Center and radius:
+
+$$
+C = \frac{120 + 40}{2} = 80 \text{ MPa}, \qquad R_M = \sqrt{\left(\frac{120 - 40}{2}\right)^2 + 30^2} = \sqrt{1600 + 900} = 50 \text{ MPa}
+$$
+
+**Step 2.** Principal stresses:
+
+$$
+\sigma_1 = 80 + 50 = 130 \text{ MPa}, \qquad \sigma_2 = 80 - 50 = 30 \text{ MPa}
+$$
+
+**Step 3.** Von Mises, two ways:
+
+$$
+\sigma_{vm} = \sqrt{130^2 - (130)(30) + 30^2} = \sqrt{13{,}900} = 117.9 \text{ MPa}
+$$
+
+$$
+\sigma_{vm} = \sqrt{120^2 - (120)(40) + 40^2 + 3(30)^2} = \sqrt{13{,}900} = 117.9 \text{ MPa}
+$$
+
+Both agree, as they must.
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Leaving out the factor of safety">
+Writing $MS = \sigma_\text{allow}/\sigma_\text{applied} - 1$ gives a margin that's too high. The FS always multiplies the applied stress (or load) first.
+</Callout>
+
+<Callout kind="mistake" title="Pairing the wrong FS with the wrong allowable">
+Yield allowables pair with the yield FS (1.25 in the capstone), ultimate allowables with the ultimate FS (1.4). Check both and report the lower margin.
+</Callout>
+
+<Callout kind="mistake" title="Using von Mises for buckling">
+Von Mises predicts yielding. Buckling is a stability failure that can happen far below yield, so it gets its own margin with its own allowable (Weeks 5 and 6).
+</Callout>
+
+<Callout kind="mistake" title="Mixing units">
+MPa is N/mm². If force is in N and lengths are in mm, stress comes out in MPa directly. Mixing meters and millimeters is the most common source of answers that are off by 1000.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A bracket has a practice yield allowable of 480 MPa. The applied stress is 310 MPa and the yield FS is 1.25. What is the yield margin?
+
+<Solution>
+$$
+MS = \frac{480}{1.25 \times 310} - 1 = \frac{480}{387.5} - 1 = +0.24
+$$
+
+The bracket passes with $MS = +0.24$.
+</Solution>
+</Problem>
+
+<Problem n={2}>
+The ultimate allowable is 700 MPa and the ultimate FS is 1.4. What is the largest applied stress that still gives $MS \geq 0$?
+
+<Solution>
+Set $MS = 0$ and solve for the applied stress:
+
+$$
+0 = \frac{700}{1.4\,\sigma_\text{applied}} - 1 \quad\Rightarrow\quad \sigma_\text{applied} = \frac{700}{1.4} = 500 \text{ MPa}
+$$
+</Solution>
+</Problem>
+
+<Problem n={3}>
+A point has $\sigma_x = -80$ MPa, $\sigma_y = 150$ MPa and $\tau_{xy} = 40$ MPa. Find the principal stresses and the von Mises stress.
+
+<Solution>
+**Center and radius:**
+
+$$
+C = \frac{-80 + 150}{2} = 35 \text{ MPa}, \qquad R_M = \sqrt{\left(\frac{-80 - 150}{2}\right)^2 + 40^2} = \sqrt{13{,}225 + 1{,}600} = 121.8 \text{ MPa}
+$$
+
+**Principal stresses:**
+
+$$
+\sigma_1 = 35 + 121.8 = 156.8 \text{ MPa}, \qquad \sigma_2 = 35 - 121.8 = -86.8 \text{ MPa}
+$$
+
+**Von Mises:**
+
+$$
+\sigma_{vm} = \sqrt{156.8^2 - (156.8)(-86.8) + (-86.8)^2} = \sqrt{24{,}586 + 13{,}610 + 7{,}534} = 213.8 \text{ MPa}
+$$
+
+Tension in one direction and compression in the other makes von Mises *larger* than either stress alone. Mixed-sign stress states are the harsh ones.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+A stage of total mass $1.0 \times 10^6$ kg has 20 MN of thrust at liftoff. Ignore drag. (a) What is its acceleration and load factor? (b) What axial force does the wall carry at a station with $4.0 \times 10^5$ kg above it?
+
+<Solution>
+**(a)** Net force divided by mass:
+
+$$
+a = \frac{T}{m} - g = \frac{20 \times 10^6}{1.0 \times 10^6} - 9.81 = 10.19 \text{ m/s}^2
+$$
+
+$$
+n = \frac{a + g}{g} = \frac{10.19 + 9.81}{9.81} = 2.04
+$$
+
+**(b)** The wall must hold up and accelerate the mass above it:
+
+$$
+P = m_\text{above}\, n\, g = 4.0 \times 10^5 \times 2.04 \times 9.81 = 8.0 \times 10^6 \text{ N} = 8.0 \text{ MN}
+$$
+
+A shortcut: $P = m_\text{above} \times T/m$, which is $40\%$ of the thrust because $40\%$ of the mass is above the station.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+A strain gauge rosette on a 304L tank wall ($E = 193$ GPa, $\nu = 0.29$) reads $\varepsilon_x = 2.18 \times 10^{-4}$ (axial) and $\varepsilon_y = 8.86 \times 10^{-4}$ (hoop). The wall is in plane stress with no shear. Find $\sigma_x$ and $\sigma_y$.
+
+<Solution>
+Invert the biaxial Hooke's law:
+
+$$
+\sigma_x = \frac{E}{1 - \nu^2}\left(\varepsilon_x + \nu\,\varepsilon_y\right), \qquad \sigma_y = \frac{E}{1 - \nu^2}\left(\varepsilon_y + \nu\,\varepsilon_x\right)
+$$
+
+$$
+\frac{E}{1 - \nu^2} = \frac{193{,}000}{1 - 0.0841} = 210{,}722 \text{ MPa}
+$$
+
+$$
+\sigma_x = 210{,}722 \times (2.18 + 0.29 \times 8.86) \times 10^{-4} = 210{,}722 \times 4.749 \times 10^{-4} \approx 100 \text{ MPa}
+$$
+
+$$
+\sigma_y = 210{,}722 \times (8.86 + 0.29 \times 2.18) \times 10^{-4} = 210{,}722 \times 9.492 \times 10^{-4} \approx 200 \text{ MPa}
+$$
+
+These are the stresses from Worked Example 2. The hoop strain is about four times the axial strain even though the hoop stress is only twice the axial stress, because Poisson contraction from the hoop stress subtracts from the axial strain.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+Two load cases on the same weld land give yield margins of $+0.42$ and $-0.05$, and an ultimate margin of $+0.18$. What do you report, and what are your options?
+
+<Solution>
+Report the **minimum margin, $-0.05$ (yield)**, and the load case that drives it. The part does not meet the requirement. Options:
+
+1. **Reduce the applied stress:** thicken the land, change the load path, or reduce the load.
+2. **Raise the allowable:** a stronger material or processing condition, with real allowables data behind it.
+3. **Refine the analysis:** remove conservatism (better load data, a more accurate stress model, test data), so the applied stress is calculated more accurately.
+</Solution>
+</Problem>
