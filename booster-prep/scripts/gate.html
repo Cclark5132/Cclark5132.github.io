@@ -162,11 +162,31 @@
               var stream = new Blob([zipped]).stream().pipeThrough(new DecompressionStream("gzip"));
               return new Response(stream).text();
             })
-            .then(function (html) {
-              document.open();
-              document.write(html);
-              document.close();
+            .then(mount);
+        }
+
+        // Swaps the decrypted page into this document. This avoids document.write, which some
+        // browsers (Safari in particular) handle badly once the app starts changing the URL hash.
+        function mount(html) {
+          var doc = new DOMParser().parseFromString(html, "text/html");
+          var root = document.documentElement;
+          Array.prototype.slice.call(root.attributes).forEach(function (a) {
+            root.removeAttribute(a.name);
+          });
+          Array.prototype.slice.call(doc.documentElement.attributes).forEach(function (a) {
+            root.setAttribute(a.name, a.value);
+          });
+          document.head.replaceWith(document.importNode(doc.head, true));
+          document.body.replaceWith(document.importNode(doc.body, true));
+          // Parsed scripts never run, so recreate each one in order.
+          Array.prototype.slice.call(document.querySelectorAll("script")).forEach(function (old) {
+            var s = document.createElement("script");
+            Array.prototype.slice.call(old.attributes).forEach(function (a) {
+              s.setAttribute(a.name, a.value);
             });
+            s.textContent = old.textContent;
+            old.replaceWith(s);
+          });
         }
 
         // A key remembered on this device unlocks without asking.

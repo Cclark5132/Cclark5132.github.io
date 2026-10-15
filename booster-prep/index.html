@@ -13,6 +13,13 @@
         var saved = localStorage.getItem("booster-prep:theme");
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
       } catch (e) {}
+      // If the app fails before it can draw anything, show the error instead of a blank page.
+      window.addEventListener("error", function (event) {
+        var root = document.getElementById("root");
+        if (!root || root.childElementCount) return;
+        root.style.cssText = "padding:24px;font:15px/1.5 system-ui,sans-serif;color:#e7ecf3;background:#0a1120;min-height:100vh";
+        root.textContent = "Booster Prep couldn't start in this browser. Try reloading, or send Claude this message: " + event.message + " | " + navigator.userAgent;
+      });
     </script>
   </head>
   <body>
