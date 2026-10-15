@@ -1,7 +1,7 @@
 import { Link, NavLink, useParams } from "react-router-dom";
 import { CheckItem } from "../components/Checks";
 import { Rich } from "../components/Tex";
-import { feaPractices, swToNx, toolTracks } from "../data/tools";
+import { feaPractices, nastranLiteracy, swToNx, toolTracks } from "../data/tools";
 import { NotFound } from "./NotFound";
 
 function ToolTabs() {
@@ -42,8 +42,61 @@ export function Tools() {
           <span className="eyebrow">Read before Week 4</span>
         </Link>
       </div>
+      <NastranCard />
       <SwTable />
     </div>
+  );
+}
+
+function NastranCard() {
+  const n = nastranLiteracy;
+  return (
+    <section className="card" style={{ marginTop: 24 }} aria-labelledby="nastran-h">
+      <div className="card-title">
+        <h2 id="nastran-h">{n.title}</h2>
+        <span className="tag">{n.budget}</span>
+      </div>
+      <p className="hint" style={{ marginBottom: 12 }}>
+        {n.why}
+      </p>
+      <div className="table-wrap">
+        <table className="data">
+          <caption className="sr-only">Nastran bulk data cards</caption>
+          <thead>
+            <tr>
+              <th scope="col">Card</th>
+              <th scope="col">What it does</th>
+            </tr>
+          </thead>
+          <tbody>
+            {n.cards.map(([card, what]) => (
+              <tr key={card}>
+                <td className="num">{card}</td>
+                <td>{what}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 12 }}>
+        {n.steps.map((step, i) => (
+          <CheckItem key={i} id={`tool-nastran-${i}`}>
+            <span className="check-meta">Week {step.week}</span>
+            <Rich text={step.text} />
+          </CheckItem>
+        ))}
+      </div>
+      <p className="hint" style={{ marginTop: 10 }}>
+        {n.links.map((link, i) => (
+          <span key={link.url}>
+            {i > 0 && " · "}
+            <a href={link.url} target="_blank" rel="noopener noreferrer">
+              {link.label}
+            </a>
+          </span>
+        ))}
+      </p>
+    </section>
   );
 }
 

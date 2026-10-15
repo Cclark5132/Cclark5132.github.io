@@ -36,6 +36,8 @@ export interface Week {
   deliverable: string;
   selfChecks: SelfCheck[];
   tasks?: string[]; // checklist-style weeks (0, 9, 10–12)
+  /** MATLAB weeks keep Python as the main toolkit: Friday's script session is Python, with this task. */
+  pythonScript?: string;
   note?: string;
 }
 
@@ -189,6 +191,7 @@ export const baseWeeks: Week[] = [
       "Thin-wall cylinder, radius $R$ and wall thickness $t$, internal pressure $p$: hoop and axial stress.",
       "Spherical or hemispherical dome stress.",
       "Ellipsoidal domes and why dome shape matters at the joint with the barrel.",
+      "**Shell discontinuity** at the dome-to-barrel joint: for a hemisphere on a cylinder of equal thickness the peak meridional stress is about **1.29 ×** $pR/(2t)$ (254.3 MPa vs. 196.9 MPa in the worked example). Week 8's FEA checks it.",
       "Hydrostatic head: liquid at the bottom of a tank sees extra pressure, and it grows with vehicle acceleration ($n$, in g's). Example: LOX ($\\rho \\approx 1141$ kg/m³), $h = 20$ m, at 1 g gives about **0.22 MPa**; at 3 g it triples to about **0.67 MPa**.",
       "Total wall pressure = ullage (gas) pressure + hydrostatic head.",
     ],
@@ -264,6 +267,7 @@ export const baseWeeks: Week[] = [
     ],
     cad: { tool: "NX", items: ["Assemblies and constraints.", "Drafting: create a drawing with views, sections, and dimensions."] },
     code: { tool: "MATLAB", items: ["Finish **MATLAB Onramp** (free from MathWorks).", "Practice matrices and plotting."] },
+    pythonScript: "Python: add `thermal_stress()` (uniaxial and biaxial) to your toolkit with pytest tests from the Lesson 3 worked examples.",
     formulas: [
       {
         label: "Thermal stress, fully constrained",
@@ -416,7 +420,8 @@ export const baseWeeks: Week[] = [
       "Classical buckling stress of a thin cylinder under axial compression.",
       "Real cylinders buckle far below this because of tiny shape imperfections. NASA SP-8007 (free online) gives a **knockdown factor γ**.",
       "Worked example: $R = 4500$ mm, $t = 4$ mm, $E = 193$ GPa gives $\\sigma_{cr} \\approx$ **103.8 MPa**, $\\phi \\approx 2.10$, $\\gamma \\approx$ **0.21**, $\\sigma_\\text{design} \\approx$ **21.8 MPa**. An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.",
-      "**Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load.",
+      "**Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load. The buckling FS goes on the applied load only; the relieving pressure is taken at its minimum, unfactored.",
+      "**FEA vs. SP-8007:** linear buckling of a perfect cylinder lands near the classical value; a nonlinear run with a seeded imperfection (Week 11 stretch) collapses between SP-8007 and classical.",
     ],
     code: { tool: "Python", items: ["Add `cylinder_buckling(R, t, E)` to your toolkit, returning σ_cr, γ, and σ_design."] },
     formulas: [
@@ -508,6 +513,7 @@ export const baseWeeks: Week[] = [
       items: ["Pressurized tank model with domes using shell elements.", "Compare barrel hoop stress to $pR/t$. Look at the stress jump at the dome-to-barrel joint."],
     },
     code: { tool: "MATLAB", items: ["Miner's-rule calculator for a made-up flight load spectrum (liftoff, max-Q, catch, repeated over many flights)."] },
+    pythonScript: "Python: port the Miner's-rule calculation and add Goodman and critical-crack-size functions to your toolkit, with pytest tests from the Lesson 8 worked examples.",
     formulas: [
       {
         label: "Miner's rule",

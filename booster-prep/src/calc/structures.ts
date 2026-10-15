@@ -41,6 +41,25 @@ export function thinWall(p: number, R: number, t: number) {
   };
 }
 
+/**
+ * Discontinuity stress where a hemispherical head meets a cylinder of the same thickness, from the
+ * beam-on-elastic-foundation shell model (Geckeler approximation: each side takes half the radial mismatch,
+ * so the joint moment M0 = 0 and only a joint shear Q0 acts).
+ *   β = [3(1 − ν²)]^¼ / √(R t),  δ = p R² / (2 E t),  Q0 = p / (8β)
+ *   M(x) = (Q0/β) e^(−βx) sin βx, peak at βx = π/4;  σ_b = 6 M_max / t²
+ * Units: p and E in MPa, R and t in mm. Moments are per unit length of circumference (N·mm/mm).
+ */
+export function shellDiscontinuityHemiCyl(p: number, R: number, t: number, E: number, nu: number) {
+  const beta = (3 * (1 - nu * nu)) ** 0.25 / Math.sqrt(R * t);
+  const mismatch = (p * R * R) / (2 * E * t);
+  const Q0 = p / (8 * beta);
+  const peakAt = Math.PI / (4 * beta);
+  const Mmax = (Q0 / beta) * Math.exp(-Math.PI / 4) * Math.sin(Math.PI / 4);
+  const bending = (6 * Mmax) / (t * t);
+  const membrane = (p * R) / (2 * t);
+  return { beta, decayLength: Math.PI / beta, mismatch, Q0, peakAt, Mmax, bending, membrane, total: membrane + bending, factor: (membrane + bending) / membrane };
+}
+
 /** Required wall thickness from hoop stress: t = FS · p · R / σ_allow. */
 export function requiredThickness(p: number, R: number, fs: number, allowable: number) {
   return (fs * p * R) / allowable;

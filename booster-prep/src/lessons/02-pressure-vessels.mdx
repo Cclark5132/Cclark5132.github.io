@@ -117,6 +117,78 @@ They are welded together, so they cannot grow apart. Local shear forces and bend
 
 For a hemisphere the mismatch is small. For a 2:1 ellipsoidal head it is much larger, because the dome equator is in hoop compression and pulls inward while the barrel pushes outward. This is why joints are often locally thickened, why dome shapes are tuned, and why your Week 8 FEA tank model (barrel plus domes) will show a stress jump right at the dome-to-barrel weld that membrane formulas do not predict.
 
+### Computing the discontinuity stress
+
+You can estimate the joint stress by hand with the classical **beam-on-elastic-foundation** model of a thin shell (the same idea as a beam resting on springs: the hoop stiffness of the wall acts as the springs). Near the joint, the edge loads decay along the wall with the **shell parameter**:
+
+<Formula
+  label="Shell parameter (bending decay rate)"
+  tex="\beta = \frac{\left[3(1 - \nu^2)\right]^{1/4}}{\sqrt{R t}}"
+  vars="\beta | shell parameter: edge effects decay with distance x as $e^{-\beta x}$ | 1/mm; \nu | Poisson's ratio | —; R | mean radius | mm; t | wall thickness | mm"
+/>
+
+For a hemisphere on a cylinder of equal thickness, the free growths above differ by
+
+$$
+\delta = w_\text{cyl} - w_\text{sph} = \frac{pR^2}{2Et}\left[(2 - \nu) - (1 - \nu)\right] = \frac{pR^2}{2Et}
+$$
+
+Near its edge a hemisphere is stiff in the same way as a cylinder, so by symmetry each side takes up half of $\delta$. In this approximation (Geckeler's) the two sides rotate the same way and **no moment is needed at the joint, $M_0 = 0$**. Only a radial shear force $Q_0$ acts at the weld:
+
+<Formula
+  label="Hemisphere-to-cylinder joint: shear and bending moment"
+  tex="Q_0 = \frac{p}{8\beta}, \qquad M(x) = \frac{Q_0}{\beta}\,e^{-\beta x}\sin\beta x, \qquad M_\text{max} = \frac{Q_0}{\beta}\,e^{-\pi/4}\sin\frac{\pi}{4} \;\text{ at }\; \beta x = \frac{\pi}{4}"
+  vars="Q_0 | radial shear force per unit length of circumference at the joint | N/mm; M(x) | meridional bending moment per unit length, a distance x into the cylinder | N·mm/mm; M_\text{max} | peak moment | N·mm/mm; p | internal pressure | MPa; \beta | shell parameter | 1/mm; x | distance from the joint along the cylinder | mm"
+/>
+
+The bending stress at the wall surface is $\sigma_b = 6M/t^2$. It adds to the axial membrane stress $pR/(2t)$ on one face of the wall.
+
+<Example title="Discontinuity stress at a hemispherical head">
+
+A hemispherical head is welded to a cylinder of the same thickness. $p = 0.35$ MPa, $R = 4500$ mm, $t = 4$ mm, $\nu = 0.29$ and $E = 193{,}000$ MPa (practice values). Find the peak meridional stress near the joint.
+
+**Step 1.** Shell parameter:
+
+$$
+\beta = \frac{\left[3(1 - 0.29^2)\right]^{1/4}}{\sqrt{4500 \times 4}} = \frac{(2.748)^{1/4}}{134.16} = \frac{1.2875}{134.16} = 0.009596 \text{ /mm}
+$$
+
+So $1/\beta = 104.2$ mm. The peak moment sits at $\pi/(4\beta) = 81.8$ mm from the joint, and the effect has nearly died out by $\pi/\beta = 327$ mm.
+
+**Step 2.** Radial mismatch (for reference; each side takes half):
+
+$$
+\delta = \frac{pR^2}{2Et} = \frac{0.35 \times 4500^2}{2 \times 193{,}000 \times 4} = \frac{7{,}087{,}500}{1{,}544{,}000} = 4.59 \text{ mm}
+$$
+
+**Step 3.** Joint shear:
+
+$$
+Q_0 = \frac{p}{8\beta} = \frac{0.35}{8 \times 0.009596} = 4.559 \text{ N/mm}
+$$
+
+**Step 4.** Peak moment at $\beta x = \pi/4$:
+
+$$
+M_\text{max} = \frac{Q_0}{\beta}\,e^{-\pi/4}\sin\frac{\pi}{4} = \frac{4.559}{0.009596} \times 0.4559 \times 0.7071 = 475.1 \times 0.3224 = 153.2 \text{ N·mm/mm}
+$$
+
+**Step 5.** Bending stress:
+
+$$
+\sigma_b = \frac{6 M_\text{max}}{t^2} = \frac{6 \times 153.2}{4^2} = \frac{919.2}{16} = 57.4 \text{ MPa}
+$$
+
+**Step 6.** Add the axial membrane stress:
+
+$$
+\frac{pR}{2t} = \frac{0.35 \times 4500}{2 \times 4} = 196.9 \text{ MPa}, \qquad \sigma_\text{total} = 196.9 + 57.4 \approx 254.3 \text{ MPa}
+$$
+
+**Result:** the peak meridional stress is $254.3 / 196.9 = 1.29$ times the membrane axial stress, the classical factor of about 1.293 for a hemispherical head on a cylinder of equal thickness. It is still below the 393.75 MPa hoop stress, so for a hemisphere the joint doesn't govern static strength. It matters for fatigue (it sits right at the weld), and it gets much larger for flatter heads. In Week 8 you'll compare this hand calc with the stress jump in your Ansys shell model of the tank.
+
+</Example>
+
 ## 4. Hydrostatic head
 
 Liquid has weight. The deeper you go below the liquid surface, the more liquid sits on top of you and the higher the pressure. When the vehicle accelerates upward, the liquid "feels" heavier, so the effective gravity is $n g$ instead of $g$:
@@ -449,3 +521,38 @@ $$
 The hoop-only margin was $+0.016$. Von Mises gives more margin, because biaxial tension delays yielding. Sizing on hoop stress alone is conservative for yield.
 </Solution>
 </Problem>
+
+<Problem n={7}>
+In words: the Example above used a hemispherical head. What changes at the joint if the head is a **2:1 ellipsoid** of the same thickness instead? Which way does the discontinuity stress go, and why?
+
+<Solution>
+The mismatch gets **much larger**. A hemisphere's equator grows outward (hoop tension $pR/(2t)$), just less than the barrel. A 2:1 ellipsoid's equator is in **hoop compression**, $\sigma_{\theta,\text{eq}} = -pa/t$ (Practice 4), so it actually pulls **inward** while the barrel pushes outward. The radial mismatch is several times the hemisphere's, so the joint shear and moment, and the local bending stress, grow by the same proportion. The flatter head is also stiffer in a different way, so the equal-split symmetry (and $M_0 = 0$) no longer holds; a joint moment appears too. This is why flat heads are often thickened locally near the knuckle and why the Week 8 FEA joint check matters. It's also why thin, flat heads can wrinkle in hoop compression under internal pressure.
+</Solution>
+</Problem>
+
+<Problem n={8}>
+**US units.** A barrel has $R = 177$ in, $t = 0.157$ in and an ullage pressure of $p = 50$ psi (practice values). Find the hoop and axial stress in ksi and in MPa. Then find the required thickness for a practice allowable of 72.5 ksi with $FS = 1.25$. Check yourself with the **SI / US toggle** on the Calculators page (pressure vessel card).
+
+<Solution>
+**Stresses:**
+
+$$
+\sigma_h = \frac{pR}{t} = \frac{50 \times 177}{0.157} = 56{,}369 \text{ psi} = 56.4 \text{ ksi}, \qquad \sigma_a = \frac{\sigma_h}{2} = 28.2 \text{ ksi}
+$$
+
+**In SI** (1 ksi = 6.895 MPa):
+
+$$
+\sigma_h = 56.37 \times 6.895 = 388.7 \text{ MPa}, \qquad \sigma_a = 194.3 \text{ MPa}
+$$
+
+(The inputs are $R = 4496$ mm, $t = 3.99$ mm and $p = 0.345$ MPa, close to Example 1.)
+
+**Required thickness:**
+
+$$
+t_\text{req} = \frac{FS \cdot p \cdot R}{\sigma_\text{allow}} = \frac{1.25 \times 50 \times 177}{72{,}500} = 0.153 \text{ in} = 3.88 \text{ mm}
+$$
+</Solution>
+</Problem>
+

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { fromSI, quantities, toSI } from "../src/calc/units";
 import {
   capstone,
   capstoneDefaults,
@@ -15,6 +16,9 @@ import {
   bucklingMargin,
   preloadFromTorque,
   requiredThickness,
+  runningLoad,
+  equivalentAxialLoad,
+  shellDiscontinuityHemiCyl,
   thermalStress,
   thinWall,
   torqueFromPreload,
@@ -185,5 +189,112 @@ describe("capstone proof case: 1.25 × MEOP, no yield at proof (2.4)", () => {
     expect(proofRows(10)[0].fs).toBe(1);
     expect(proofRows(11.85)[0].ms).toBeCloseTo(0.19, 2);
     expect(proofRows(10)[0].ms).toBeCloseTo(0.005, 3);
+  });
+});
+
+describe("running loads (3.1)", () => {
+  it("30 MN and 20 MN·m at R 4500 mm: 1061.0 + 314.4 = 1375.4 N/mm, P_eq 38.89 MN", () => {
+    const n = runningLoad(30e6, 20e9, 4500);
+    expect(n.axial).toBeCloseTo(1061.0, 1);
+    expect(n.bending).toBeCloseTo(314.4, 1);
+    expect(n.peak).toBeCloseTo(1375.4, 1);
+    const Peq = equivalentAxialLoad(30e6, 20e9, 4500);
+    expect(Peq / 1e6).toBeCloseTo(38.89, 2);
+    expect(Peq / (2 * Math.PI * 4500)).toBeCloseTo(n.peak, 6);
+  });
+
+  it("Lesson 1 Practice 7: 12 MN and 8 MN·m", () => {
+    const n = runningLoad(12e6, 8e9, 4500);
+    expect(n.peak).toBeCloseTo(550.2, 1);
+    expect(n.min).toBeCloseTo(298.7, 1);
+    expect(equivalentAxialLoad(12e6, 8e9, 4500) / 1e6).toBeCloseTo(15.56, 2);
+  });
+
+  it("Lesson 1 Practice 8 (US): 1653.6 lbf/in = 289.6 N/mm, P_eq 1,838,983 lbf", () => {
+    // Works in any consistent units: lbf, in·lbf and in give lbf/in.
+    const n = runningLoad(1.5e6, 3e7, 177);
+    expect(n.axial).toBeCloseTo(1348.8, 1);
+    expect(n.bending).toBeCloseTo(304.8, 1);
+    expect(n.peak).toBeCloseTo(1653.6, 1);
+    expect(toSI(n.peak, "runningLoad", "US")).toBeCloseTo(289.6, 1);
+    expect(equivalentAxialLoad(1.5e6, 3e7, 177)).toBeCloseTo(1_838_983, 0);
+  });
+
+  it("Lesson 1 Practice 9: factored P_eq with unfactored relief, 12 mm wall → MS ≈ +0.21", () => {
+    const Peq = equivalentAxialLoad(30e6, 20e9, 4500);
+    const net = netAxialCompressionFactored(Peq, 1.4, 0.35, 4500, 12);
+    expect(net.netLoad / 1e6).toBeCloseTo(32.18, 2);
+    expect(net.netLoad / (2 * Math.PI * 4500)).toBeCloseTo(1138, 0);
+    expect(net.stress).toBeCloseTo(94.8, 1);
+    const pAllow = cylinderBuckling(4500, 12, 193_000).loadCapacity;
+    expect(pAllow / 1e6).toBeCloseTo(38.83, 2);
+    expect(bucklingMargin(pAllow, net.netLoad)).toBeCloseTo(0.21, 2);
+  });
+
+  it("1 lbf/in = 0.175127 N/mm", () => {
+    expect(quantities.runningLoad.toSI).toBeCloseTo(0.175127, 6);
+    expect(fromSI(0.175127, "runningLoad", "US")).toBeCloseTo(1, 5);
+  });
+});
+
+describe("capstone max-Q stretch case (3.1)", () => {
+  it("P_eq = 25 MN + 2 × 30 MN·m / 4.5 m = 38.33 MN; minimum thickness unchanged at about 11.85 mm", () => {
+    const withQ = { ...capstoneDefaults, includeMaxQ: true };
+    expect(capstone(withQ).maxQEquivalent / 1e6).toBeCloseTo(38.33, 2);
+    expect(capstone(withQ).rows.some((r) => r.loadCase.startsWith("4."))).toBe(true);
+    expect(capstone(capstoneDefaults).rows.some((r) => r.loadCase.startsWith("4."))).toBe(false);
+    expect(capstoneMinThickness(withQ)).toBeCloseTo(capstoneMinThickness(capstoneDefaults), 6);
+    const maxQBuckling = (t: number) => capstone({ ...withQ, t }).rows.find((r) => r.loadCase.startsWith("4.") && r.check.startsWith("Axial"))!.ms;
+    expect(maxQBuckling(12)).toBeCloseTo(0.237, 3);
+  });
+});
+
+describe("shell discontinuity, hemisphere on cylinder (3.3)", () => {
+  const d = shellDiscontinuityHemiCyl(0.35, 4500, 4, 193_000, 0.29);
+  it("matches the Lesson 2 worked example", () => {
+    expect(d.beta).toBeCloseTo(0.009596, 6);
+    expect(1 / d.beta).toBeCloseTo(104.2, 1);
+    expect(d.peakAt).toBeCloseTo(81.8, 1);
+    expect(d.decayLength).toBeCloseTo(327, 0);
+    expect(d.mismatch).toBeCloseTo(4.59, 2);
+    expect(d.Q0).toBeCloseTo(4.559, 3);
+    expect(d.Mmax).toBeCloseTo(153.2, 1);
+    expect(d.bending).toBeCloseTo(57.4, 1);
+    expect(d.membrane).toBeCloseTo(196.9, 1);
+    expect(d.total).toBeCloseTo(254.3, 1);
+  });
+  it("gives the classical ≈ 1.293 factor, independent of p, R and t", () => {
+    expect(d.factor).toBeCloseTo(1.293, 2);
+    expect(shellDiscontinuityHemiCyl(1, 1000, 10, 70_000, 0.29).factor).toBeCloseTo(d.factor, 10);
+  });
+});
+
+describe("US-unit practice problems (3.7)", () => {
+  it("Lesson 2 Practice 8: 50 psi, R 177 in, t 0.157 in", () => {
+    const s = thinWall(50, 177, 0.157);
+    expect(s.hoop / 1000).toBeCloseTo(56.37, 2);
+    expect(toSI(s.hoop / 1000, "stress", "US")).toBeCloseTo(388.7, 1);
+    expect(requiredThickness(50, 177, 1.25, 72_500)).toBeCloseTo(0.1526, 4);
+  });
+  it("Lesson 5 Practice 8: Johnson column in ksi", () => {
+    const c = columnBuckling(28_000, 50, 1.2, 0.5, 1, 60);
+    expect(c.regime).toBe("Johnson");
+    expect(c.slenderness).toBeCloseTo(92.95, 2);
+    expect(c.transition).toBeCloseTo(105.1, 1);
+    expect(c.stress).toBeCloseTo(30.46, 2);
+    expect(c.load).toBeCloseTo(36.55, 2);
+    expect(toSI(c.stress, "stress", "US")).toBeCloseTo(210.0, 1);
+  });
+  it("Lesson 6 Practice 7: SP-8007 in ksi", () => {
+    const b = cylinderBuckling(177.2, 0.1575, 28_000);
+    expect(b.sigmaCr).toBeCloseTo(15.06, 2);
+    expect(b.gamma).toBeCloseTo(0.210, 3);
+    expect(b.sigmaDesign).toBeCloseTo(3.16, 2);
+    expect(b.loadCapacity).toBeCloseTo(553.8, 1);
+    expect(toSI(b.sigmaCr, "stress", "US")).toBeCloseTo(103.8, 1);
+  });
+  it("Lesson 7 Practice 8: 30 ft·lbf on a 3/8 in bolt → 4800 lbf ≈ 21.35 kN", () => {
+    expect((30 * 12) / (0.2 * 0.375)).toBeCloseTo(4800, 6);
+    expect(preloadFromTorque(toSI(30, "torque", "US"), 0.2, toSI(0.375, "length", "US"))).toBeCloseTo(21_351, 0);
   });
 });

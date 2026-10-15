@@ -16,9 +16,11 @@ Every week mixes three tracks, so theory and tools grow together:
 |---|---|---|
 | **Structures** | The theory behind booster structures, done as hand calcs | about 40% |
 | **CAD / FEA** | NX for modeling and drawings, then Ansys for analysis | about 35% |
-| **Code** | Python first, MATLAB second, building your own calc toolkit | about 25% |
+| **Code** | Python is the main toolkit (pytest from Week 1, `booster_calcs.py`, the capstone); MATLAB is reading literacy only (Onramp in Week 3, the Miner's-rule script in Week 8) | about 25% |
 
 Each week also has a short **Starship context** reading, one **deliverable** you keep in a portfolio folder, and **self-check questions**. If you can answer the self-checks without notes, move on.
+
+Aerospace stress reports often use US customary units (ksi, lbf/in, in·lbf), so Lessons 1, 2, 5, 6 and 7 each include a US-unit practice problem with the answer in SI too. The site's calculators have an SI / US toggle to check them.
 
 ### Weekly rhythm (2 hours a day)
 
@@ -166,6 +168,14 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
   σ = p × R / (2t)
 
 - Ellipsoidal domes and why dome shape matters at the joint with the barrel.
+- **Shell discontinuity at the dome-to-barrel joint** (hemisphere on a cylinder of equal thickness, beam-on-elastic-foundation model):
+
+  β = [3(1 − ν²)]^¼ / √(R t)
+  Q₀ = p / (8β),  M₀ = 0
+  M_max = (Q₀/β) e^(−π/4) sin(π/4), at βx = π/4
+  σ_total = pR/(2t) + 6 M_max / t²
+
+  Worked example (p = 0.35 MPa, R = 4500 mm, t = 4 mm): β = 0.009596 /mm, M_max = 153.2 N·mm/mm, σ_b = 57.4 MPa, total ≈ **254.3 MPa**, which is 1.29 × the membrane axial stress. Week 8's tank FEA checks this.
 - Hydrostatic head: liquid at the bottom of a tank sees extra pressure, and it grows with vehicle acceleration (n, in g's):
 
   p_hydro = ρ × n × g × h
@@ -210,8 +220,9 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 **CAD / FEA (NX)**
 - Assemblies and constraints. Drafting: create a drawing with views, sections, and dimensions.
 
-**Code (MATLAB)**
+**Code (MATLAB, reading literacy; Python stays the main toolkit)**
 - Finish **MATLAB Onramp** (free from MathWorks). Practice matrices and plotting.
+- Friday's script hour is Python: add `thermal_stress()` with tests to your toolkit.
 
 **Starship context**
 - Why stainless instead of carbon fiber or aluminum-lithium: low cost, strong at cryogenic temperatures, handles reentry heat, and is easy to weld and repair.
@@ -304,7 +315,11 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
   - σ_design = 0.21 × 103.8 ≈ **21.8 MPa**
 
   An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.
-- **Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load.
+- **Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load. With pressure relief, the buckling FS goes on the applied load only and the pressure is taken at its minimum, unfactored:
+
+  P_net = FS × P − p_min × π × R²
+  MS = P_allow / P_net − 1
+- **FEA vs. SP-8007:** linear buckling of a perfect cylinder lands near the classical value. A nonlinear run with a seeded imperfection (Week 11 stretch) collapses between SP-8007 and classical, and lower as the imperfection grows.
 
 **Code (Python)**
 - Add `cylinder_buckling(R, t, E)` to your toolkit, returning σ_cr, γ, and σ_design.
@@ -370,8 +385,9 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 **CAD / FEA (Ansys)**
 - Pressurized tank model with domes using shell elements. Compare barrel hoop stress to p × R / t. Look at the stress jump at the dome-to-barrel joint.
 
-**Code (MATLAB)**
+**Code (MATLAB, reading literacy; Python stays the main toolkit)**
 - Miner's-rule calculator for a made-up flight load spectrum (liftoff, max-Q, catch, repeated over many flights).
+- Friday's script hour is Python: port Miner's rule and add Goodman and critical-crack-size functions with tests.
 
 **Starship context**
 - A reusable booster flies many times, so fatigue matters far more than on an expendable stage. Read about cryogenic proof testing of test tanks at Starbase.
@@ -383,6 +399,15 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 2. A part sees 1,000 cycles where N = 10,000 and 50 cycles where N = 500. Damage?
    D = 1000/10000 + 50/500 = 0.1 + 0.1 = **0.2**
 3. Why does a successful proof test give confidence about cracks?
+
+---
+
+## Optional track: Nastran deck literacy (3–4 hours, Weeks 7–11)
+
+Public SpaceX Starship structures postings name ABAQUS, ANSYS and Nastran solvers, so learn to read a Nastran deck even though you'll work in Ansys.
+- **Cards:** GRID, CQUAD4, CBAR or CBEAM, PSHELL, MAT1, SPC1, FORCE, PLOAD4, SUBCASE, SOL 101 (linear static) and SOL 105 (linear buckling).
+- **Exercise:** write a tiny plate-with-hole deck by hand or in Python with pyNastran (`pip install pyNastran`), run it in MYSTRAN (a free, open-source, Nastran-compatible solver), and compare with the Week 4 Ansys answer.
+- **Optional:** read the `.f06` results file.
 
 ---
 
@@ -437,6 +462,7 @@ You'll analyze a simplified stainless steel barrel section the way a structures 
 2. **NX model:** barrel plus ring frames, built as a midsurface for shell meshing. Make a drawing.
 3. **Ansys static:** pressure cases, using shell elements and symmetry to stay under the student limit. Run a mesh convergence study.
 4. **Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare eigenvalue mode shapes and load factors for 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.
+   - **Stretch: nonlinear buckling with an imperfection.** Take handling-case mode 1, seed it as an initial imperfection with w₀ = 0.5t and then 1.0t, run a nonlinear static analysis with large deflection on while ramping the axial load, plot load vs. end shortening, and compare the collapse load with the classical and SP-8007 values. It should fall between them and drop as w₀ grows. This fits under the 128K-node limit only with shells and a coarse but converged mesh.
 5. **Trade study:** plot mass and minimum margin vs. wall thickness. Recommend a design.
    - **Hand calc:** mass vs. frame count, and a statement that unstiffened axial buckling is insensitive to frame spacing at this Batdorf Z (about 40 even at 12 mm, far above the ≈ 2.85 where the long-cylinder formula applies).
    - **FEA (Week 11):** compare eigenvalue buckling mode shapes and load factors for 0, 3 and 6 frames.

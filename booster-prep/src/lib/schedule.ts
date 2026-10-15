@@ -204,7 +204,12 @@ function planWeek(week: Week): Plan[] {
     [s(rhythm[1].h1, "Rework the lesson's worked examples, then practice problems 1–3.", "structures", "structures"), s(codeLabel, code[0] ?? "", "code", "code")],
     [s(rhythm[2].h1, join(learnB.length ? learnB : learnA), "structures", "structures"), s(cadLabel, cad[1] ?? cad[0] ?? "", "cad", "cad")],
     [s(rhythm[3].h1, "Finish the practice problems and answer the self-checks without notes.", "structures", "structures"), s(codeLabel, code[1] ?? code[0] ?? "", "code", "code")],
-    [s(cadLabel, "Finish this week's CAD / FEA work.", "cad", "cad"), s("Code: turn this week's hand calc into a script", code[code.length - 1] ?? "", "code", "code")],
+    [
+      s(cadLabel, "Finish this week's CAD / FEA work.", "cad", "cad"),
+      week.pythonScript
+        ? s("Code (Python): turn this week's hand calc into a script", week.pythonScript, "code", "code")
+        : s("Code: turn this week's hand calc into a script", code[code.length - 1] ?? "", "code", "code"),
+    ],
     [s(rhythm[5].h1, week.deliverable, "deliverable"), s(rhythm[5].h2, week.deliverable, "deliverable")],
     [
       s(rhythm[6].h1, `${join(week.context)} Then this week's flashcards.`, "context"),

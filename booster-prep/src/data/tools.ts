@@ -137,8 +137,22 @@ export const toolTracks: ToolTrack[] = [
           "Handling case: linear buckling with 2 MN axial compression only.",
           "Flight case: prestressed buckling, with pressure applied in the static step before buckling.",
           "Linear buckling of a perfect cylinder will be close to the classical value, not the knockdown value. Explain the gap using SP-8007.",
+          "Rerun the handling-case eigenvalue buckling with 0, 3 and 6 ring frames and compare mode shapes and load factors.",
         ],
         check: "You can explain why FEA and SP-8007 differ.",
+      },
+      {
+        week: 11,
+        title: "Capstone stretch: nonlinear buckling with an imperfection",
+        steps: [
+          "Take eigenvalue buckling mode 1 from the handling case.",
+          "Seed it as an initial geometric imperfection with amplitude $w_0 = 0.5t$, then repeat with $w_0 = 1.0t$ (a second Static Structural system whose geometry is updated from the mode shape).",
+          "Run a nonlinear static analysis with Large Deflection on, ramping the axial load (or end displacement) in many substeps.",
+          "Plot load vs. end shortening and read the collapse load at the peak.",
+          "Compare the collapse load with the classical value and the SP-8007 value (Lesson 6 §5): it should fall between them and drop as $w_0$ grows.",
+          "Stay under the 128K-node limit: shells only, and a coarse mesh that you've shown is converged on the eigenvalue load factor.",
+        ],
+        check: "A load vs. end-shortening plot for both amplitudes, with the collapse loads marked against classical and SP-8007.",
       },
     ],
   },
@@ -235,7 +249,7 @@ export const toolTracks: ToolTrack[] = [
   {
     id: "matlab",
     name: "MATLAB",
-    blurb: "Weeks 3 and 8. Plenty of test and analysis groups use MATLAB, so get comfortable reading it.",
+    blurb: "Weeks 3 and 8, reading literacy only. Plenty of test and analysis groups use MATLAB, so get comfortable reading it; Python stays your main toolkit.",
     path: [
       {
         week: 3,
@@ -260,6 +274,39 @@ export const toolTracks: ToolTrack[] = [
     ],
   },
 ];
+
+/**
+ * Optional Nastran deck literacy (3–4 hours total, spread over Weeks 7–11). Public SpaceX Starship structures
+ * postings name Nastran among the team's solvers, so be able to read a deck. Install instructions checked Oct 2026:
+ * pyNastran 1.4.1 (`pip install pyNastran`, Python ≥ 3.9) and MYSTRAN (MIT license, Windows .exe in its GitHub releases).
+ */
+export const nastranLiteracy = {
+  title: "Nastran deck literacy (optional)",
+  budget: "3–4 hours total, spread over Weeks 7–11",
+  why: "You'll learn Ansys, but the posted Starship structures roles also name Nastran-family solvers. A Nastran input deck is plain text, so learning to read one takes hours, not weeks.",
+  cards: [
+    ["SOL 101 / SOL 105", "Executive control: the analysis type. 101 is linear static; 105 is linear (eigenvalue) buckling."],
+    ["SUBCASE", "Case control: one load case, pointing at its SPC (supports) and LOAD sets."],
+    ["GRID", "A node: ID, coordinate system, x, y, z."],
+    ["CQUAD4", "A 4-node shell element: element ID, property ID, four GRID IDs."],
+    ["CBAR / CBEAM", "Line elements for stiffeners, stringers and frames, with an orientation vector."],
+    ["PSHELL", "Shell property: material ID and thickness t."],
+    ["MAT1", "Isotropic material: E, G, ν, density, thermal expansion."],
+    ["SPC1", "Single-point constraints: which degrees of freedom (1–6) are fixed at which GRIDs."],
+    ["FORCE", "A concentrated force at a GRID, as a magnitude times a direction vector."],
+    ["PLOAD4", "Pressure on a shell element face, for tank pressure."],
+  ] as [string, string][],
+  steps: [
+    { week: 7, text: "Read the card list above and a short example deck from the MYSTRAN or pyNastran documentation. Label every card in a printout." },
+    { week: 8, text: "Write a tiny plate-with-hole deck: by hand, or in Python with **pyNastran** (`pip install pyNastran`; its BDF writer creates GRID, CQUAD4, PSHELL, MAT1, SPC1 and FORCE cards)." },
+    { week: 10, text: "Run the deck in **MYSTRAN**, the free, open-source, Nastran-compatible solver (SOL 101). Compare the peak stress with your Week 4 Ansys answer and the Lesson 4 $K_t$ hand calc." },
+    { week: 11, text: "Optional: open the `.f06` results file and find the displacement and element stress tables. Change SOL 101 to SOL 105 and find the eigenvalue." },
+  ],
+  links: [
+    { label: "pyNastran on PyPI", url: "https://pypi.org/project/pyNastran/" },
+    { label: "MYSTRAN on GitHub (releases have a Windows .exe)", url: "https://github.com/MYSTRANsolver/MYSTRAN" },
+  ],
+};
 
 export const swToNx: [string, string][] = [
   ["FeatureManager design tree", "Part Navigator"],

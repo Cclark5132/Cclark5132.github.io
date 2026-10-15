@@ -461,3 +461,23 @@ Match each inspection need to an NDT method: (a) a suspected surface crack at th
 **(c) Ultrasonic (UT).** Lack of fusion is planar and may be invisible to X-ray unless it lines up with the beam. UT reflects strongly off planar flaws and gives depth, though coarse-grained stainless weld metal makes it harder and needs a qualified technique.
 </Solution>
 </Problem>
+
+<Problem n={8}>
+**US units.** A 3/8 in ($d = 0.375$ in) steel bolt is torqued to 30 ft·lbf with a nut factor $K = 0.2$. Find the preload in lbf, then redo the whole calculation in SI. Check it with the **SI / US toggle** on the Calculators page (bolt preload card).
+
+<Solution>
+**US:** convert the torque to in·lbf so the units match $d$ in inches:
+
+$$
+T = 30 \times 12 = 360 \text{ in·lbf}, \qquad F = \frac{T}{K d} = \frac{360}{0.2 \times 0.375} = 4800 \text{ lbf}
+$$
+
+**SI:** $T = 30 \times 1.356 = 40.67$ N·m and $d = 0.375 \times 25.4 = 9.525$ mm $= 0.009525$ m:
+
+$$
+F = \frac{40.67}{0.2 \times 0.009525} = 21{,}350 \text{ N} \approx 21.4 \text{ kN}
+$$
+
+Check: $4800 \times 4.448 = 21{,}350$ N. The most common slip is mixing ft·lbf with inches; convert first.
+</Solution>
+</Problem>

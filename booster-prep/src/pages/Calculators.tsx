@@ -4,11 +4,13 @@ import {
   columnCriticalStress,
   cylinderBuckling,
   endConditionK,
+  equivalentAxialLoad,
   hydrostaticHead,
   marginOfSafety,
   minersDamage,
   preloadFromTorque,
   requiredThickness,
+  runningLoad,
   thermalStress,
   thinWall,
   torqueFromPreload,
@@ -115,7 +117,7 @@ function MarginCalc({ system }: { system: System }) {
       formula={
         <Formula
           tex="MS = \frac{\sigma_\text{allow}}{FS \times \sigma_\text{applied}} - 1"
-          vars={[v("\\sigma_\\text{allow}", "allowable stress", unitOf("stress", system)), v("\\sigma_\\text{applied}", "applied stress", unitOf("stress", system)), v("FS", "factor of safety", "—")]}
+          vars={[v("\\sigma_\\text{allow}", "allowable stress", unitOf("stress", system)), v("\\sigma_\\text{applied}", "applied (limit) stress", unitOf("stress", system)), v("FS", "factor of safety", "—")]}
         />
       }
       inputs={
@@ -127,6 +129,57 @@ function MarginCalc({ system }: { system: System }) {
       }
       steps={[`MS = \\frac{${tex(allow)}}{${tex(fs)} \\times ${tex(applied)}} - 1 = \\frac{${tex(allow)}}{${tex(fs * applied)}} - 1 = ${signed(ms)}`]}
       outputs={<MarginOut ms={ms} />}
+    />
+  );
+}
+
+function RunningLoadCalc({ system }: { system: System }) {
+  const [P, setP] = useState(30); // MN
+  const [M, setM] = useState(20); // MN·m
+  const [R, setR] = useState(4500);
+  const [t, setT] = useState(4);
+  const n = runningLoad(P * 1e6, M * 1e9, R);
+  const Peq = equivalentAxialLoad(P * 1e6, M * 1e9, R);
+  return (
+    <Calc
+      id="running"
+      title="Running load and equivalent axial load"
+      intro="Force per unit length of circumference from axial force and bending, the equivalent axial load, and the peak wall stress. Defaults: 30 MN and 20 MN·m on a 9 m barrel (practice values)."
+      formula={
+        <Formula
+          tex="N_x = \frac{P}{2\pi R} \pm \frac{M}{\pi R^2}, \qquad P_\text{eq} = P + \frac{2M}{R}, \qquad \sigma = \frac{N_x}{t}"
+          vars={[
+            v("N_x", "axial running load", unitOf("runningLoad", system)),
+            v("P", "axial force", unitOf("bigForce", system)),
+            v("M", "bending moment", unitOf("moment", system)),
+            v("R, t", "mean radius and wall thickness", unitOf("length", system)),
+            v("P_\\text{eq}", "uniform load with the same peak running load", unitOf("bigForce", system)),
+          ]}
+        />
+      }
+      inputs={
+        <>
+          <NumField label="Axial force P" q="bigForce" system={system} value={P} onChange={setP} allowNegative />
+          <NumField label="Bending moment M" q="moment" system={system} value={M} onChange={setM} />
+          <NumField label="Radius R" q="length" system={system} value={R} onChange={setR} />
+          <NumField label="Wall t" q="length" system={system} value={t} onChange={setT} />
+        </>
+      }
+      steps={[
+        `\\frac{P}{2\\pi R} = \\frac{${tex(P)} \\times 10^6}{2\\pi \\times ${tex(R)}} = ${tex(n.axial)}\\ \\text{N/mm}`,
+        `\\frac{M}{\\pi R^2} = \\frac{${tex(M)} \\times 10^9}{\\pi \\times ${tex(R)}^2} = ${tex(n.bending)}\\ \\text{N/mm}`,
+        `N_{x,\\text{peak}} = ${tex(n.axial)} + ${tex(n.bending)} = ${tex(n.peak)}\\ \\text{N/mm}`,
+        `P_\\text{eq} = ${tex(P)} + \\frac{2 \\times ${tex(M)}}{${tex(R / 1000)}} = ${tex(Peq / 1e6)}\\ \\text{MN}`,
+        `\\sigma_\\text{peak} = \\frac{${tex(n.peak)}}{${tex(t)}} = ${tex(n.peak / t)}\\ \\text{MPa}`,
+      ]}
+      outputs={
+        <>
+          <Out label="Peak running load" si={n.peak} q="runningLoad" system={system} />
+          <Out label="Minimum running load" si={n.min} q="runningLoad" system={system} />
+          <Out label="Equivalent axial load" si={Peq / 1e6} q="bigForce" system={system} />
+          <Out label="Peak wall stress" si={n.peak / t} q="stress" system={system} />
+        </>
+      }
     />
   );
 }
@@ -512,6 +565,7 @@ function MinerCalc({ system }: { system: System }) {
 
 const calcs = [
   ["margin", "Margin of safety"],
+  ["running", "Running load"],
   ["pressure", "Pressure vessel"],
   ["thickness", "Wall thickness"],
   ["column", "Column buckling"],
@@ -542,6 +596,7 @@ export function Calculators() {
       </div>
       <div className="stack-lg">
         <MarginCalc system={system} />
+        <RunningLoadCalc system={system} />
         <PressureCalc system={system} />
         <ThicknessCalc system={system} />
         <ColumnCalc system={system} />
