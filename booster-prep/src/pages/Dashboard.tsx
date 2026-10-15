@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SessionCheck } from "../components/Checks";
-import { ProgressIO } from "../components/ProgressIO";
+import { CatchUpCard, HoursVsPlanCard } from "../components/CatchUp";
+import { Icon } from "../components/Icon";
+import { WeakTopicsCard } from "../components/WeakTopics";
+import { downloadProgress } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
 import { phaseColor, START_DATE, weeks } from "../data/plan";
-import { stats } from "../lib/progress";
-import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
+import { stats, validSessions } from "../lib/progress";
+import { addDays, allSessions, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
+import { daysSince, lastExport } from "../lib/backup";
+import { cardsDueToday } from "../lib/cards";
+import { actualHours, behindQueue, movedTo } from "../lib/catchup";
 import { studyStreak, useProgress } from "../lib/store";
+import { readSettings, useSyncStatus } from "../lib/sync";
+import { StorageLine } from "./Backup";
 
 // First day at Starbase, midnight Central Standard Time (UTC−6).
 const LAUNCH = Date.parse(`${START_DATE}T06:00:00Z`);
@@ -49,6 +57,7 @@ function Countdown() {
 }
 
 function TodayCard({ today }: { today: string }) {
+  const progress = useProgress();
   const where = locate(today);
   if (where.status === "before") {
     return (
@@ -75,13 +84,17 @@ function TodayCard({ today }: { today: string }) {
   }
   const { week, dayIndex } = where;
   const sessions = scheduleByWeek[week.n][dayIndex] ?? [];
+  const moved = movedTo(progress, today);
   const tomorrow = addDays(today, 1);
+  const behind = behindQueue(progress, today).length;
+  const due = cardsDueToday(progress, today);
+  const tomorrowSessions = [...allSessions.filter((s) => s.date === tomorrow), ...movedTo(progress, tomorrow)];
   return (
     <section className="card">
       <div className="card-title">
         <div>
           <div className="eyebrow">
-            Week {week.n} · Day {dayIndex + 1} of {week.days} · {formatDate(today, { weekday: "long", month: "short", day: "numeric" })}
+            Week {week.n} · Day {dayIndex + 1} of {week.days} · {week.title} · {formatDate(today, { weekday: "long", month: "short", day: "numeric" })}
           </div>
           <h2 style={{ marginTop: 4 }}>Today: {week.title}</h2>
         </div>
@@ -95,6 +108,30 @@ function TodayCard({ today }: { today: string }) {
           <SessionCheck key={session.id} session={session} />
         ))}
       </div>
+      {moved.length > 0 && (
+        <div className="stack" style={{ gap: 4, marginTop: 10 }}>
+          <div className="eyebrow">Moved here from catch-up</div>
+          {moved.map((session) => (
+            <SessionCheck key={session.id} session={session} showDate />
+          ))}
+        </div>
+      )}
+      <div className="today-chips">
+        <a
+          className="chip"
+          href="#catchup-h"
+          onClick={(event) => {
+            event.preventDefault();
+            document.getElementById("catchup-h")?.scrollIntoView({ block: "start" });
+          }}
+          data-testid="today-catchup"
+        >
+          Catch up: <strong className="num">{behind}</strong>
+        </a>
+        <Link className="chip" to="/flashcards" data-testid="today-cards">
+          Cards due: <strong className="num">{due}</strong>
+        </Link>
+      </div>
       <div className="row" style={{ marginTop: 14 }}>
         <Link className="btn" to={`/week/${week.n}`}>
           Open Week {week.n}
@@ -104,10 +141,69 @@ function TodayCard({ today }: { today: string }) {
             This week's lesson
           </Link>
         )}
-        <span className="eyebrow" style={{ marginLeft: "auto" }}>
-          Tomorrow: {formatDate(tomorrow, { weekday: "short", month: "short", day: "numeric" })}
-        </span>
       </div>
+      {tomorrowSessions.length > 0 && (
+        <div className="tomorrow" data-testid="tomorrow">
+          <span className="eyebrow">Tomorrow · {formatDate(tomorrow, { weekday: "short", month: "short", day: "numeric" })}</span>
+          <ul>
+            {tomorrowSessions.map((s) => (
+              <li key={s.id}>{s.title}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/** Cards due today (reviews plus today's new cards), linking to the deck. */
+function CardsDueTile({ today }: { today: string }) {
+  const progress = useProgress();
+  const n = cardsDueToday(progress, today);
+  return (
+    <Link to="/flashcards" className="card tile-link" data-testid="cards-due">
+      <span className="eyebrow">Flashcards</span>
+      <span className="num stat-big">
+        {n} <span className="stat-sub">{n === 1 ? "card" : "cards"} due today</span>
+      </span>
+    </Link>
+  );
+}
+
+/** One-click export, a nudge when the last export is old, and the sync state. */
+function BackupCard() {
+  useProgress();
+  const sync = useSyncStatus();
+  const [exportedAt, setExportedAt] = useState(lastExport);
+  const syncing = Boolean(readSettings()?.token);
+  const days = daysSince(exportedAt);
+  const stale = !syncing && (days === undefined || days >= 7);
+  return (
+    <section className={`card${stale ? " nudge" : ""}`} aria-labelledby="dash-backup-h">
+      <div className="card-title">
+        <h2 id="dash-backup-h">Back up your progress</h2>
+        <Link to="/backup" className="eyebrow">
+          Backup &amp; sync
+        </Link>
+      </div>
+      <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem", marginBottom: 10 }}>
+        {days === undefined ? "Last export: never." : `Last export: ${days === 0 ? "today" : `${days} ${days === 1 ? "day" : "days"} ago`}.`}
+        {stale ? " Export now." : ""}
+        {syncing && ` Sync: ${sync.error ? sync.error : sync.lastSync ? `last synced ${new Date(sync.lastSync).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}` : "waiting"}.`}
+      </p>
+      <div className="row">
+        <button
+          type="button"
+          className="btn small"
+          onClick={() => {
+            downloadProgress();
+            setExportedAt(lastExport());
+          }}
+        >
+          <Icon name="download" /> Export progress
+        </button>
+      </div>
+      <StorageLine />
     </section>
   );
 }
@@ -116,8 +212,9 @@ export function Dashboard() {
   const progress = useProgress();
   const today = localToday(new Date(useNow(60_000)));
   const s = stats(progress);
-  const streak = studyStreak(progress.sessions, today, addDays);
+  const streak = studyStreak(validSessions(progress.sessions), today, addDays);
   const onPlan = plannedHoursThrough(today);
+  const actual = actualHours(progress);
   const trackRows = [
     ["Structures", s.tracks.structures, "var(--phase-foundations)"],
     ["CAD / FEA", s.tracks.cad, "var(--phase-core)"],
@@ -132,63 +229,79 @@ export function Dashboard() {
         <p className="lede">Two hours a day, twelve weeks, one goal: walk into the Super Heavy structures team on January 11 ready to contribute.</p>
       </header>
 
-      <div className="dash-grid">
-        <Countdown />
-        <section className="card stat-card">
-          <ProgressRing value={s.done / s.total} label="Overall progress" />
-          <div className="stack" style={{ gap: 10 }}>
-            <div>
-              <div className="eyebrow">Hours logged</div>
-              <div className="num stat-big">
-                {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
-              </div>
-              <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
-                {onPlan} {onPlan === 1 ? "hr" : "hrs"} scheduled through today
-              </div>
-            </div>
-            <div>
-              <div className="eyebrow">Study streak</div>
-              <div className="num stat-big">
-                {streak} <span className="stat-sub">{streak === 1 ? "day" : "days"}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div className="dash-grid wide-left" style={{ marginTop: 16 }}>
-        <TodayCard today={today} />
-        <div className="stack">
-          <section className="card">
-            <div className="card-title">
-              <h2>Tracks</h2>
-              <span className="eyebrow">sessions done</span>
-            </div>
-            <div className="stack" style={{ gap: 14 }}>
-              {trackRows.map(([label, t, color]) => (
-                <div key={label}>
-                  <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
-                    <span>{label}</span>
-                    <span className="num" style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
-                      {t.done} / {t.total}
-                    </span>
+      <div className="dash-body">
+        <div className="dash-grid dash-top">
+          <Countdown />
+          <section className="card stat-card">
+            <ProgressRing value={s.done / s.total} label="Overall progress" />
+            <div className="stack" style={{ gap: 10 }}>
+              <div>
+                <div className="eyebrow">Hours logged</div>
+                <div className="stat-pair">
+                  <div>
+                    <div className="num stat-big">
+                      {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
+                    </div>
+                    <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                      planned sessions done
+                    </div>
                   </div>
-                  <div className="bar" role="progressbar" aria-label={`${label} progress`} aria-valuemin={0} aria-valuemax={t.total} aria-valuenow={t.done}>
-                    <span style={{ width: `${(t.done / Math.max(1, t.total)) * 100}%`, background: color }} />
+                  <div>
+                    <div className="num stat-big">
+                      {actual} <span className="stat-sub">hrs</span>
+                    </div>
+                    <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                      actual hours studied (timer)
+                    </div>
                   </div>
                 </div>
-              ))}
+                <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                  {onPlan} {onPlan === 1 ? "hr" : "hrs"} scheduled through today
+                </div>
+              </div>
+              <div>
+                <div className="eyebrow">Study streak</div>
+                <div className="num stat-big">
+                  {streak} <span className="stat-sub">{streak === 1 ? "day" : "days"}</span>
+                </div>
+              </div>
             </div>
           </section>
-          <section className="card">
-            <div className="card-title">
-              <h2>Back up your progress</h2>
-            </div>
-            <p style={{ color: "var(--muted)", fontSize: "0.9rem", marginBottom: 10 }}>
-              Progress is saved in this browser only. Export it now and then, and import it on another device.
-            </p>
-            <ProgressIO />
-          </section>
+        </div>
+
+        <div className="dash-grid wide-left dash-today">
+          <TodayCard today={today} />
+          <div className="stack">
+            <section className="card">
+              <div className="card-title">
+                <h2>Tracks</h2>
+                <span className="eyebrow">sessions done</span>
+              </div>
+              <div className="stack" style={{ gap: 14 }}>
+                {trackRows.map(([label, t, color]) => (
+                  <div key={label}>
+                    <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
+                      <span>{label}</span>
+                      <span className="num" style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
+                        {t.done} / {t.total}
+                      </span>
+                    </div>
+                    <div className="bar" role="progressbar" aria-label={`${label} progress`} aria-valuemin={0} aria-valuemax={t.total} aria-valuenow={t.done}>
+                      <span style={{ width: `${(t.done / Math.max(1, t.total)) * 100}%`, background: color }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <CardsDueTile today={today} />
+            <WeakTopicsCard />
+            <BackupCard />
+          </div>
+        </div>
+
+        <div className="dash-grid wide-left">
+          <HoursVsPlanCard today={today} />
+          <CatchUpCard today={today} />
         </div>
       </div>
     </div>

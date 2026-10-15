@@ -23,7 +23,7 @@ export interface Week {
   n: number;
   title: string;
   start: string; // ISO date of first day
-  days: number; // number of days in the week (Week 0 has 4)
+  days: number; // number of days in the week (Week 0 has 1, Week 1 has 10)
   phase: Phase;
   light: boolean;
   hours: number;
@@ -36,11 +36,20 @@ export interface Week {
   deliverable: string;
   selfChecks: SelfCheck[];
   tasks?: string[]; // checklist-style weeks (0, 9, 10–12)
+  /** MATLAB weeks keep Python as the main toolkit: Friday's script session is Python, with this task. */
+  pythonScript?: string;
   note?: string;
 }
 
 export const START_DATE = "2027-01-11";
 export const PREP_START = "2026-10-15";
+
+/**
+ * Monday of the calendar week that holds the light finals week (Week 9, Review). Move it to match your VT
+ * exam schedule: "2026-11-30", "2026-12-07", "2026-12-14" (default) or "2026-12-21". Weeks 7–10 shift around
+ * it in order; week content and progress IDs stay attached to their week numbers.
+ */
+export const FINALS_WEEK_START = "2026-12-14";
 
 export const tracks: { id: Track; label: string; share: string; covers: string }[] = [
   { id: "structures", label: "Structures", share: "about 40%", covers: "The theory behind booster structures, done as hand calcs" },
@@ -55,59 +64,71 @@ export const rhythm: { day: string; h1: string; h2: string }[] = [
   { day: "Thu", h1: "Structures: worked problems", h2: "Code" },
   { day: "Fri", h1: "CAD / FEA", h2: "Code: turn this week's hand calc into a script" },
   { day: "Sat", h1: "Deliverable build", h2: "Deliverable build" },
-  { day: "Sun", h1: "Starship context reading (30 min)", h2: "Flashcards and self-check (30 min), rest" },
+  { day: "Sun", h1: "Starship context (30 min), then flashcards (30 min)", h2: "Hardest problem again with no notes, then plan next week" },
 ];
 
 const v = (s: string, m: string, u: string): Var => [s, m, u];
 
-export const weeks: Week[] = [
+/** Weeks in their default calendar positions (finals in Dec 14 – Dec 20). */
+export const baseWeeks: Week[] = [
   {
     n: 0,
     title: "Setup",
     start: "2026-10-15",
-    days: 4,
+    days: 1,
     phase: "Setup",
     light: false,
-    hours: 4,
+    hours: 2,
+    note: "One day, two hours. Setup is Day 1 only; Week 1 starts tomorrow at full intensity.",
     structures: [],
     formulas: [],
     context: [],
-    deliverable: "Tools installed, a `booster-prep` GitHub repo, and a dated engineering notebook.",
+    deliverable: "Tools downloading or installed, a `booster-prep` GitHub repo with a passing pytest test, and a dated engineering notebook.",
     selfChecks: [],
     tasks: [
-      "Install **Ansys Student** (free; structural problems are capped at about 128,000 nodes/elements, so learn to use shells and symmetry early).",
-      "Get **Siemens NX** access. Try the NX student edition from Siemens first. If that doesn't work, ask the VT ME department which labs or remote desktops carry NX.",
-      "Install **MATLAB** through Virginia Tech's campus license.",
-      "Install **Python** (Anaconda or plain Python plus VS Code) with numpy, scipy, matplotlib, pandas, and Jupyter.",
-      "Create a portfolio folder and a GitHub repo called `booster-prep`. Every deliverable goes there.",
-      "Start a paper or digital **engineering notebook**. Date every page. This habit matters at SpaceX.",
+      "**Hour 1.** Start every big download in parallel: **Ansys Student 2026 R1** (free; structural problems capped at 128K nodes/elements; Windows 10/11 64-bit only; built-in license runs to Mar 31, 2027), **Siemens Designcenter Student Edition (includes NX)** (free; Windows 64-bit only), and **MATLAB** through VT's campus license.",
+      "**Hour 1.** While they run, install **Python** (Miniconda or Anaconda) and **VS Code**, and create an environment with numpy, scipy, matplotlib, pandas, jupyter and pytest.",
+      "**Hour 1.** Create the `booster-prep` GitHub repo with folders `calcs/`, `tests/`, `cad/`, `fea/`, `notes/` and a README. Add a trivial passing `pytest` test so testing is part of the workflow from day one.",
+      "**Hour 2.** Finish the installs and launch Ansys, NX and MATLAB once each to confirm the licenses work. If NX won't work out, ask the VT ME department which labs or remote desktops carry NX.",
+      "**Hour 2.** Start the dated **engineering notebook**. Page 1 is your goals and how you'll track your time. Date every page; this habit matters at SpaceX.",
+      "**Hour 2.** Skim the Roadmap and Week 1 on this site.",
+      "**On a Mac:** Ansys Student and Siemens Designcenter Student Edition (includes NX) are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.",
     ],
   },
   {
     n: 1,
-    title: "Stress, loads, and margins",
-    start: "2026-10-19",
-    days: 7,
+    title: "Stress, loads, margins, and running loads",
+    start: "2026-10-16",
+    days: 10,
     phase: "Foundations",
     light: false,
-    hours: 14,
+    hours: 20,
+    note: "Ten days, Fri Oct 16 to Sun Oct 25, at full intensity: 2 hours every day. Hour 1 is structures; Hour 2 is a tool. Fri Oct 23 gives you a head start on Week 2.",
     lesson: "stress-and-margins",
     structures: [
       "Free body diagrams for a vertical rocket stage: thrust, weight, inertia, aerodynamic bending.",
-      "Stress and strain, Hooke's law, Mohr's circle, principal stresses.",
+      "**Running loads:** force per unit length of circumference (N/mm or lbf/in). Axial force and bending combine into a peak running load $N_x$ and an equivalent axial load $P_\\text{eq}$.",
+      "Stress and strain, biaxial Hooke's law, strain gauges, Mohr's circle, principal stresses (review speed).",
       "Von Mises equivalent stress (2D, principal stresses).",
       "Factor of safety (FS) and margin of safety (MS). A part passes when **MS ≥ 0**. Aerospace work talks in margins far more than in factors of safety.",
+      "**Limit vs. ultimate load.** Limit load is the maximum expected in service; ultimate load is limit × FS. Pair the yield FS with the yield allowable and the ultimate FS with the ultimate allowable.",
+      "**Units drill:** redo three examples in US customary units (ksi, lbf/in, in·lbf).",
     ],
     cad: {
       tool: "NX",
       items: [
-        "NX interface tour. Map SolidWorks words to NX words (Feature Manager → Part Navigator, Sketch → Sketch, Extrude → Extrude, Mates → Assembly Constraints).",
-        "Sketch, extrude, revolve, holes, patterns.",
+        "NX interface tour. Map SolidWorks words to NX words (Feature Manager → Part Navigator, Sketch → Sketch, Extrude → Extrude, Mates → Assembly Constraints). First part: sketch, extrude, Boolean inside the dialog.",
+        "Hole, Pattern Feature and Revolve: build the bolted flange ring.",
+        "Expressions (parametric bolt count and diameter), Part Navigator hygiene, and a first drawing of the flange.",
       ],
     },
     code: {
       tool: "Python",
-      items: ["Variables, functions, lists, f-strings, plotting a simple line.", "Write `margin_of_safety(allowable, applied, fs)`."],
+      items: [
+        "Environment check, git workflow, and `margin_of_safety(allowable, applied, fs)` with its first pytest test.",
+        "`mos.py`: a load-case table (list of dicts or pandas) with yield and ultimate margins, flagging the minimum margin, with a plot.",
+        "`running_load()` and `equivalent_axial_load()` with tests, vectorized over stations with numpy.",
+      ],
     },
     formulas: [
       {
@@ -122,14 +143,29 @@ export const weeks: Week[] = [
           v("MS", "margin of safety (pass when MS ≥ 0)", "—"),
           v("\\sigma_\\text{allowable}", "material allowable", "MPa"),
           v("FS", "factor of safety", "—"),
-          v("\\sigma_\\text{applied}", "applied stress", "MPa"),
+          v("\\sigma_\\text{applied}", "applied (limit) stress", "MPa"),
+        ],
+      },
+      {
+        label: "Running load and equivalent axial load",
+        tex: "N_x = \\frac{P}{2\\pi R} \\pm \\frac{M}{\\pi R^2}, \\qquad P_\\text{eq} = P + \\frac{2M}{R}, \\qquad \\sigma = \\frac{N_x}{t}",
+        vars: [
+          v("N_x", "axial running load (force per unit length of circumference)", "N/mm"),
+          v("P", "axial force", "N"),
+          v("M", "bending moment", "N·mm"),
+          v("R", "mean radius", "mm"),
+          v("t", "wall thickness", "mm"),
+          v("P_\\text{eq}", "uniform axial load giving the same peak running load as P plus M", "N"),
         ],
       },
     ],
     context: [
-      "The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter, and burn liquid methane and liquid oxygen.",
+      "The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter (approx., public sources), and burn liquid methane and liquid oxygen.",
+      "**Booster V3 changes** (Space.com, May 14, 2026): three grid fins instead of four, each about 50% larger and mounted lower; the hot-staging ring is now attached to the top of the booster (on V2 it was a separate interstage that was jettisoned); and a redesigned fuel transfer tube (the downcomer), roughly the size of a Falcon 9 first stage, so all 33 Raptor 3 engines can ignite together. Structures lesson: bigger fins mean bigger concentrated loads into fewer frames.",
+      "**Booster 18 (Nov 2025):** the first V3 booster suffered an anomaly during gas system pressure testing, done in advance of structural proof testing, with no propellant aboard and no engines installed; Space.com reported heavy damage to the LOX tank section. Reading question: why are pressure tests staged (gas systems, then structural proof, then cryo), and what does a ground-test failure teach a structures team? Don't speculate about the cause beyond what's published.",
+      "**Flight 12 (May 22, 2026):** the first flight of Block 3 / V3 vehicles (Booster 19, Ship 39) and the first launch from Starbase's second pad. The booster was lost in the Gulf after most of its engines failed to relight for the boostback and landing burns; the ship completed its planned splashdown in the Indian Ocean. Note one structures lesson from each of these three. Sources are on the Resources page.",
     ],
-    deliverable: "NX model of a bolted flange ring, plus `mos.py` that prints margins for a list of load cases.",
+    deliverable: "An NX model and drawing of a bolted flange ring, plus `mos.py` and `test_mos.py` in the repo, running the load-case margins table with yield and ultimate checks.",
     selfChecks: [
       {
         q: "Why do aerospace engineers report margins instead of just factors of safety?",
@@ -158,6 +194,7 @@ export const weeks: Week[] = [
       "Thin-wall cylinder, radius $R$ and wall thickness $t$, internal pressure $p$: hoop and axial stress.",
       "Spherical or hemispherical dome stress.",
       "Ellipsoidal domes and why dome shape matters at the joint with the barrel.",
+      "**Shell discontinuity** at the dome-to-barrel joint: for a hemisphere on a cylinder of equal thickness the peak meridional stress is about **1.29 ×** $pR/(2t)$ (254.3 MPa vs. 196.9 MPa in the worked example). Week 8's FEA checks it.",
       "Hydrostatic head: liquid at the bottom of a tank sees extra pressure, and it grows with vehicle acceleration ($n$, in g's). Example: LOX ($\\rho \\approx 1141$ kg/m³), $h = 20$ m, at 1 g gives about **0.22 MPa**; at 3 g it triples to about **0.67 MPa**.",
       "Total wall pressure = ullage (gas) pressure + hydrostatic head.",
     ],
@@ -233,6 +270,7 @@ export const weeks: Week[] = [
     ],
     cad: { tool: "NX", items: ["Assemblies and constraints.", "Drafting: create a drawing with views, sections, and dimensions."] },
     code: { tool: "MATLAB", items: ["Finish **MATLAB Onramp** (free from MathWorks).", "Practice matrices and plotting."] },
+    pythonScript: "Python: add `thermal_stress()` (uniaxial and biaxial) to your toolkit with pytest tests from the Lesson 3 worked examples.",
     formulas: [
       {
         label: "Thermal stress, fully constrained",
@@ -354,6 +392,7 @@ export const weeks: Week[] = [
     ],
     context: [
       "Booster axial loads: engine thrust pushing up from the bottom, propellant weight, aerodynamic bending near max-Q, and the loads from being caught by the tower's chopstick arms.",
+      "V3 detail (Space.com, May 14, 2026): three grid fins instead of four, each about 50% larger and mounted lower on the booster. Think about where each fin's aerodynamic load and hinge moment go: into local frames, then the barrel wall.",
     ],
     deliverable: "Euler/Johnson plot, plus an Ansys column buckling check within a few percent of Euler.",
     selfChecks: [
@@ -384,8 +423,9 @@ export const weeks: Week[] = [
     structures: [
       "Classical buckling stress of a thin cylinder under axial compression.",
       "Real cylinders buckle far below this because of tiny shape imperfections. NASA SP-8007 (free online) gives a **knockdown factor γ**.",
-      "Worked example: $R = 4500$ mm, $t = 4$ mm, $E = 193$ GPa gives $\\sigma_{cr} \\approx$ **103.8 MPa**, $\\phi \\approx 2.10$, $\\gamma \\approx$ **0.21**, $\\sigma_\\text{design} \\approx$ **21.8 MPa**. An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.",
-      "**Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load.",
+      "Worked example: $R = 4500$ mm, $t = 4$ mm, $E = 193$ GPa gives $\\sigma_{cr} \\approx$ **103.8 MPa**, $\\phi \\approx 2.10$, $\\gamma \\approx$ **0.210**, $\\sigma_\\text{design} \\approx$ **21.8 MPa**. An unpressurized, unstiffened barrel loses almost 80% of its theoretical strength. That's why tanks are pressurized during loads and why stringers and frames exist.",
+      "**Pressure stabilization:** internal pressure puts the wall in tension and raises the buckling load. The buckling FS goes on the applied load only; the relieving pressure is taken at its minimum, unfactored.",
+      "**FEA vs. SP-8007:** linear buckling of a perfect cylinder lands near the classical value; a nonlinear run with a seeded imperfection (Week 11 stretch) collapses between SP-8007 and classical.",
     ],
     code: { tool: "Python", items: ["Add `cylinder_buckling(R, t, E)` to your toolkit, returning σ_cr, γ, and σ_design."] },
     formulas: [
@@ -400,7 +440,10 @@ export const weeks: Week[] = [
         vars: [v("\\phi", "SP-8007 parameter", "—"), v("\\gamma", "knockdown factor", "—"), v("\\sigma_\\text{design}", "design buckling stress", "MPa"), v("R/t", "radius-to-thickness ratio", "—")],
       },
     ],
-    context: ["Watch a launch and note the moments of highest axial load: liftoff, max-Q, and just before engine cutoff."],
+    context: [
+      "Watch a launch and note the moments of highest axial load: liftoff, max-Q, and just before engine cutoff.",
+      "**Booster 18 (Nov 2025):** the first V3 booster suffered an anomaly during gas system pressure testing, done in advance of structural proof testing, with no propellant aboard and no engines installed; Space.com reported heavy damage to the LOX tank section. Reading question: why are pressure tests staged (gas systems, then structural proof, then cryo), and what does a ground-test failure teach a structures team? Don't speculate about the cause beyond what's published.",
+    ],
     deliverable: "Buckling function plus a one-page note explaining knockdown factors in your own words.",
     selfChecks: [
       {
@@ -477,6 +520,7 @@ export const weeks: Week[] = [
       items: ["Pressurized tank model with domes using shell elements.", "Compare barrel hoop stress to $pR/t$. Look at the stress jump at the dome-to-barrel joint."],
     },
     code: { tool: "MATLAB", items: ["Miner's-rule calculator for a made-up flight load spectrum (liftoff, max-Q, catch, repeated over many flights)."] },
+    pythonScript: "Python: port the Miner's-rule calculation and add Goodman and critical-crack-size functions to your toolkit, with pytest tests from the Lesson 8 worked examples.",
     formulas: [
       {
         label: "Miner's rule",
@@ -496,6 +540,7 @@ export const weeks: Week[] = [
     ],
     context: [
       "A reusable booster flies many times, so fatigue matters far more than on an expendable stage. Read about cryogenic proof testing of test tanks at Starbase.",
+      "Revisit **Booster 18** (Nov 2025): the anomaly came during gas system pressure testing, before structural proof testing. Connect it to this week: what is each stage of pressure testing meant to prove, and why do you want to find a weakness on the ground rather than in flight? Stick to what was published.",
     ],
     deliverable: "Tank FEA vs. hand calc comparison, plus the Miner's-rule script.",
     selfChecks: [
@@ -521,15 +566,15 @@ export const weeks: Week[] = [
     phase: "Review",
     light: true,
     hours: 7,
-    note: "Finals week. About 1 hour a day. Check your own exam schedule and slide this week if finals land differently.",
+    note: "Finals week. About 1 hour a day. If your exams land in a different week, change `FINALS_WEEK_START` in `src/data/plan.ts` and this week moves there.",
     structures: [],
     formulas: [],
     context: [],
-    deliverable: "`booster_calcs.py`: one clean module with a test for every function, plus a sketched capstone model plan.",
+    deliverable: "`booster_calcs.py`: one consolidated module with any test gaps filled, plus a sketched capstone model plan.",
     selfChecks: [],
     tasks: [
       "30 minutes a day of flashcards and self-check questions from Weeks 1–8.",
-      "Clean up your Python toolkit into one module, `booster_calcs.py`, with a test for every function using the worked examples in this plan.",
+      "Consolidate your Python toolkit into one module, `booster_calcs.py`, and fill any test gaps using the worked examples in this plan (you've written tests since Week 1).",
       "Read the capstone spec and sketch your model plan.",
     ],
   },
@@ -566,8 +611,8 @@ export const weeks: Week[] = [
     deliverable: "A 4-page report and a 5-slide deck.",
     selfChecks: [],
     tasks: [
-      "**Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare to your hand calcs and explain the gap.",
-      "**Trade study:** plot mass and minimum margin vs. wall thickness (and vs. number of ring frames). Recommend a design.",
+      "**Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling), with 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.",
+      "**Trade study:** plot mass and minimum margin vs. wall thickness. Hand calc: mass vs. frame count, and why unstiffened buckling ignores frame spacing at this Batdorf Z. FEA: buckling load factors for 0, 3 and 6 frames. Stretch: stringers. Recommend a design.",
       "**Report:** 4 pages max (Summary, Assumptions, Hand Calcs, FEA, Comparison, Trade Study, Recommendation), plus a 5-slide deck.",
     ],
   },
@@ -584,6 +629,10 @@ export const weeks: Week[] = [
     context: [
       "Learn the main parts and what loads each one carries: methane and LOX tanks, common dome, downcomer, thrust section and engine mounts (33 Raptors), hot-staging ring, grid fins, chines, and the hardpoints used for the tower catch.",
       "Rewatch recent flight test footage and SpaceX's flight summaries. For each flight, note one thing that would interest a structures engineer.",
+      "**Flight 12 (May 22, 2026):** first Block 3 / V3 flight (Booster 19, Ship 39) and first launch from Starbase's second pad. Booster lost in the Gulf after most engines failed to relight; ship completed its planned splashdown.",
+      "**Flight 13 (Jul 24, 2026):** Booster 20 and Ship 40. Only ten of 13 engines relit for the landing burn and the booster was lost in the Gulf. The ship deployed 20 Starlink V3 satellites on a suborbital path, relit in space, and stayed intact after tipping over at splashdown.",
+      "**Flight 14 (Sep 28, 2026):** Starship reached orbit for the first time and deployed 26 Starlink V3 satellites.",
+      "V3 booster changes to know on day one: three larger grid fins mounted lower, an integrated hot-staging ring, and a much larger fuel transfer tube (downcomer) so all 33 Raptor 3 engines can start together.",
     ],
     deliverable: "One-page \"first week plan\" and your portfolio cleaned up and ready to show.",
     selfChecks: [],
@@ -595,6 +644,25 @@ export const weeks: Week[] = [
     ],
   },
 ];
+
+/**
+ * Places the light finals week (Week 9) on the calendar week named by FINALS_WEEK_START. Weeks 2–12 occupy
+ * consecutive 7-day slots from Oct 26; Week 9 takes the chosen slot and the other weeks keep their order.
+ * Returns the weeks in calendar order.
+ */
+export const FINALS_SLOTS = ["2026-11-30", "2026-12-07", "2026-12-14", "2026-12-21"];
+export function placeFinalsWeek(list: Week[], finalsStart: string): Week[] {
+  const fixed = list.filter((w) => w.n <= 1);
+  const slotted = list.filter((w) => w.n >= 2).sort((a, b) => a.n - b.n);
+  const slots = slotted.map((w) => w.start);
+  const index = FINALS_SLOTS.includes(finalsStart) ? slots.indexOf(finalsStart) : -1;
+  if (index < 0) return [...fixed, ...slotted];
+  const order = slotted.filter((w) => w.n !== 9);
+  order.splice(index, 0, slotted.find((w) => w.n === 9)!);
+  return [...fixed, ...order.map((w, i) => ({ ...w, start: slots[i] }))];
+}
+
+export const weeks: Week[] = placeFinalsWeek(baseWeeks, FINALS_WEEK_START);
 
 export const weekByNumber = (n: number) => weeks.find((week) => week.n === n);
 
@@ -617,16 +685,27 @@ export const capstoneSpec = {
   geometry: ["Diameter 9 m (R = 4.5 m), barrel length 6 m", "Wall thickness t is a design variable; start at 4 mm", "3 internal ring frames, evenly spaced (stretch goal: add stringers)"],
   materials: ["304L-like stainless steel: E = 193 GPa, ν = 0.29, density 8000 kg/m³", "Practice allowables: yield 500 MPa, ultimate 700 MPa"],
   loadCases: [
-    "**Proof pressure:** internal pressure 0.45 MPa",
-    "**Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN",
-    "**Unpressurized handling:** axial compression of 2 MN only (no pressure help)",
+    "**Proof pressure:** proof factor 1.25 × MEOP. MEOP (maximum expected operating pressure) at the bottom of the section is the flight wall pressure, $0.35 + 0.672 \\approx 1.022$ MPa, so proof is $\\approx 1.277$ MPa. Check **no yield at proof** (FS 1.0 on yield), using von Mises of the hoop stress and $pR/(2t)$.",
+    "**Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN (limit load)",
+    "**Unpressurized handling:** axial compression of 2 MN only (limit load, no pressure help)",
   ],
-  factors: "1.25 on yield, 1.4 on ultimate (practice values)",
+  proofNote:
+    "A proof test pressurizes the real tank above anything it will see in service, so surviving it screens out flaws. The proof pressure already contains the proof factor, so it is checked for no yield (FS 1.0), not with the flight factors of safety on top.",
+  limitNote:
+    "**Limit load** is the maximum load expected in service. **Ultimate load** is limit load × FS. The 30 MN and 2 MN axial loads are limit loads.",
+  factors: "1.25 on yield, 1.4 on ultimate, 1.4 on buckling (applied to the destabilizing load only; relieving pressure at its minimum guaranteed value, unfactored), 1.0 on yield at proof (practice values)",
   steps: [
     {
       title: "Hand calcs (Python)",
       body: "Hoop and axial stress, buckling with knockdown, and margins for every load case. Find the minimum wall thickness that gives MS ≥ 0 everywhere.",
-      checklist: ["Hoop and axial stress for each load case", "Hydrostatic head at 3 g at the bottom of the section", "Buckling with SP-8007 knockdown (with and without pressure)", "Margins table for every load case", "Minimum wall thickness with MS ≥ 0 everywhere"],
+      checklist: [
+        "Hoop and axial stress for each load case",
+        "Hydrostatic head at 3 g at the bottom of the section; MEOP and proof pressure",
+        "Buckling with SP-8007 knockdown (FS on the load only, minimum pressure unfactored)",
+        "Margins table for every load case",
+        "Minimum wall thickness with MS ≥ 0 everywhere",
+        "Enter your answers in the answer check on the Capstone page",
+      ],
     },
     {
       title: "NX model",
@@ -636,17 +715,30 @@ export const capstoneSpec = {
     {
       title: "Ansys static",
       body: "Pressure cases, using shell elements and symmetry to stay under the student limit. Run a mesh convergence study.",
-      checklist: ["Shell elements with thickness t", "Symmetry to stay under the node limit", "Proof and flight pressure cases", "Mesh convergence study (peak changes less than about 5%)"],
+      checklist: ["Shell elements with thickness t", "Symmetry to stay under the node limit", "Proof (1.25 × MEOP ≈ 1.277 MPa) and flight pressure cases", "Mesh convergence study (peak changes less than about 5%)"],
     },
     {
       title: "Ansys buckling",
-      body: "Linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare to your hand calcs and explain the gap.",
-      checklist: ["Linear buckling, handling case", "Prestressed buckling, flight case with pressure first", "Compare with hand calcs and explain the gap"],
+      body: "Linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare eigenvalue mode shapes and load factors for 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.",
+      checklist: [
+        "Linear buckling, handling case",
+        "Prestressed buckling, flight case with pressure first",
+        "Mode shapes and load factors for 0, 3 and 6 ring frames",
+        "Compare with hand calcs and explain the gap",
+        "Stretch: nonlinear buckling with a seeded imperfection (w0 = 0.5t and 1.0t)",
+      ],
     },
     {
       title: "Trade study",
-      body: "Plot mass and minimum margin vs. wall thickness (and vs. number of ring frames). Recommend a design.",
-      checklist: ["Mass vs. thickness", "Minimum margin vs. thickness", "Effect of number of ring frames", "Recommended design"],
+      body:
+        "Plot mass and minimum margin vs. wall thickness. Hand calc: mass vs. frame count, and a statement that unstiffened axial buckling is insensitive to frame spacing at this Batdorf Z. FEA: the 0, 3 and 6 frame buckling runs. Stretch: add stringers, check skin panels between stringers with the Lesson 5 plate formula and stringers as columns between frames (Euler/Johnson with effective width); that's where frame count changes the margin. Recommend a design.",
+      checklist: [
+        "Mass and minimum margin vs. thickness",
+        "Mass vs. frame count, and why unstiffened buckling ignores frame spacing here",
+        "FEA buckling load factors for 0, 3 and 6 frames",
+        "Stretch: stringers, skin panels and stringer columns vs. frame count",
+        "Recommended design",
+      ],
     },
     {
       title: "Report",

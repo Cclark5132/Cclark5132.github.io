@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Icon } from "../components/Icon";
 import { mdxComponents } from "../components/mdx";
+import { useScrollToParam } from "../lib/anchors";
 import { formatDate } from "../lib/schedule";
 import { weekByNumber } from "../data/plan";
 import { lessons, lessonBySlug } from "../lessons";
@@ -43,6 +44,7 @@ export function Lessons() {
 
 export function LessonPage() {
   const { slug } = useParams();
+  useScrollToParam("section");
   const lesson = lessonBySlug(slug ?? "");
   if (!lesson) return <NotFound />;
   const i = lessons.indexOf(lesson);

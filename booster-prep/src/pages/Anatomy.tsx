@@ -14,14 +14,16 @@ const parts: Part[] = [
   {
     id: "hsr",
     name: "Hot-staging ring",
-    does: "A vented interstage on top of the booster. The upper stage lights its engines while still attached, and the vents let that exhaust escape sideways.",
+    does:
+      "A vented ring on top of the booster. The upper stage lights its engines while still attached, and the vents let that exhaust escape sideways. On the V3 booster the ring is attached to the top of the booster; on V2 it was a separate interstage that was jettisoned after staging (Space.com, May 14, 2026).",
     loads: ["Axial compression from the upper stage stacked on top", "Upper-stage engine plume: heating and pressure on the dome below", "Bending from aerodynamic loads through the stack joint"],
   },
   {
     id: "fins",
     name: "Grid fins",
-    does: "Lattice-shaped control surfaces near the top that steer the booster during its return.",
-    loads: ["Aerodynamic forces and hinge moments fed into local frames", "Actuator reactions", "Concentrated loads the barrel wall has to spread out"],
+    does:
+      "Lattice-shaped control surfaces near the top that steer the booster during its return. The V3 booster has three grid fins, each about 50% larger than V2's four and mounted lower on the booster (Space.com, May 14, 2026). The drawing shows a generic pair.",
+    loads: ["Aerodynamic forces and hinge moments fed into local frames", "Actuator reactions", "Concentrated loads the barrel wall has to spread out: fewer, larger fins means larger loads at each attachment"],
   },
   {
     id: "hard",
@@ -54,7 +56,8 @@ const parts: Part[] = [
   {
     id: "down",
     name: "Downcomer",
-    does: "A pipe that carries methane from the upper tank down through the LOX tank to the engines.",
+    does:
+      "A pipe that carries methane from the upper tank down through the LOX tank to the engines. V3's redesigned fuel transfer tube is roughly the size of a Falcon 9 first stage, so all 33 Raptor 3 engines can start together (Space.com, May 14, 2026).",
     loads: ["External pressure from the surrounding LOX (a buckling risk for the pipe)", "Thermal contraction relative to the tank", "Flow and acceleration loads; support reactions at the domes"],
     lesson: ["column-and-plate-buckling", "Buckling"],
   },
@@ -107,7 +110,11 @@ export function Anatomy() {
           Hover, tap or tab to each section to see what it does and what loads it carries. Roughly 70 m tall and 9 m in diameter (approx., public sources).
         </p>
         <p className="practice-banner">
-          <strong>Simplified illustration.</strong> Proportions, part shapes and positions are schematic and generic, not a drawing of real hardware.
+          <strong>Simplified illustration.</strong> Proportions, part shapes and positions are schematic and generic, not a drawing of real hardware. V3 details come from public reporting (
+          <a href="https://www.space.com/space-exploration/launches-spacecraft/the-worlds-biggest-rocket-how-spacexs-new-starship-v3-differs-from-its-predecessors" target="_blank" rel="noopener noreferrer">
+            Space.com, May 14, 2026
+          </a>
+          ); V2 boosters differed (four smaller grid fins, a jettisoned hot-staging interstage).
         </p>
       </header>
 

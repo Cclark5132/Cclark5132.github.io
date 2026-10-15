@@ -73,3 +73,25 @@ export function UnitToggle({ system, onChange }: { system: System; onChange: (s:
     </div>
   );
 }
+
+const SYSTEM_KEY = "booster-prep:units";
+
+/** The SI / US choice, remembered on this device. Shared by Calculators and Practice. */
+export function useSystem() {
+  const [system, setSystem] = useState<System>(() => {
+    try {
+      return localStorage.getItem(SYSTEM_KEY) === "US" ? "US" : "SI";
+    } catch {
+      return "SI";
+    }
+  });
+  const set = (s: System) => {
+    setSystem(s);
+    try {
+      localStorage.setItem(SYSTEM_KEY, s);
+    } catch {
+      // Not persisted.
+    }
+  };
+  return [system, set] as const;
+}

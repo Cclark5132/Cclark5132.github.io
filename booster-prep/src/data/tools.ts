@@ -83,7 +83,7 @@ export const toolTracks: ToolTrack[] = [
           "Geometry: a 200 × 100 × 2 mm plate with a 10 mm center hole (d/W = 0.1, so $K_t$ ≈ 3 on gross stress).",
           "Use quarter symmetry: model one quarter with Frictionless Supports on the two symmetry faces.",
           "Apply a pressure (or force) on the far edge to give 100 MPa nominal stress. Mesh with a refinement around the hole.",
-          "Solve; read the maximum normal stress at the hole edge and compare with $K_t \\times$ nominal.",
+          "Solve; read the maximum normal stress at the hole edge and compare with $K_t \\times$ nominal. The Lesson 4 Heywood fit gives $K_{tg} \\approx 3.03$ on gross stress for d/W = 0.1, so about **303 MPa** at 100 MPa nominal is the right target.",
         ],
         check: "Deliverable: FEA peak within about 5% of the $K_t$ hand calc, with a short write-up.",
       },
@@ -125,7 +125,7 @@ export const toolTracks: ToolTrack[] = [
         title: "Capstone static cases",
         steps: [
           "Shell model of the barrel and ring frames using symmetry.",
-          "Proof case: 0.45 MPa internal pressure. Flight case: ullage plus hydrostatic head (a hydrostatic pressure load or a linearly varying pressure) plus 30 MN axial compression.",
+          "Proof case: 1.25 × MEOP ≈ 1.277 MPa internal pressure (practice), checked for no yield at proof with FS 1.0. Flight case: ullage plus hydrostatic head (a hydrostatic pressure load or a linearly varying pressure) plus 30 MN axial compression.",
           "Run a mesh convergence study on the peak stress.",
         ],
         check: "Static results compare with hand calcs within about 10%.",
@@ -137,25 +137,41 @@ export const toolTracks: ToolTrack[] = [
           "Handling case: linear buckling with 2 MN axial compression only.",
           "Flight case: prestressed buckling, with pressure applied in the static step before buckling.",
           "Linear buckling of a perfect cylinder will be close to the classical value, not the knockdown value. Explain the gap using SP-8007.",
+          "Rerun the handling-case eigenvalue buckling with 0, 3 and 6 ring frames and compare mode shapes and load factors.",
         ],
         check: "You can explain why FEA and SP-8007 differ.",
+      },
+      {
+        week: 11,
+        title: "Capstone stretch: nonlinear buckling with an imperfection",
+        steps: [
+          "Take eigenvalue buckling mode 1 from the handling case.",
+          "Seed it as an initial geometric imperfection with amplitude $w_0 = 0.5t$, then repeat with $w_0 = 1.0t$ (a second Static Structural system whose geometry is updated from the mode shape).",
+          "Run a nonlinear static analysis with Large Deflection on, ramping the axial load (or end displacement) in many substeps.",
+          "Plot load vs. end shortening and read the collapse load at the peak.",
+          "Compare the collapse load with the classical value and the SP-8007 value (Lesson 6 §5): it should fall between them and drop as $w_0$ grows.",
+          "Stay under the 128K-node limit: shells only, and a coarse mesh that you've shown is converged on the eigenvalue load factor.",
+        ],
+        check: "A load vs. end-shortening plot for both amplitudes, with the collapse loads marked against classical and SP-8007.",
       },
     ],
   },
   {
     id: "python",
     name: "Python",
-    blurb: "Weeks 1, 2, 4–7, 9–11. You're building one toolkit, booster_calcs.py, that you'll keep using at work.",
+    blurb: "Weeks 1, 2, 4–7, 9–11. Python is your main toolkit: pytest from Week 1, one module (booster_calcs.py) you'll keep using at work, and the capstone.",
     path: [
       {
         week: 1,
-        title: "Basics and your first function",
+        title: "Basics, pytest from day one, and running loads",
         steps: [
-          "Write `def margin_of_safety(allowable, applied, fs): return allowable / (fs * applied) - 1`.",
-          "Store load cases as a list of dicts and loop over them, printing with f-strings: `f\"{name}: MS = {ms:+.2f}\"`.",
+          "Check the environment (`python -c \"import numpy, scipy, matplotlib, pandas, pytest\"`) and run the trivial Week 0 test with `pytest`.",
+          "Write `def margin_of_safety(allowable, applied, fs): return allowable / (fs * applied) - 1` and a first test in `tests/test_mos.py`: `assert abs(margin_of_safety(300, 200, 1.4) - 0.0714) < 1e-3`. Commit and push.",
+          "Store load cases as a list of dicts (or a pandas DataFrame) with yield and ultimate checks. Print them with f-strings, `f\"{name}: MS = {ms:+.2f}\"`, and flag the minimum margin.",
           "Plot MS vs. applied stress with matplotlib and draw a horizontal line at MS = 0.",
+          "Write `running_load(P, M, R)` and `equivalent_axial_load(P, M, R)` with tests (30 MN and 20 MN·m at R = 4500 mm give 1375.4 N/mm and 38.89 MN), then vectorize over stations with numpy.",
         ],
-        check: "Deliverable: `mos.py` prints margins for a list of load cases.",
+        check: "Deliverable: `mos.py` and `test_mos.py` pass with `pytest` and print the load-case margins table.",
       },
       {
         week: 2,
@@ -190,7 +206,7 @@ export const toolTracks: ToolTrack[] = [
       {
         week: 6,
         title: "cylinder_buckling()",
-        steps: ["Write `cylinder_buckling(R, t, E)` returning σ_cr, γ, σ_design.", "Test it against R = 4500, t = 4, E = 193000: 103.8, 0.21, 21.8."],
+        steps: ["Write `cylinder_buckling(R, t, E)` returning σ_cr, γ, σ_design.", "Test it against R = 4500, t = 4, E = 193000: 103.8, 0.210, 21.8."],
         check: "Deliverable: the buckling function.",
       },
       {
@@ -201,24 +217,31 @@ export const toolTracks: ToolTrack[] = [
       },
       {
         week: 9,
-        title: "booster_calcs.py with tests",
+        title: "Consolidate booster_calcs.py and fill test gaps",
         steps: [
-          "Move every function into one module.",
-          "Write a pytest test for each one using the worked examples in the plan (`assert abs(x - expected) < tol`).",
+          "Move every function you've written since Week 1 into one module, `booster_calcs.py`.",
+          "You've had tests since Week 1. List any function without one and add a test from the plan's worked examples (`assert abs(x - expected) < tol`).",
           "Run `pytest` and get everything green.",
         ],
-        check: "One module, one passing test per function.",
+        check: "One module, and every function has a passing test.",
       },
       {
         week: 10,
         title: "Capstone hand calcs",
-        steps: ["Write a function that runs all three load cases for a given t and returns a margins table.", "Sweep t to find the minimum thickness with MS ≥ 0 everywhere."],
-        check: "Your minimum thickness matches the Capstone page's hand-calc panel.",
+        steps: [
+          "Write a function that runs all three load cases for a given t and returns a margins table. Apply the buckling FS to the axial load only, never to the pressure relief.",
+          "Sweep t to find the minimum thickness with MS ≥ 0 everywhere.",
+        ],
+        check: "Enter your minimum thickness and margins in the Capstone page's answer check. It tells you which are within 2% before you reveal the reference solution.",
       },
       {
         week: 11,
         title: "Trade study plots",
-        steps: ["Plot mass and minimum margin vs. thickness on twin axes.", "Repeat for 1–6 ring frames."],
+        steps: [
+          "Plot mass and minimum margin vs. thickness on twin axes.",
+          "Plot mass vs. ring frame count. The unstiffened hand-calc margin doesn't change with frames (Batdorf Z ≫ 2.85); say so in the report.",
+          "Stretch, with stringers: sweep 1–6 ring frames and check skin panels between stringers (Lesson 5 plate formula) and stringers as columns between frames (Euler/Johnson with effective width). Now frame count changes the margin.",
+        ],
         check: "Plots ready for the report.",
       },
     ],
@@ -226,7 +249,7 @@ export const toolTracks: ToolTrack[] = [
   {
     id: "matlab",
     name: "MATLAB",
-    blurb: "Weeks 3 and 8. Plenty of test and analysis groups use MATLAB, so get comfortable reading it.",
+    blurb: "Weeks 3 and 8, reading literacy only. Plenty of test and analysis groups use MATLAB, so get comfortable reading it; Python stays your main toolkit.",
     path: [
       {
         week: 3,
@@ -251,6 +274,39 @@ export const toolTracks: ToolTrack[] = [
     ],
   },
 ];
+
+/**
+ * Optional Nastran deck literacy (3–4 hours total, spread over Weeks 7–11). Public SpaceX Starship structures
+ * postings name Nastran among the team's solvers, so be able to read a deck. Install instructions checked Oct 2026:
+ * pyNastran 1.4.1 (`pip install pyNastran`, Python ≥ 3.9) and MYSTRAN (MIT license, Windows .exe in its GitHub releases).
+ */
+export const nastranLiteracy = {
+  title: "Nastran deck literacy (optional)",
+  budget: "3–4 hours total, spread over Weeks 7–11",
+  why: "You'll learn Ansys, but the posted Starship structures roles also name Nastran-family solvers. A Nastran input deck is plain text, so learning to read one takes hours, not weeks.",
+  cards: [
+    ["SOL 101 / SOL 105", "Executive control: the analysis type. 101 is linear static; 105 is linear (eigenvalue) buckling."],
+    ["SUBCASE", "Case control: one load case, pointing at its SPC (supports) and LOAD sets."],
+    ["GRID", "A node: ID, coordinate system, x, y, z."],
+    ["CQUAD4", "A 4-node shell element: element ID, property ID, four GRID IDs."],
+    ["CBAR / CBEAM", "Line elements for stiffeners, stringers and frames, with an orientation vector."],
+    ["PSHELL", "Shell property: material ID and thickness t."],
+    ["MAT1", "Isotropic material: E, G, ν, density, thermal expansion."],
+    ["SPC1", "Single-point constraints: which degrees of freedom (1–6) are fixed at which GRIDs."],
+    ["FORCE", "A concentrated force at a GRID, as a magnitude times a direction vector."],
+    ["PLOAD4", "Pressure on a shell element face, for tank pressure."],
+  ] as [string, string][],
+  steps: [
+    { week: 7, text: "Read the card list above and a short example deck from the MYSTRAN or pyNastran documentation. Label every card in a printout." },
+    { week: 8, text: "Write a tiny plate-with-hole deck: by hand, or in Python with **pyNastran** (`pip install pyNastran`; its BDF writer creates GRID, CQUAD4, PSHELL, MAT1, SPC1 and FORCE cards)." },
+    { week: 10, text: "Run the deck in **MYSTRAN**, the free, open-source, Nastran-compatible solver (SOL 101). Compare the peak stress with your Week 4 Ansys answer and the Lesson 4 $K_t$ hand calc." },
+    { week: 11, text: "Optional: open the `.f06` results file and find the displacement and element stress tables. Change SOL 101 to SOL 105 and find the eigenvalue." },
+  ],
+  links: [
+    { label: "pyNastran on PyPI", url: "https://pypi.org/project/pyNastran/" },
+    { label: "MYSTRAN on GitHub (releases have a Windows .exe)", url: "https://github.com/MYSTRANsolver/MYSTRAN" },
+  ],
+};
 
 export const swToNx: [string, string][] = [
   ["FeatureManager design tree", "Part Navigator"],

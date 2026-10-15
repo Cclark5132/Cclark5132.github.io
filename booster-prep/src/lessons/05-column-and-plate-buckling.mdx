@@ -462,3 +462,35 @@ Why do you have to run a static analysis before a linear buckling analysis in An
 4. Pressure or other loads that should **not** be scaled (for example, tank pressure in a prestressed buckling run) need special setup so they're held constant while the axial load is scaled.
 </Solution>
 </Problem>
+
+<Problem n={8}>
+**US units.** A pinned-pinned stainless tube strut has $L = 60$ in, $A = 1.2$ in², $I = 0.5$ in⁴, $E = 28{,}000$ ksi and a practice yield strength of $\sigma_y = 50$ ksi. Pick the regime (Euler or Johnson) and find the critical stress and load. Give the answers in SI too, and check them with the **SI / US toggle** on the Calculators page (column card).
+
+<Solution>
+**Slenderness:**
+
+$$
+r = \sqrt{\frac{I}{A}} = \sqrt{\frac{0.5}{1.2}} = 0.6455 \text{ in}, \qquad \frac{KL}{r} = \frac{1.0 \times 60}{0.6455} = 92.95
+$$
+
+**Transition:**
+
+$$
+\left(\frac{KL}{r}\right)_c = \sqrt{\frac{2\pi^2 E}{\sigma_y}} = \sqrt{\frac{2\pi^2 \times 28{,}000}{50}} = 105.1
+$$
+
+$92.95 < 105.1$, so this is a **Johnson** (short) column. Euler alone would give $\pi^2 \times 28{,}000 / 92.95^2 = 32.0$ ksi, more than half of yield, which is the sign Euler doesn't apply.
+
+**Johnson stress and load:**
+
+$$
+\sigma_{cr} = 50 - \frac{50^2}{4\pi^2 \times 28{,}000} \times 92.95^2 = 50 - 19.54 = 30.46 \text{ ksi}, \qquad P_{cr} = 30.46 \times 1.2 = 36.6 \text{ kips}
+$$
+
+**In SI** (1 ksi = 6.895 MPa, 1 kip = 4.448 kN):
+
+$$
+\sigma_{cr} = 30.46 \times 6.895 = 210.0 \text{ MPa}, \qquad P_{cr} = 36.6 \times 4.448 = 162.6 \text{ kN}
+$$
+</Solution>
+</Problem>

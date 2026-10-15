@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { search } from "../lib/search";
+import { noteItems, search } from "../lib/search";
+import { useProgress } from "../lib/store";
 
 export function SearchDialog({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const results = useMemo(() => search(query), [query]);
+  const progress = useProgress();
+  const results = useMemo(() => search(query, 30, noteItems(progress.notes)), [query, progress.notes]);
 
   useEffect(() => {
     inputRef.current?.focus();

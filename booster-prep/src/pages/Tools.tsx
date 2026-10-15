@@ -1,7 +1,8 @@
 import { Link, NavLink, useParams } from "react-router-dom";
 import { CheckItem } from "../components/Checks";
 import { Rich } from "../components/Tex";
-import { feaPractices, swToNx, toolTracks } from "../data/tools";
+import { feaPractices, nastranLiteracy, swToNx, toolTracks } from "../data/tools";
+import { useScrollToParam } from "../lib/anchors";
 import { NotFound } from "./NotFound";
 
 function ToolTabs() {
@@ -28,6 +29,29 @@ export function Tools() {
         <p className="lede">Guided paths that follow the plan week by week, with step-by-step exercises. You know SolidWorks, so start with the translation table.</p>
       </header>
       <ToolTabs />
+      <section className="card" style={{ marginTop: 20 }} aria-labelledby="team-tools-h">
+        <div className="card-title">
+          <h2 id="team-tools-h">What the Starship structures team uses</h2>
+          <span className="tag">public posting</span>
+        </div>
+        <p className="hint" style={{ marginBottom: 8 }}>
+          A public SpaceX posting for a <em>senior</em> Starship structures analyst lists the tools and skills below. It describes the team's toolbox, not intern
+          requirements, so use it to see where Ansys, Python and hand calcs fit.
+        </p>
+        <ul className="bullets">
+          <li>Solvers: ABAQUS, ANSYS or Nastran. Pre/post: ABAQUS/CAE, ANSA/META, ANSYS or FEMAP, including scripting them.</li>
+          <li>Fatigue and crack growth: nCode, NASGRO or equivalents. Scripting: Python, VBA or MATLAB.</li>
+          <li>Skills: hand calcs alongside FE models, developing load paths and preliminary sizing, welded structures (heat distortion and residual stress), material, geometric and contact nonlinear analysis, and fatigue and fracture mechanics.</li>
+        </ul>
+        <p className="hint" style={{ marginTop: 8 }}>
+          This plan touches each one: hand calcs every week, load paths in Weeks 1 and 4, welds in Week 7, nonlinear buckling in the Week 11 stretch, fatigue and
+          fracture in Week 8, and the optional Nastran card below. Source:{" "}
+          <a href="https://job-boards.greenhouse.io/spacex/jobs/8233882002" target="_blank" rel="noopener noreferrer">
+            SpaceX, Sr. Structures Analyst (Starship)
+          </a>
+          .
+        </p>
+      </section>
       <div className="grid-auto" style={{ marginTop: 20 }}>
         {toolTracks.map((track) => (
           <Link key={track.id} to={`/tools/${track.id}`} className="card link-card">
@@ -42,8 +66,61 @@ export function Tools() {
           <span className="eyebrow">Read before Week 4</span>
         </Link>
       </div>
+      <NastranCard />
       <SwTable />
     </div>
+  );
+}
+
+function NastranCard() {
+  const n = nastranLiteracy;
+  return (
+    <section className="card" style={{ marginTop: 24 }} aria-labelledby="nastran-h">
+      <div className="card-title">
+        <h2 id="nastran-h">{n.title}</h2>
+        <span className="tag">{n.budget}</span>
+      </div>
+      <p className="hint" style={{ marginBottom: 12 }}>
+        {n.why}
+      </p>
+      <div className="table-wrap">
+        <table className="data">
+          <caption className="sr-only">Nastran bulk data cards</caption>
+          <thead>
+            <tr>
+              <th scope="col">Card</th>
+              <th scope="col">What it does</th>
+            </tr>
+          </thead>
+          <tbody>
+            {n.cards.map(([card, what]) => (
+              <tr key={card}>
+                <td className="num">{card}</td>
+                <td>{what}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 12 }}>
+        {n.steps.map((step, i) => (
+          <CheckItem key={i} id={`tool-nastran-${i}`}>
+            <span className="check-meta">Week {step.week}</span>
+            <Rich text={step.text} />
+          </CheckItem>
+        ))}
+      </div>
+      <p className="hint" style={{ marginTop: 10 }}>
+        {n.links.map((link, i) => (
+          <span key={link.url}>
+            {i > 0 && " · "}
+            <a href={link.url} target="_blank" rel="noopener noreferrer">
+              {link.label}
+            </a>
+          </span>
+        ))}
+      </p>
+    </section>
   );
 }
 
@@ -77,6 +154,7 @@ function SwTable() {
 
 export function ToolPage() {
   const { tool } = useParams();
+  useScrollToParam("step", "step-");
   if (tool === "fea") return <FeaPractices />;
   const track = toolTracks.find((t) => t.id === tool);
   if (!track) return <NotFound />;
@@ -89,8 +167,8 @@ export function ToolPage() {
       </header>
       <ToolTabs />
       <div className="stack" style={{ marginTop: 20 }}>
-        {track.path.map((step) => (
-          <section key={step.week + step.title} className="card">
+        {track.path.map((step, i) => (
+          <section key={step.week + step.title} className="card" id={track.path.findIndex((s) => s.week === step.week) === i ? `step-w${step.week}` : undefined}>
             <div className="card-title">
               <h2>{step.title}</h2>
               <Link to={`/week/${step.week}`} className="tag">

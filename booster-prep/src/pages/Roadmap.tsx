@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { phaseColor, weeks, type Phase } from "../data/plan";
 import { weekProgress } from "../lib/progress";
-import { formatDate, locate, localToday, weekEnd } from "../lib/schedule";
+import { formatDate, locate, localToday, plannedHours, weekEnd } from "../lib/schedule";
 import { useProgress } from "../lib/store";
 
 const phases: Phase[] = ["Setup", "Foundations", "Core structures", "Review", "Capstone", "Launch prep"];
@@ -10,7 +10,6 @@ export function Roadmap() {
   const progress = useProgress();
   const where = locate(localToday());
   const current = where.status === "during" ? where.week.n : -1;
-  const totalHours = weeks.reduce((sum, week) => sum + week.hours, 0);
 
   return (
     <div className="content">
@@ -18,8 +17,8 @@ export function Roadmap() {
         <span className="eyebrow">Roadmap</span>
         <h1>12 weeks to Starbase</h1>
         <p className="lede">
-          October 15, 2026 to January 10, 2027. Normal weeks are 14 hours; light weeks (Thanksgiving and finals) are about 7. Total {totalHours} hours including Week 0
-          setup.
+          October 15, 2026 to January 10, 2027. Week 0 is one 2-hour setup day, Week 1 runs 10 days (20 hours), normal weeks are 14 hours and light weeks
+          (Thanksgiving and finals) are 7. Total {plannedHours} hours.
         </p>
       </header>
 

@@ -66,6 +66,74 @@ The thin wall of radius $R$ and thickness $t$ turns these into stress. Axial for
   vars="\sigma_\text{axial} | uniform axial stress in the wall | MPa; \sigma_\text{bending} | peak bending stress (thin-wall tube) | MPa; P | axial force | N; M | bending moment | N·mm; R | mean radius | mm; t | wall thickness | mm"
 />
 
+## 1b. Running loads and equivalent axial load
+
+Structures engineers rarely quote wall stress first. They talk in **running loads**: force per unit length of circumference, in N/mm or lbf/in. A running load doesn't depend on the wall thickness, so it is the natural way to pass loads from the loads group to the stress analyst, and to compare stations, joints and panels of different thickness. Divide by $t$ only at the end to get stress.
+
+Around the circumference of a thin cylinder, axial force spreads evenly, while bending adds running load on one side and subtracts it on the other:
+
+<Formula
+  label="Axial running load from axial force and bending"
+  tex="N_x = \frac{P}{2\pi R} \pm \frac{M}{\pi R^2}, \qquad \sigma = \frac{N_x}{t}"
+  vars="N_x | axial running load (force per unit length of circumference) | N/mm; P | axial force | N; M | bending moment | N·mm; R | mean radius | mm; t | wall thickness | mm; \sigma | wall stress | MPa"
+/>
+
+The peak running load is on the side where bending adds to the axial force. Buckling checks usually want one number: the **equivalent axial load**, the uniform axial force that gives the same peak running load as $P$ and $M$ together. Set $P_\text{eq}/(2\pi R)$ equal to the peak:
+
+$$
+\frac{P_\text{eq}}{2\pi R} = \frac{P}{2\pi R} + \frac{M}{\pi R^2} \quad\Rightarrow\quad P_\text{eq} = P + \frac{2M}{R}
+$$
+
+<Formula
+  label="Equivalent axial load"
+  tex="P_\text{eq} = P + \frac{2M}{R}"
+  vars="P_\text{eq} | uniform axial load that gives the same peak running load as P plus M | N; P | axial force | N; M | bending moment | N·mm; R | mean radius | mm"
+/>
+
+<Example title="Running load and equivalent axial load at a station">
+
+A 9 m barrel ($R = 4500$ mm) carries $P = 30$ MN of axial compression and a bending moment of $M = 20$ MN·m (both practice values). Find the axial and bending running loads, the peak running load and $P_\text{eq}$.
+
+**Step 1.** Convert the moment to N·mm:
+
+$$
+M = 20 \text{ MN·m} = 20 \times 10^6 \text{ N} \times 10^3 \text{ mm} = 20 \times 10^9 \text{ N·mm}
+$$
+
+**Step 2.** Axial part:
+
+$$
+\frac{P}{2\pi R} = \frac{30 \times 10^6}{2\pi \times 4500} = \frac{30 \times 10^6}{28{,}274} = 1061.0 \text{ N/mm}
+$$
+
+**Step 3.** Bending part:
+
+$$
+\frac{M}{\pi R^2} = \frac{20 \times 10^9}{\pi \times 4500^2} = \frac{20 \times 10^9}{6.362 \times 10^7} = 314.4 \text{ N/mm}
+$$
+
+**Step 4.** Peak running load (bending adds on the compression side):
+
+$$
+N_{x,\text{peak}} = 1061.0 + 314.4 = 1375.4 \text{ N/mm}
+$$
+
+**Step 5.** Equivalent axial load, with $R = 4.5$ m and $M$ in MN·m so the result is in MN:
+
+$$
+P_\text{eq} = P + \frac{2M}{R} = 30 + \frac{2 \times 20}{4.5} = 30 + 8.89 = 38.89 \text{ MN}
+$$
+
+**Check:** spreading $P_\text{eq}$ evenly gives the same peak:
+
+$$
+\frac{38.89 \times 10^6}{2\pi \times 4500} = 1375.4 \text{ N/mm} \;\checkmark
+$$
+
+**Result:** the bending moment adds about 30% to the compression the wall has to carry at the worst point. A 4 mm wall would see $1375.4 / 4 = 344$ MPa there.
+
+</Example>
+
 ## 2. Stress, strain and Hooke's law
 
 Stress is force per area, $\sigma = F/A$. Strain is stretch per length, $\varepsilon = \Delta L / L$ (dimensionless). In the elastic range they are proportional:
@@ -155,6 +223,25 @@ The **factor of safety** (FS) is a required multiplier on the load, set by the p
 
 Aerospace reports use margins because zero is always the pass line, whichever factor of safety or failure mode applies. You can line up yield, ultimate, buckling and joint margins in one table and the smallest one is the one that matters.
 
+### Limit, ultimate, proof, MEOP: the vocabulary
+
+These words appear in every stress report and requirements document. The values below are the practice values this site uses, not any program's real criteria.
+
+- **Limit load:** the maximum load expected in service. Loads groups deliver limit loads.
+- **Ultimate load:** limit load × the ultimate factor of safety. The structure must carry ultimate load without failing.
+- **Yield and ultimate factors of safety:** separate factors for the two checks, for example 1.25 on yield (no permanent set at limit × 1.25) and 1.4 on ultimate (no rupture at limit × 1.4). Pair each with its own allowable.
+- **Buckling factor of safety:** the factor on the destabilizing load in a stability check, 1.4 in the capstone. It never multiplies a relieving load such as pressure end load; that is taken at its minimum guaranteed value, unfactored.
+- **MEOP (maximum expected operating pressure):** the highest pressure a tank or line is expected to see in operation, including head and regulator tolerances.
+- **Proof factor:** proof pressure ÷ MEOP. A proof test pressurizes real hardware to MEOP × proof factor (1.25 in the capstone) to screen out flaws. The check is usually no yield (or no detrimental deformation) at proof.
+- **Burst factor:** burst (design ultimate) pressure ÷ MEOP. The tank must not rupture below MEOP × burst factor, which is higher than the proof factor.
+- **Fitting factor:** an extra factor that many programs apply to fittings, lugs and joints, where load paths and stress concentrations are hard to predict. Learn it as a concept; the program's criteria set the number.
+
+**How margins are written in a stress report:**
+
+- Round margins **down** to 2 decimals: $+0.0749$ is reported as $+0.07$, never rounded up.
+- Write a very large margin as **MS = +HIGH** instead of a big number nobody needs.
+- Always name the **governing case**: the load case, the failure mode and the location that give the minimum margin.
+
 <Example title="Margin from the Week 1 self-check">
 
 A part has $\sigma_\text{allowable} = 300$ MPa, $\sigma_\text{applied} = 200$ MPa and $FS = 1.4$.
@@ -228,6 +315,10 @@ Both agree, as they must.
 </Example>
 
 ## Common mistakes
+
+<Callout kind="mistake" title="Mixing running load and stress">
+$N_x$ is in N/mm (force per length), stress is in N/mm² (MPa). Divide the running load by the thickness $t$ to get stress. Writing "1375 MPa" for a running load is a units error, not a scary stress.
+</Callout>
 
 <Callout kind="mistake" title="Leaving out the factor of safety">
 Writing $MS = \sigma_\text{allow}/\sigma_\text{applied} - 1$ gives a margin that's too high. The FS always multiplies the applied stress (or load) first.
@@ -358,3 +449,94 @@ Report the **minimum margin, $-0.05$ (yield)**, and the load case that drives it
 3. **Refine the analysis:** remove conservatism (better load data, a more accurate stress model, test data), so the applied stress is calculated more accurately.
 </Solution>
 </Problem>
+
+<Problem n={7}>
+A station has $R = 4500$ mm, $P = 12$ MN of axial compression and $M = 8$ MN·m of bending (practice values). Find the largest and smallest axial running loads around the circumference, and $P_\text{eq}$. Is any side in net tension?
+
+<Solution>
+**Axial and bending parts:**
+
+$$
+\frac{P}{2\pi R} = \frac{12 \times 10^6}{2\pi \times 4500} = 424.41 \text{ N/mm}, \qquad \frac{M}{\pi R^2} = \frac{8 \times 10^9}{\pi \times 4500^2} = 125.75 \text{ N/mm}
+$$
+
+**Largest and smallest:**
+
+$$
+N_{x,\max} = 424.41 + 125.75 = 550.2 \text{ N/mm}, \qquad N_{x,\min} = 424.41 - 125.75 = 298.7 \text{ N/mm}
+$$
+
+Both are compressive, so no side goes into tension; bending would need to exceed $PR/2 = 27$ MN·m for that.
+
+**Equivalent axial load:**
+
+$$
+P_\text{eq} = 12 + \frac{2 \times 8}{4.5} = 12 + 3.56 = 15.56 \text{ MN}
+$$
+</Solution>
+</Problem>
+
+<Problem n={8}>
+**US units.** A loads memo gives $P = 1{,}500{,}000$ lbf of compression and $M = 30{,}000{,}000$ in·lbf of bending at a station with $R = 177$ in. Find the peak running load in lbf/in and $P_\text{eq}$ in lbf, then give both in SI. Check your answer with the **SI / US toggle** on the Calculators page (running load card).
+
+<Solution>
+**Axial and bending parts:**
+
+$$
+\frac{P}{2\pi R} = \frac{1{,}500{,}000}{2\pi \times 177} = 1348.8 \text{ lbf/in}, \qquad \frac{M}{\pi R^2} = \frac{30{,}000{,}000}{\pi \times 177^2} = 304.8 \text{ lbf/in}
+$$
+
+**Peak running load:**
+
+$$
+N_{x,\text{peak}} = 1348.8 + 304.8 = 1653.6 \text{ lbf/in}
+$$
+
+**Equivalent axial load:**
+
+$$
+P_\text{eq} = 1{,}500{,}000 + \frac{2 \times 30{,}000{,}000}{177} = 1{,}500{,}000 + 338{,}983 = 1{,}838{,}983 \text{ lbf}
+$$
+
+**In SI** (1 lbf/in = 0.175127 N/mm, 1 lbf = 4.448 N):
+
+$$
+N_{x,\text{peak}} = 1653.6 \times 0.175127 = 289.6 \text{ N/mm}, \qquad P_\text{eq} = 1{,}838{,}983 \times 4.448 = 8.18 \text{ MN}
+$$
+</Solution>
+</Problem>
+
+<Problem n={9}>
+The Example 1b station ($R = 4500$ mm, $P = 30$ MN limit, $M = 20$ MN·m limit, so $P_\text{eq} = 38.89$ MN) is pressurized to a guaranteed minimum of $p_\text{min} = 0.35$ MPa. The buckling FS is 1.4 (practice). With a 12 mm wall, SP-8007 gives $P_\text{allow} = 38.83$ MN (Lesson 6 method). Find the factored net running load and the buckling margin.
+
+<Solution>
+**Step 1.** Factor the destabilizing load only:
+
+$$
+FS \times P_\text{eq} = 1.4 \times 38.89 = 54.44 \text{ MN}
+$$
+
+**Step 2.** Pressure end load at the minimum pressure, unfactored:
+
+$$
+p_\text{min}\,\pi R^2 = 0.35 \times \pi \times 4500^2 = 22.27 \text{ MN}
+$$
+
+**Step 3.** Net load and net running load:
+
+$$
+P_\text{net} = 54.44 - 22.27 = 32.18 \text{ MN}, \qquad N_{x,\text{net}} = \frac{32.18 \times 10^6}{2\pi \times 4500} = 1138 \text{ N/mm}
+$$
+
+That is $1138 / 12 = 94.8$ MPa of factored net compression in the wall.
+
+**Step 4.** Margin:
+
+$$
+MS = \frac{P_\text{allow}}{P_\text{net}} - 1 = \frac{38.83}{32.18} - 1 = +0.21
+$$
+
+The wall passes. Never multiply the 22.27 MN of relief by 1.4; that would make the margin look better than it is.
+</Solution>
+</Problem>
+

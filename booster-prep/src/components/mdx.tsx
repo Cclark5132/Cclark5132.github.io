@@ -1,4 +1,5 @@
 import { isValidElement, type ComponentProps, type ReactNode } from "react";
+import { headingId, textOf } from "../lib/anchors";
 import { Formula } from "./Formula";
 import { Tex } from "./Tex";
 
@@ -80,4 +81,13 @@ export function Figure({ caption, children }: { caption: string; children: React
   );
 }
 
-export const mdxComponents = { Formula, Example, Problem, Solution, Callout, Figure, code: Code, pre: Pre };
+/** Lesson `##` headings get stable anchor ids, so focus mode can link to the exact section. */
+function H2({ children, ...rest }: ComponentProps<"h2">) {
+  return (
+    <h2 id={headingId(textOf(children))} {...rest}>
+      {children}
+    </h2>
+  );
+}
+
+export const mdxComponents = { Formula, Example, Problem, Solution, Callout, Figure, code: Code, pre: Pre, h2: H2 };

@@ -1,7 +1,9 @@
 import { parseVars, type Var } from "../components/Formula";
+import type { CardState } from "./progressDoc";
 import { glossary } from "../data/glossary";
 import { weeks, type Track } from "../data/plan";
 import { lessons } from "../lessons";
+import { topics } from "./practice";
 
 export interface Card {
   id: string;
@@ -70,11 +72,57 @@ function build(): Card[] {
 
 export const deck = build();
 
-/** Simple spaced repetition: Again → today, Good → double the interval, Easy → triple it. */
-export function schedule(prev: { interval: number; reps: number } | undefined, grade: "again" | "good" | "easy") {
+/** One card per practice topic. A card joins the deck when you add it after a wrong answer. */
+export const practiceCards: Card[] = topics.map((t) => ({
+  id: `p-${t.id}`,
+  kind: "formula",
+  week: t.week,
+  track: "structures",
+  front: `**Practice: ${t.title}**. Write the method and the formula.`,
+  back: t.card.method,
+  tex: t.card.tex,
+}));
+
+export const practiceCardCheck = (topic: string) => `pcard-${topic}`;
+
+/** The deck plus any practice cards you added. */
+export function activeDeck(checks: Record<string, boolean>) {
+  return [...deck, ...practiceCards.filter((c) => checks[practiceCardCheck(c.id.slice(2))])];
+}
+
+export type CardGrade = "again" | "hard" | "good" | "easy";
+
+/**
+ * Simple spaced repetition: Again → today, Hard → interval × 1.2 (at least 1 day), Good → double it,
+ * Easy → triple it (at least 3 days). Intervals are whole days.
+ */
+export function schedule(prev: { interval: number; reps: number } | undefined, grade: CardGrade) {
   const interval = prev?.interval ?? 0;
   const reps = (prev?.reps ?? 0) + 1;
   if (grade === "again") return { interval: 0, reps };
+  if (grade === "hard") return { interval: Math.max(1, Math.round(interval * 1.2)), reps };
   if (grade === "good") return { interval: Math.max(1, interval * 2), reps };
   return { interval: Math.max(3, interval * 3), reps };
 }
+
+/** New cards introduced per day, so future weeks don't flood the deck. */
+export const NEW_PER_DAY = 15;
+
+/** Weeks whose first day is on or before today. Only these feed new cards. */
+export const startedWeeks = (today: string) => new Set(weeks.filter((w) => w.start <= today).map((w) => w.n));
+
+/**
+ * Today's queue: every review that is due, then new cards from started weeks, up to the daily limit
+ * minus the new cards already started today.
+ */
+export function dailyQueue(cards: Card[], state: Record<string, CardState>, today: string, limit = NEW_PER_DAY) {
+  const started = startedWeeks(today);
+  const reviews = cards.filter((c) => state[c.id] && state[c.id].due <= today);
+  const introduced = Object.values(state).filter((s) => s.added === today).length;
+  const room = Math.max(0, limit - introduced);
+  const fresh = cards.filter((c) => !state[c.id] && started.has(c.week)).slice(0, room);
+  return { reviews, fresh, queue: [...reviews, ...fresh], introduced, room };
+}
+
+/** "Cards due today" for the Dashboard: due reviews plus today's new cards, across the whole deck. */
+export const cardsDueToday = (progress: { checks: Record<string, boolean>; cards: Record<string, CardState> }, today: string) => dailyQueue(activeDeck(progress.checks), progress.cards, today).queue.length;
