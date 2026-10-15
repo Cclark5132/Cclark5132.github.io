@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Session } from "../lib/schedule";
-import { localToday } from "../lib/schedule";
+import { formatDate, localToday } from "../lib/schedule";
 import { setCheck, setSession, toggleSession, useProgress } from "../lib/store";
 import { Rich } from "./Tex";
 import { showToast } from "./Toast";
@@ -32,6 +32,8 @@ export function SessionCheck({ session, showDate = false }: { session: Session; 
       <span className="check-text">
         <span className="check-meta">
           {showDate ? `${session.dayName} · ` : ""}Hour {session.slot} · {kindLabel[session.kind]}
+          {progress.overrides[session.id] && !done ? ` · moved to ${formatDate(progress.overrides[session.id], { weekday: "short", month: "short", day: "numeric" })}` : ""}
+          {progress.skipped[session.id] && !done ? " · skipped" : ""}
         </span>
         <strong style={{ fontWeight: 600 }}>{session.title}</strong>
         {session.detail && (

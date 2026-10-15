@@ -1863,3 +1863,33 @@ ol.bullets {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
+
+/* Catch-up queue */
+.catchup-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.catchup-list li {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.catchup-list strong {
+  display: block;
+  font-weight: 600;
+}
+.catchup-actions {
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.stat-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}

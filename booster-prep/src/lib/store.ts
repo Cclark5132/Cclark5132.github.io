@@ -141,6 +141,22 @@ export function setCapstoneEntry(id: string, value: string) {
   put("capstone", id, value);
 }
 
+/** Catch-up: move a session to another day (the plan itself is unchanged), or clear the move. */
+export function setOverride(id: string, date: string | null) {
+  put("overrides", id, date);
+}
+
+/** Catch-up: drop a session from the queue. It still counts as missed. */
+export function setSkipped(id: string, skipped: boolean) {
+  put("skipped", id, skipped);
+}
+
+/** Adds minutes studied (from the focus timer) to a session. */
+export function addMinutes(id: string, minutes: number) {
+  if (!(minutes > 0)) return;
+  put("minutes", id, Math.round((view.minutes[id] ?? 0) + minutes));
+}
+
 export function exportProgress() {
   markExported();
   return JSON.stringify({ ...doc, exportedAt: nowIso() }, null, 2);

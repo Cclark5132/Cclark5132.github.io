@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SessionCheck } from "../components/Checks";
+import { CatchUpCard, HoursVsPlanCard } from "../components/CatchUp";
 import { Icon } from "../components/Icon";
 import { downloadProgress } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
@@ -8,6 +9,7 @@ import { phaseColor, START_DATE, weeks } from "../data/plan";
 import { stats, validSessions } from "../lib/progress";
 import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
 import { daysSince, lastExport } from "../lib/backup";
+import { actualHours, movedTo } from "../lib/catchup";
 import { studyStreak, useProgress } from "../lib/store";
 import { readSettings, useSyncStatus } from "../lib/sync";
 import { StorageLine } from "./Backup";
@@ -53,6 +55,7 @@ function Countdown() {
 }
 
 function TodayCard({ today }: { today: string }) {
+  const progress = useProgress();
   const where = locate(today);
   if (where.status === "before") {
     return (
@@ -79,6 +82,7 @@ function TodayCard({ today }: { today: string }) {
   }
   const { week, dayIndex } = where;
   const sessions = scheduleByWeek[week.n][dayIndex] ?? [];
+  const moved = movedTo(progress, today);
   const tomorrow = addDays(today, 1);
   return (
     <section className="card">
@@ -99,6 +103,14 @@ function TodayCard({ today }: { today: string }) {
           <SessionCheck key={session.id} session={session} />
         ))}
       </div>
+      {moved.length > 0 && (
+        <div className="stack" style={{ gap: 4, marginTop: 10 }}>
+          <div className="eyebrow">Moved here from catch-up</div>
+          {moved.map((session) => (
+            <SessionCheck key={session.id} session={session} showDate />
+          ))}
+        </div>
+      )}
       <div className="row" style={{ marginTop: 14 }}>
         <Link className="btn" to={`/week/${week.n}`}>
           Open Week {week.n}
@@ -160,6 +172,7 @@ export function Dashboard() {
   const s = stats(progress);
   const streak = studyStreak(validSessions(progress.sessions), today, addDays);
   const onPlan = plannedHoursThrough(today);
+  const actual = actualHours(progress);
   const trackRows = [
     ["Structures", s.tracks.structures, "var(--phase-foundations)"],
     ["CAD / FEA", s.tracks.cad, "var(--phase-core)"],
@@ -181,8 +194,23 @@ export function Dashboard() {
           <div className="stack" style={{ gap: 10 }}>
             <div>
               <div className="eyebrow">Hours logged</div>
-              <div className="num stat-big">
-                {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
+              <div className="stat-pair">
+                <div>
+                  <div className="num stat-big">
+                    {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
+                  </div>
+                  <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                    planned sessions done
+                  </div>
+                </div>
+                <div>
+                  <div className="num stat-big">
+                    {actual} <span className="stat-sub">hrs</span>
+                  </div>
+                  <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                    actual hours studied (timer)
+                  </div>
+                </div>
               </div>
               <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
                 {onPlan} {onPlan === 1 ? "hr" : "hrs"} scheduled through today
@@ -224,6 +252,11 @@ export function Dashboard() {
           </section>
           <BackupCard />
         </div>
+      </div>
+
+      <div className="dash-grid wide-left" style={{ marginTop: 16 }}>
+        <HoursVsPlanCard today={today} />
+        <CatchUpCard today={today} />
       </div>
     </div>
   );
