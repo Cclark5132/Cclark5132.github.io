@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CheckItem, SessionCheck } from "../components/Checks";
 import { Formula } from "../components/Formula";
+import { SelfCheckItem } from "../components/SelfCheck";
+import { selfCheckScore } from "../lib/selfcheck";
 import { Icon } from "../components/Icon";
 import { Rich } from "../components/Tex";
 import { phaseColor, rhythm, weekByNumber, weeks } from "../data/plan";
@@ -74,6 +76,7 @@ export function WeekPage() {
   const week = weekByNumber(Number(n));
   if (!week) return <NotFound />;
   const days = scheduleByWeek[week.n];
+  const score = selfCheckScore(progress.grades, week.n, week.selfChecks.length);
   const lesson = week.lesson ? lessonBySlug(week.lesson) : undefined;
   const wp = weekProgress(progress, week.n);
   // Neighbors in calendar order (the finals week can be moved; see FINALS_WEEK_START).
@@ -221,23 +224,13 @@ export function WeekPage() {
           <section className="card" aria-labelledby="sc-h" id="self-check">
             <div className="card-title">
               <h2 id="sc-h">Self-check</h2>
-              <span className="eyebrow">answer without notes</span>
+              <span className="eyebrow" data-testid="selfcheck-score">
+                {score.graded ? `score ${Math.round((100 * score.points) / score.graded)}% · ${score.tally.got} got it, ${score.tally.shaky} shaky, ${score.tally.missed} missed · ${score.graded} of ${score.total} graded` : "answer without notes, then grade yourself"}
+              </span>
             </div>
             <ol className="selfchecks">
-              {week.selfChecks.map((check) => (
-                <li key={check.q}>
-                  <p>
-                    <Rich text={check.q} />
-                  </p>
-                  <details className="reveal">
-                    <summary>Show answer</summary>
-                    <div className="reveal-body">
-                      <div>
-                        <Rich text={check.a} />
-                      </div>
-                    </div>
-                  </details>
-                </li>
+              {week.selfChecks.map((check, i) => (
+                <SelfCheckItem key={check.q} week={week.n} index={i} check={check} />
               ))}
             </ol>
           </section>

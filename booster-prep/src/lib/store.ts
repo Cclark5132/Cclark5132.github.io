@@ -157,6 +157,11 @@ export function addMinutes(id: string, minutes: number) {
   put("minutes", id, Math.round((view.minutes[id] ?? 0) + minutes));
 }
 
+/** Self-check grade: Got it / Shaky / Missed. */
+export function setGrade(id: string, grade: Grade) {
+  put("grades", id, grade);
+}
+
 /** A random id for this browser, so practice tallies from two devices add up instead of overwriting. */
 function deviceId() {
   try {

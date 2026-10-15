@@ -158,7 +158,7 @@ describe("practice checking", () => {
 
   it("weak topics need 3 attempts and rank lowest accuracy first", () => {
     const p = { ...emptyView(), practice: { "margin|a": { attempts: 4, correct: 1 }, "margin|b": { attempts: 1, correct: 1 }, "weld|a": { attempts: 3, correct: 3 }, "crack|a": { attempts: 2, correct: 0 } } };
-    expect(weakTopics(p).map((w) => [w.topic, w.accuracy])).toEqual([
+    expect(weakTopics(p).map((w) => [w.key, w.accuracy])).toEqual([
       ["margin", 0.4],
       ["weld", 1],
     ]);

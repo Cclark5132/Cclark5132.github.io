@@ -15,19 +15,19 @@ export function WeakTopicsCard() {
         </Link>
       </div>
       {weak.length === 0 ? (
-        <p className="hint">Answer at least 3 practice problems in a topic and the weakest ones show up here.</p>
+        <p className="hint">Answer at least 3 practice problems in a topic, or grade 3 self-checks in a week, and the weakest show up here.</p>
       ) : (
         <ul className="catchup-list">
           {weak.map((w) => (
-            <li key={w.topic} className="row" style={{ justifyContent: "space-between" }}>
+            <li key={w.key} className="row" style={{ justifyContent: "space-between" }}>
               <span>
                 <strong>{w.title}</strong>
                 <span className="check-meta">
-                  {Math.round(w.accuracy * 100)}% over {w.attempts} tries
+                  {Math.round(w.accuracy * 100)}% over {w.attempts} {w.kind === "practice" ? "tries" : "graded"}
                 </span>
               </span>
-              <Link className="btn small" to={`/practice?topic=${w.topic}`}>
-                Practice this
+              <Link className="btn small" to={w.to}>
+                {w.action}
               </Link>
             </li>
           ))}

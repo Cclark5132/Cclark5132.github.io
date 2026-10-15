@@ -1944,3 +1944,12 @@ ol.bullets {
 .practice-card .seg button {
   min-height: 40px;
 }
+
+/* Self-check grading */
+.grade-self {
+  margin-top: 10px;
+  gap: 6px;
+}
+.btn.grade-got { border-color: var(--good); color: var(--good); }
+.btn.grade-shaky { border-color: var(--accent); color: var(--accent); }
+.btn.grade-missed { border-color: var(--bad); color: var(--bad); }
