@@ -28,6 +28,29 @@ export function Tools() {
         <p className="lede">Guided paths that follow the plan week by week, with step-by-step exercises. You know SolidWorks, so start with the translation table.</p>
       </header>
       <ToolTabs />
+      <section className="card" style={{ marginTop: 20 }} aria-labelledby="team-tools-h">
+        <div className="card-title">
+          <h2 id="team-tools-h">What the Starship structures team uses</h2>
+          <span className="tag">public posting</span>
+        </div>
+        <p className="hint" style={{ marginBottom: 8 }}>
+          A public SpaceX posting for a <em>senior</em> Starship structures analyst lists the tools and skills below. It describes the team's toolbox, not intern
+          requirements, so use it to see where Ansys, Python and hand calcs fit.
+        </p>
+        <ul className="bullets">
+          <li>Solvers: ABAQUS, ANSYS or Nastran. Pre/post: ABAQUS/CAE, ANSA/META, ANSYS or FEMAP, including scripting them.</li>
+          <li>Fatigue and crack growth: nCode, NASGRO or equivalents. Scripting: Python, VBA or MATLAB.</li>
+          <li>Skills: hand calcs alongside FE models, developing load paths and preliminary sizing, welded structures (heat distortion and residual stress), material, geometric and contact nonlinear analysis, and fatigue and fracture mechanics.</li>
+        </ul>
+        <p className="hint" style={{ marginTop: 8 }}>
+          This plan touches each one: hand calcs every week, load paths in Weeks 1 and 4, welds in Week 7, nonlinear buckling in the Week 11 stretch, fatigue and
+          fracture in Week 8, and the optional Nastran card below. Source:{" "}
+          <a href="https://job-boards.greenhouse.io/spacex/jobs/8233882002" target="_blank" rel="noopener noreferrer">
+            SpaceX, Sr. Structures Analyst (Starship)
+          </a>
+          .
+        </p>
+      </section>
       <div className="grid-auto" style={{ marginTop: 20 }}>
         {toolTracks.map((track) => (
           <Link key={track.id} to={`/tools/${track.id}`} className="card link-card">

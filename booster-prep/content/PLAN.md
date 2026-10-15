@@ -142,7 +142,11 @@ Setup is Day 1 only. Then Week 1 starts the next morning at full intensity.
 | Sun Oct 25 | Starship context: the V3 booster changes, the Booster 18 pressure-test anomaly and Flight 12; note one structures lesson from each | Flashcards and self-check, then plan Week 2 in the notebook |
 
 **Starship context**
-- The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter, and burn liquid methane and liquid oxygen.
+- The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter (approx., public sources), and burn liquid methane and liquid oxygen.
+- **Booster V3 changes** (Space.com, May 14, 2026): three grid fins instead of four, each about 50% larger and mounted lower; the hot-staging ring is now attached to the top of the booster (on V2 it was a separate interstage that was jettisoned); and a redesigned fuel transfer tube (the downcomer), roughly the size of a Falcon 9 first stage, so all 33 Raptor 3 engines can ignite together. Structures lesson: bigger fins mean bigger concentrated loads into fewer frames.
+- **Booster 18 (Nov 2025):** the first V3 booster suffered an anomaly during gas system pressure testing, done in advance of structural proof testing, with no propellant aboard and no engines installed; Space.com reported heavy damage to the LOX tank section. Reading question: why are pressure tests staged (gas systems, then structural proof, then cryo), and what does a ground-test failure teach a structures team? Don't speculate about the cause beyond what's published.
+- **Flight 12 (May 22, 2026):** the first flight of Block 3 / V3 vehicles (Booster 19, Ship 39) and the first launch from Starbase's second pad. The booster was lost in the Gulf after most of its engines failed to relight for the boostback and landing burns; the ship completed its planned splashdown in the Indian Ocean.
+- Sources: [Space.com, V3 changes](https://www.space.com/space-exploration/launches-spacecraft/the-worlds-biggest-rocket-how-spacexs-new-starship-v3-differs-from-its-predecessors); [Space.com, Booster 18](https://www.space.com/space-exploration/launches-spacecraft/spacexs-1st-version-3-super-heavy-starship-booster-buckles-under-pressure-during-initial-tests); [Wikipedia, Flight 12](https://en.wikipedia.org/wiki/Starship_flight_test_12).
 
 **Deliverable:** an NX model and drawing of a bolted flange ring, plus `mos.py` and `test_mos.py` in the repo, running the load-case margins table with yield and ultimate checks.
 
@@ -285,6 +289,7 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 
 **Starship context**
 - Booster axial loads: engine thrust pushing up from the bottom, propellant weight, aerodynamic bending near max-Q, and the loads from being caught by the tower's chopstick arms.
+- V3 detail: three grid fins instead of four, each about 50% larger and mounted lower (Space.com, May 14, 2026). Where does each fin's load go?
 
 **Deliverable:** Euler/Johnson plot, plus an Ansys column buckling check within a few percent of Euler.
 
@@ -326,6 +331,7 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 
 **Starship context**
 - Watch a launch and note the moments of highest axial load: liftoff, max-Q, and just before engine cutoff.
+- Booster 18 (Nov 2025) reading: why are pressure tests staged, and what does a ground-test failure teach a structures team? Stick to what was published.
 
 **Deliverable:** buckling function plus a one-page note explaining knockdown factors in your own words.
 
@@ -391,6 +397,7 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 
 **Starship context**
 - A reusable booster flies many times, so fatigue matters far more than on an expendable stage. Read about cryogenic proof testing of test tanks at Starbase.
+- Revisit Booster 18: its anomaly came during gas system pressure testing, before structural proof testing. What is each stage of pressure testing meant to prove?
 
 **Deliverable:** tank FEA vs. hand calc comparison, plus the Miner's-rule script.
 
@@ -481,6 +488,9 @@ You'll analyze a simplified stainless steel barrel section the way a structures 
 **Booster anatomy deep dive**
 - Learn the main parts and what loads each one carries: methane and LOX tanks, common dome, downcomer, thrust section and engine mounts (33 Raptors), hot-staging ring, grid fins, chines, and the hardpoints used for the tower catch.
 - Rewatch recent flight test footage and SpaceX's flight summaries. For each flight, note one thing that would interest a structures engineer.
+  - Flight 12 (May 22, 2026): first Block 3 / V3 flight (Booster 19, Ship 39), first launch from Starbase's second pad; booster lost in the Gulf after most engines failed to relight; ship completed its planned splashdown. [Wikipedia](https://en.wikipedia.org/wiki/Starship_flight_test_12)
+  - Flight 13 (Jul 24, 2026): Booster 20, Ship 40; only ten of 13 engines relit for the landing burn and the booster was lost; the ship deployed 20 Starlink V3 satellites suborbitally, relit in space and stayed intact after tipping over at splashdown. [Wikipedia](https://en.wikipedia.org/wiki/Starship_flight_test_13)
+  - Flight 14 (Sep 28, 2026): Starship reached orbit for the first time and deployed 26 Starlink V3 satellites. [Space.com](https://www.space.com/space-exploration/launches-spacecraft/starship-just-reached-orbit-for-the-1st-time-whats-next-for-the-spacex-megarocket)
 
 **Working well as an intern**
 - Keep your engineering notebook from day one.

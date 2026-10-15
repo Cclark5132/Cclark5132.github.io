@@ -160,7 +160,10 @@ export const baseWeeks: Week[] = [
       },
     ],
     context: [
-      "The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter, and burn liquid methane and liquid oxygen.",
+      "The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter (approx., public sources), and burn liquid methane and liquid oxygen.",
+      "**Booster V3 changes** (Space.com, May 14, 2026): three grid fins instead of four, each about 50% larger and mounted lower; the hot-staging ring is now attached to the top of the booster (on V2 it was a separate interstage that was jettisoned); and a redesigned fuel transfer tube (the downcomer), roughly the size of a Falcon 9 first stage, so all 33 Raptor 3 engines can ignite together. Structures lesson: bigger fins mean bigger concentrated loads into fewer frames.",
+      "**Booster 18 (Nov 2025):** the first V3 booster suffered an anomaly during gas system pressure testing, done in advance of structural proof testing, with no propellant aboard and no engines installed; Space.com reported heavy damage to the LOX tank section. Reading question: why are pressure tests staged (gas systems, then structural proof, then cryo), and what does a ground-test failure teach a structures team? Don't speculate about the cause beyond what's published.",
+      "**Flight 12 (May 22, 2026):** the first flight of Block 3 / V3 vehicles (Booster 19, Ship 39) and the first launch from Starbase's second pad. The booster was lost in the Gulf after most of its engines failed to relight for the boostback and landing burns; the ship completed its planned splashdown in the Indian Ocean. Note one structures lesson from each of these three. Sources are on the Resources page.",
     ],
     deliverable: "An NX model and drawing of a bolted flange ring, plus `mos.py` and `test_mos.py` in the repo, running the load-case margins table with yield and ultimate checks.",
     selfChecks: [
@@ -389,6 +392,7 @@ export const baseWeeks: Week[] = [
     ],
     context: [
       "Booster axial loads: engine thrust pushing up from the bottom, propellant weight, aerodynamic bending near max-Q, and the loads from being caught by the tower's chopstick arms.",
+      "V3 detail (Space.com, May 14, 2026): three grid fins instead of four, each about 50% larger and mounted lower on the booster. Think about where each fin's aerodynamic load and hinge moment go: into local frames, then the barrel wall.",
     ],
     deliverable: "Euler/Johnson plot, plus an Ansys column buckling check within a few percent of Euler.",
     selfChecks: [
@@ -436,7 +440,10 @@ export const baseWeeks: Week[] = [
         vars: [v("\\phi", "SP-8007 parameter", "—"), v("\\gamma", "knockdown factor", "—"), v("\\sigma_\\text{design}", "design buckling stress", "MPa"), v("R/t", "radius-to-thickness ratio", "—")],
       },
     ],
-    context: ["Watch a launch and note the moments of highest axial load: liftoff, max-Q, and just before engine cutoff."],
+    context: [
+      "Watch a launch and note the moments of highest axial load: liftoff, max-Q, and just before engine cutoff.",
+      "**Booster 18 (Nov 2025):** the first V3 booster suffered an anomaly during gas system pressure testing, done in advance of structural proof testing, with no propellant aboard and no engines installed; Space.com reported heavy damage to the LOX tank section. Reading question: why are pressure tests staged (gas systems, then structural proof, then cryo), and what does a ground-test failure teach a structures team? Don't speculate about the cause beyond what's published.",
+    ],
     deliverable: "Buckling function plus a one-page note explaining knockdown factors in your own words.",
     selfChecks: [
       {
@@ -533,6 +540,7 @@ export const baseWeeks: Week[] = [
     ],
     context: [
       "A reusable booster flies many times, so fatigue matters far more than on an expendable stage. Read about cryogenic proof testing of test tanks at Starbase.",
+      "Revisit **Booster 18** (Nov 2025): the anomaly came during gas system pressure testing, before structural proof testing. Connect it to this week: what is each stage of pressure testing meant to prove, and why do you want to find a weakness on the ground rather than in flight? Stick to what was published.",
     ],
     deliverable: "Tank FEA vs. hand calc comparison, plus the Miner's-rule script.",
     selfChecks: [
@@ -621,6 +629,10 @@ export const baseWeeks: Week[] = [
     context: [
       "Learn the main parts and what loads each one carries: methane and LOX tanks, common dome, downcomer, thrust section and engine mounts (33 Raptors), hot-staging ring, grid fins, chines, and the hardpoints used for the tower catch.",
       "Rewatch recent flight test footage and SpaceX's flight summaries. For each flight, note one thing that would interest a structures engineer.",
+      "**Flight 12 (May 22, 2026):** first Block 3 / V3 flight (Booster 19, Ship 39) and first launch from Starbase's second pad. Booster lost in the Gulf after most engines failed to relight; ship completed its planned splashdown.",
+      "**Flight 13 (Jul 24, 2026):** Booster 20 and Ship 40. Only ten of 13 engines relit for the landing burn and the booster was lost in the Gulf. The ship deployed 20 Starlink V3 satellites on a suborbital path, relit in space, and stayed intact after tipping over at splashdown.",
+      "**Flight 14 (Sep 28, 2026):** Starship reached orbit for the first time and deployed 26 Starlink V3 satellites.",
+      "V3 booster changes to know on day one: three larger grid fins mounted lower, an integrated hot-staging ring, and a much larger fuel transfer tube (downcomer) so all 33 Raptor 3 engines can start together.",
     ],
     deliverable: "One-page \"first week plan\" and your portfolio cleaned up and ready to show.",
     selfChecks: [],
