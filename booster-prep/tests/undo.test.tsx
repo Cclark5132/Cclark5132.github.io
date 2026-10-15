@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { act } from "react";
 import { createRoot } from "react-dom/client";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { SessionCheck } from "../src/components/Checks";
 import { Toaster } from "../src/components/Toast";
@@ -17,10 +18,10 @@ describe("Undo toast", () => {
     const root = createRoot(container);
     await act(async () => {
       root.render(
-        <>
+        <MemoryRouter>
           <SessionCheck session={session} />
           <Toaster />
-        </>,
+        </MemoryRouter>,
       );
     });
     const box = container.querySelector<HTMLInputElement>('input[type="checkbox"]')!;

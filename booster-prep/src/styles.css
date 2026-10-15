@@ -1893,3 +1893,39 @@ ol.bullets {
   flex-wrap: wrap;
   gap: 4px 20px;
 }
+
+/* Focus mode */
+.timer-big {
+  font-size: clamp(3rem, 14vw, 5.5rem);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 8px 0;
+}
+.focus .page-head .btn.primary {
+  margin-top: 12px;
+}
+.focus .btn {
+  min-height: 44px;
+}
+.session-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.session-row > .check {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.session-row > .btn {
+  flex: none;
+  margin-top: 6px;
+  min-height: 36px;
+}
+.flash {
+  animation: flash 2s ease-out;
+}
+@keyframes flash {
+  0% { background: var(--accent-soft); }
+  100% { background: transparent; }
+}

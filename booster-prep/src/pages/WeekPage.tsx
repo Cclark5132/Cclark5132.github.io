@@ -9,6 +9,7 @@ import { lessonBySlug } from "../lessons";
 import { weekProgress } from "../lib/progress";
 import { formatDate, scheduleByWeek, weekEnd } from "../lib/schedule";
 import { setDeliverable, setNote, useProgress } from "../lib/store";
+import { useScrollToParam } from "../lib/anchors";
 import { NotFound } from "./NotFound";
 
 function Notes({ week }: { week: number }) {
@@ -32,7 +33,7 @@ function Deliverable({ week, text }: { week: number; text: string }) {
   const progress = useProgress();
   const state = progress.deliverables[week] ?? { done: false, link: "" };
   return (
-    <section className="card">
+    <section className="card" id="deliverable">
       <div className="card-title">
         <h2>Deliverable</h2>
         {state.done && <span className="tag accent">Done</span>}
@@ -69,6 +70,7 @@ function Deliverable({ week, text }: { week: number; text: string }) {
 export function WeekPage() {
   const { n } = useParams();
   const progress = useProgress();
+  useScrollToParam("section");
   const week = weekByNumber(Number(n));
   if (!week) return <NotFound />;
   const days = scheduleByWeek[week.n];
@@ -172,7 +174,7 @@ export function WeekPage() {
 
         <div className="grid-auto">
           {week.context.length > 0 && (
-            <section className="card">
+            <section className="card" id="context">
               <div className="card-title">
                 <h2>Starship context</h2>
                 {week.n === 12 && (
@@ -216,7 +218,7 @@ export function WeekPage() {
         </section>
 
         {week.selfChecks.length > 0 && (
-          <section className="card" aria-labelledby="sc-h">
+          <section className="card" aria-labelledby="sc-h" id="self-check">
             <div className="card-title">
               <h2 id="sc-h">Self-check</h2>
               <span className="eyebrow">answer without notes</span>

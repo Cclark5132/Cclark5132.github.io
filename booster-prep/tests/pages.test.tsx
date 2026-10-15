@@ -12,6 +12,8 @@ const routes = [
   ...weeks.map((week) => `/week/${week.n}`),
   ...lessons.map((lesson) => `/lessons/${lesson.slug}`),
   ...["nx", "ansys", "python", "matlab", "fea"].map((tool) => `/tools/${tool}`),
+  "/focus/w2-d0-s1",
+  "/lessons/pressure-vessels?section=sec-3",
 ];
 
 describe("every page", () => {

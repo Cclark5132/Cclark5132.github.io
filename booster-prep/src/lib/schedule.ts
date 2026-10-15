@@ -1,4 +1,5 @@
 import { rhythm, type SessionKind, type Track, type Week, weeks } from "../data/plan";
+import { toolTracks } from "../data/tools";
 
 export interface Session {
   id: string;
@@ -256,4 +257,88 @@ export function locate(iso: string): { status: "before" } | { status: "after" } 
 /** Planned hours scheduled on or before a given date (what "on track" means today). */
 export function plannedHoursThrough(iso: string) {
   return allSessions.filter((session) => session.date <= iso).reduce((sum, session) => sum + session.hours, 0);
+}
+
+/*
+ * Focus-mode links: where each session's material lives. Lesson `##` headings have stable ids
+ * (`sec-1b`, `practice-problems`; see lib/anchors.ts), and tool-track steps have `step-w<week>`.
+ */
+
+/** Normal rhythm weeks: the lesson section for Monday's and Wednesday's "learn" hours. */
+const learnSections: Record<number, [monday: string, wednesday: string]> = {
+  2: ["sec-3", "sec-4"],
+  3: ["sec-1", "sec-2"],
+  4: ["sec-1", "sec-4"],
+  5: ["sec-1", "sec-4"],
+  6: ["sec-1", "sec-4"],
+  7: ["sec-1", "sec-4"],
+  8: ["sec-2", "sec-5"],
+};
+
+const toolId = (name = "") => (/ansys/i.test(name) ? "ansys" : /matlab/i.test(name) ? "matlab" : /python/i.test(name) ? "python" : "nx");
+
+export interface SessionLink {
+  to: string;
+  label: string;
+}
+
+/** The exact lesson section, tool step or page a session refers to. */
+export function sessionLink(session: Session): SessionLink {
+  const week = weeks.find((w) => w.n === session.week)!;
+  const lessonOf = (n: number) => weeks.find((w) => w.n === n)?.lesson;
+  const lesson = (slug: string | undefined, section?: string, label = "Lesson") =>
+    slug ? { to: `/lessons/${slug}${section ? `?section=${section}` : ""}`, label } : { to: `/week/${week.n}`, label: `Week ${week.n}` };
+  const tool = (id: string, w = week.n) => {
+    const track = toolTracks.find((t) => t.id === id);
+    const has = track?.path.some((step) => step.week === w);
+    return { to: `/tools/${id}${has ? `?step=w${w}` : ""}`, label: `${track?.name ?? id} track${has ? `, Week ${w} step` : ""}` };
+  };
+  const text = `${session.title} ${session.detail}`;
+
+  // An explicit "Lesson N §M" (or "§M" in a lesson week) wins.
+  const ref = text.match(/Lesson (\d+) §(\d+[a-z]?)/) ?? text.match(/§(\d+[a-z]?)/);
+  if (ref && (session.kind === "structures" || session.kind === "review")) {
+    const n = ref.length === 3 ? Number(ref[1]) : week.n;
+    const section = ref[ref.length - 1];
+    return lesson(lessonOf(n), `sec-${section}`, `Lesson ${n} §${section}`);
+  }
+  if (/Lesson \d+ Practice|practice problems|Practice \d/.test(text) && session.kind === "structures") {
+    const n = Number(text.match(/Lesson (\d+)/)?.[1] ?? week.n);
+    return lesson(lessonOf(n), "practice-problems", `Lesson ${n} practice problems`);
+  }
+
+  switch (session.kind) {
+    case "setup":
+      return { to: "/week/0", label: "Setup checklist" };
+    case "deliverable":
+      return { to: `/week/${week.n}?section=deliverable`, label: `Week ${week.n} deliverable` };
+    case "context":
+      return { to: `/week/${week.n}?section=context`, label: `Week ${week.n} Starship context` };
+    case "launch":
+      if (/anatomy/i.test(session.title)) return { to: "/anatomy", label: "Booster Anatomy" };
+      if (/flight|summar/i.test(session.title)) return { to: "/resources", label: "Resources" };
+      return { to: "/launch", label: "Launch Prep" };
+    case "capstone":
+      if (session.track === "cad") return tool(/ansys|mesh/i.test(text) ? "ansys" : "nx");
+      return { to: "/capstone", label: "Capstone" };
+    case "cad":
+      return tool(week.n === 1 ? "nx" : toolId(week.cad?.tool));
+    case "code":
+      return tool(/python/i.test(session.title) || week.n <= 2 ? "python" : toolId(week.code?.tool));
+    case "review":
+      if (week.n === 9) return tool("python");
+      if (/hardest/i.test(text)) return lesson(week.lesson, undefined, "This week's lesson");
+      return { to: `/flashcards?week=${week.n}`, label: `Week ${week.n} flashcards` };
+    case "structures": {
+      const sections = learnSections[week.n];
+      if (sections && week.n === 6) return lesson(week.lesson, session.date === week.start ? sections[0] : /SP-8007/.test(text) ? "sec-3" : sections[1]);
+      if (sections) {
+        const day = Math.round((parseDate(session.date) - parseDate(week.start)) / 86_400_000);
+        if (day === 0) return lesson(week.lesson, sections[0], `Lesson ${week.n} §${sections[0].slice(4)}`);
+        if (day === 2) return lesson(week.lesson, sections[1], `Lesson ${week.n} §${sections[1].slice(4)}`);
+        return lesson(week.lesson, "practice-problems", `Lesson ${week.n} practice problems`);
+      }
+      return lesson(week.lesson);
+    }
+  }
 }

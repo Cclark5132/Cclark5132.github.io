@@ -18,6 +18,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | `#/anatomy` | Interactive simplified booster | `pages/Anatomy.tsx` |
 | `#/flashcards` | Spaced repetition deck | `pages/Flashcards.tsx`, `lib/cards.ts` |
 | `#/resources`, `#/glossary`, `#/launch` | Reference table, glossary, launch prep | `pages/Reference.tsx` |
+| `#/focus/:id` | Focus mode for one session: link to the exact lesson section or tool step, 60-minute or 25/5 timer, Done logs minutes | `pages/Focus.tsx`, `lib/timer.ts` |
 | `#/backup` | Storage status, export / import (merge or replace), daily backups, Gist sync settings | `pages/Backup.tsx` |
 
 ## Content
@@ -27,6 +28,8 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 - `data/plan.ts` `FINALS_WEEK_START`: the Monday of the light finals week (Week 9). Change it to slide finals; `placeFinalsWeek()` re-dates Weeks 7–10 around it.
 - `lib/schedule.ts` `dateOverride()`: in `pnpm dev` only, `?date=YYYY-MM-DD` before the `#` (for example `http://localhost:5173/?date=2026-10-15#/`) mocks today's date.
 - `lessons/NN-slug.mdx`: `export const meta`, then MDX using `<Formula>`, `<Example>`, `<Problem>`/`<Solution>`, `<Callout>`, `<Figure>` with inline SVG using the `dg-*` theme classes.
+- `lib/schedule.ts` `sessionLink()`: maps each session to its material. Lesson `##` headings get stable ids from `lib/anchors.ts` (`sec-1b`, `practice-problems`), opened with `?section=`; tool steps use `?step=w<week>`. `tests/focus.test.tsx` checks every link resolves.
+- `lib/catchup.ts`: the catch-up queue, light slots for pushed sessions, and the hours-vs-plan series.
 - `lib/cards.ts`: the flashcard deck, built from every lesson `<Formula>`, week formulas, self-checks and glossary terms.
 - `lib/search.ts`: global search over pages, lessons, weeks, glossary, flashcards and tool steps.
 

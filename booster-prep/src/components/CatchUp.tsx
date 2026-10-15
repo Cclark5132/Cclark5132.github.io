@@ -35,7 +35,7 @@ export function CatchUpCard({ today }: { today: string }) {
                 <strong>{s.title}</strong>
               </div>
               <div className="row catchup-actions">
-                <Link className="btn small" to={`/week/${s.week}`}>
+                <Link className="btn small" to={`/focus/${s.id}`}>
                   Do it now
                 </Link>
                 <button type="button" className="btn small ghost" disabled={!slot} title={slot ? undefined : "No light slot left before January"} onClick={() => slot && setOverride(s.id, slot)}>

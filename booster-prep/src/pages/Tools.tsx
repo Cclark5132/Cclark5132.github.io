@@ -2,6 +2,7 @@ import { Link, NavLink, useParams } from "react-router-dom";
 import { CheckItem } from "../components/Checks";
 import { Rich } from "../components/Tex";
 import { feaPractices, nastranLiteracy, swToNx, toolTracks } from "../data/tools";
+import { useScrollToParam } from "../lib/anchors";
 import { NotFound } from "./NotFound";
 
 function ToolTabs() {
@@ -153,6 +154,7 @@ function SwTable() {
 
 export function ToolPage() {
   const { tool } = useParams();
+  useScrollToParam("step", "step-");
   if (tool === "fea") return <FeaPractices />;
   const track = toolTracks.find((t) => t.id === tool);
   if (!track) return <NotFound />;
@@ -165,8 +167,8 @@ export function ToolPage() {
       </header>
       <ToolTabs />
       <div className="stack" style={{ marginTop: 20 }}>
-        {track.path.map((step) => (
-          <section key={step.week + step.title} className="card">
+        {track.path.map((step, i) => (
+          <section key={step.week + step.title} className="card" id={track.path.findIndex((s) => s.week === step.week) === i ? `step-w${step.week}` : undefined}>
             <div className="card-title">
               <h2>{step.title}</h2>
               <Link to={`/week/${step.week}`} className="tag">
