@@ -1,0 +1,451 @@
+export const meta = {
+  slug: "pressure-vessels",
+  title: "Thin-walled pressure vessels and hydrostatic head",
+  week: 2,
+  summary: "Hoop and axial stress in a thin cylinder, dome stresses, the dome-to-barrel joint, hydrostatic head under acceleration and sizing a tank wall.",
+};
+
+A propellant tank is a pressure vessel first and a column second. Before you worry about buckling or bending, the wall has to hold the gas and liquid inside it. This lesson derives the two stresses that do most of that work, shows how domes differ from the barrel, and adds the pressure that the liquid itself creates when the vehicle accelerates.
+
+## 1. The thin-wall cylinder
+
+Take a long cylinder of mean radius $R$ and wall thickness $t$ with internal gauge pressure $p$ (pressure inside minus pressure outside). Two stresses appear in the wall:
+
+- **Hoop stress** $\sigma_h$, acting around the circumference. It resists the pressure trying to split the cylinder along its length.
+- **Axial stress** $\sigma_a$, acting along the length. It resists the pressure pushing the end caps apart.
+
+<Figure caption="A closed cylinder under internal pressure p. A small element of the wall carries hoop stress around the circumference and axial stress along the length. Hoop stress is twice axial stress.">
+<svg viewBox="0 0 600 320" role="img" aria-label="Cylinder under internal pressure with a wall element showing hoop stress arrows around the circumference and axial stress arrows along the axis">
+  <defs>
+    <marker id="l2-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l2-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <path d="M110 50 L430 50 A36 110 0 0 1 430 270 L110 270 Z" className="dg-fill-soft" />
+  <ellipse cx="110" cy="160" rx="36" ry="110" className="dg-fill" />
+  <path d="M430 50 A36 110 0 0 0 430 270" className="dg-dash" />
+  <line x1="30" y1="160" x2="72" y2="160" className="dg-dash" />
+  <line x1="468" y1="160" x2="540" y2="160" className="dg-dash" />
+  <text x="490" y="152" className="dg-text-muted">axis</text>
+  <line x1="110" y1="160" x2="110" y2="56" className="dg-line" markerEnd="url(#l2-arrow-ink)" />
+  <text x="118" y="112" className="dg-text">R</text>
+  <text x="96" y="188" className="dg-text">p</text>
+  <rect x="250" y="135" width="50" height="50" className="dg-fill" />
+  <line x1="275" y1="133" x2="275" y2="82" className="dg-accent" markerEnd="url(#l2-arrow)" />
+  <line x1="275" y1="187" x2="275" y2="238" className="dg-accent" markerEnd="url(#l2-arrow)" />
+  <text x="284" y="96" className="dg-text-accent">σh (hoop)</text>
+  <text x="284" y="234" className="dg-text-accent">σh</text>
+  <line x1="302" y1="160" x2="352" y2="160" className="dg-line" markerEnd="url(#l2-arrow-ink)" />
+  <line x1="248" y1="160" x2="198" y2="160" className="dg-line" markerEnd="url(#l2-arrow-ink)" />
+  <text x="358" y="165" className="dg-text">σa (axial)</text>
+  <text x="160" y="152" className="dg-text">σa</text>
+  <text x="70" y="304" className="dg-text-muted">hoop σh = pR/t (around)    axial σa = pR/(2t) (along)</text>
+</svg>
+</Figure>
+
+### Deriving the hoop stress
+
+Cut a length $L$ of the cylinder in half along a plane through its axis and keep one half. The pressure acting on the curved inside surface has a net force perpendicular to the cut. Its size equals the pressure times the **projected** area of the cut, $2RL$. Two strips of wall, each with area $tL$, hold the half together:
+
+$$
+p\,(2RL) = 2\,\sigma_h\,(tL) \quad\Rightarrow\quad \sigma_h = \frac{pR}{t}
+$$
+
+### Deriving the axial stress
+
+Now cut the cylinder across its axis and keep one end cap. The pressure pushes on the cap over the full circular area $\pi R^2$. The wall ring holding the cap has area $2\pi R t$:
+
+$$
+p\,(\pi R^2) = \sigma_a\,(2\pi R t) \quad\Rightarrow\quad \sigma_a = \frac{pR}{2t}
+$$
+
+<Formula
+  label="Thin-wall cylinder under internal pressure"
+  tex="\sigma_h = \frac{pR}{t}, \qquad \sigma_a = \frac{pR}{2t}"
+  vars="\sigma_h | hoop (circumferential) stress | MPa; \sigma_a | axial (longitudinal) stress, closed ends | MPa; p | internal gauge pressure | MPa; R | mean radius of the wall | mm; t | wall thickness | mm"
+/>
+
+The hoop stress is twice the axial stress because the same pressure acts on very different areas. The hoop cut sees pressure over $2RL$ but only two thin strips resist it. The end cut sees pressure over $\pi R^2$ but the whole circumference $2\pi R$ resists it. Work out the ratio and the factor of 2 falls out.
+
+### When is "thin" thin enough?
+
+The derivation assumes the hoop stress is uniform through the thickness. That is close to true when the wall is thin compared to the radius. The usual rule is $R/t \geq 10$, where the thin-wall result is within a few percent of the exact thick-wall (Lamé) solution. A booster tank wall has $R/t$ in the hundreds or more, so thin-wall theory is excellent there. Using the mean radius $R = r_i + t/2$ makes the estimate more accurate than using the inner radius.
+
+Also note what the formula leaves out. It ignores the radial stress (which is only of order $p$, tiny next to $pR/t$), and it applies only away from ends, rings, holes and welds. Near those features the wall bends locally and the stresses change.
+
+## 2. Spherical and hemispherical domes
+
+A sphere has no "long" direction. Cut it through the center and the pressure acts on $\pi R^2$, resisted by a ring of wall $2\pi R t$, exactly like the cylinder's end cap. By symmetry the stress is the same in every direction in the wall:
+
+<Formula
+  label="Thin-wall sphere or hemispherical dome"
+  tex="\sigma = \frac{pR}{2t}"
+  vars="\sigma | membrane stress, equal in all in-plane directions | MPa; p | internal gauge pressure | MPa; R | mean radius of the sphere | mm; t | wall thickness | mm"
+/>
+
+For the same pressure and radius, a hemispherical dome needs only **half** the thickness of the barrel to reach the same stress. That is why spheres are the most mass-efficient pressure vessel shape. The catch is height: a hemisphere is as tall as its radius, which costs vehicle length and volume.
+
+## 3. Ellipsoidal domes and the dome-to-barrel joint
+
+Most tank domes are flatter than a hemisphere to save length. A common reference shape is the **ellipsoid of revolution** with equator radius $a$ (equal to the barrel radius) and height $b$. The "2:1 ellipsoidal head" has $a/b = 2$. Classical membrane theory (Timoshenko) gives the stresses at the crown (the top) and the equator (where the dome meets the barrel):
+
+<Formula
+  label="Ellipsoidal dome, membrane stresses"
+  tex="\sigma_\text{crown} = \frac{p a^2}{2 b t}, \qquad \sigma_{\varphi,\text{eq}} = \frac{pa}{2t}, \qquad \sigma_{\theta,\text{eq}} = \frac{pa}{t}\left(1 - \frac{a^2}{2b^2}\right)"
+  vars="\sigma_\text{crown} | membrane stress at the crown, equal in all directions | MPa; \sigma_{\varphi,\text{eq}} | meridional stress at the equator (along the dome profile) | MPa; \sigma_{\theta,\text{eq}} | hoop stress at the equator | MPa; p | internal gauge pressure | MPa; a | equator radius (barrel radius) | mm; b | dome height (semi-minor axis) | mm; t | dome wall thickness | mm"
+/>
+
+Two things to notice:
+
+- If $a = b$ (a hemisphere), every result reduces to $pa/(2t)$, as it should.
+- If $a/b$ is greater than $\sqrt{2}$, the hoop stress at the equator turns **compressive**. For a 2:1 head, $\sigma_{\theta,\text{eq}} = (pa/t)(1 - 2) = -pa/t$. The dome is under internal pressure, yet a band near its equator is squeezed in the hoop direction. A thin, flat head can actually wrinkle (buckle) there from internal pressure alone.
+
+### The discontinuity at the joint
+
+The barrel and the dome want to grow outward by different amounts under the same pressure. For a hemispherical head on a cylinder of the same thickness, the free radial growths are:
+
+<Formula
+  label="Free radial growth under pressure"
+  tex="w_\text{cyl} = \frac{pR^2}{2Et}\,(2 - \nu), \qquad w_\text{sph} = \frac{pR^2}{2Et}\,(1 - \nu)"
+  vars="w_\text{cyl} | radial growth of the cylinder far from the joint | mm; w_\text{sph} | radial growth of the hemisphere | mm; p | internal gauge pressure | MPa; R | mean radius | mm; E | Young's modulus | MPa; t | wall thickness | mm; \nu | Poisson's ratio | —"
+/>
+
+They are welded together, so they cannot grow apart. Local shear forces and bending moments appear at the joint to force them to match. The result is **discontinuity stress**: extra bending stress in a narrow band on both sides of the weld. The band dies out over a length of order $\sqrt{Rt}$ (for $R = 4500$ mm and $t = 4$ mm, $\sqrt{Rt} \approx 134$ mm, so a few hundred millimeters).
+
+For a hemisphere the mismatch is small. For a 2:1 ellipsoidal head it is much larger, because the dome equator is in hoop compression and pulls inward while the barrel pushes outward. This is why joints are often locally thickened, why dome shapes are tuned, and why your Week 10 FEA model will show a stress jump right at the dome-to-barrel weld that hand formulas do not predict.
+
+## 4. Hydrostatic head
+
+Liquid has weight. The deeper you go below the liquid surface, the more liquid sits on top of you and the higher the pressure. When the vehicle accelerates upward, the liquid "feels" heavier, so the effective gravity is $n g$ instead of $g$:
+
+<Formula
+  label="Hydrostatic head under acceleration"
+  tex="p_\text{head} = \rho\, n\, g\, h"
+  vars="p_\text{head} | pressure from the liquid column | Pa; \rho | liquid density (LOX about 1141) | kg/m³; n | axial load factor | g's; g | gravitational acceleration, 9.81 | m/s²; h | depth below the liquid surface | m"
+/>
+
+Watch the units: $\rho n g h$ in kg/m³ × m/s² × m gives Pa (N/m²). Divide by $10^6$ to get MPa.
+
+The gas above the liquid (the **ullage**) is held at a set pressure by the pressurization system. It acts everywhere in the tank, so the wall pressure at any depth is the sum:
+
+<Formula
+  label="Total wall pressure at depth h"
+  tex="p(h) = p_u + \rho\, n\, g\, h"
+  vars="p(h) | total gauge pressure on the wall at depth h | MPa; p_u | ullage (gas) gauge pressure | MPa; \rho | liquid density | kg/m³; n | axial load factor | g's; g | gravitational acceleration, 9.81 | m/s²; h | depth below the liquid surface | m"
+/>
+
+<Figure caption="Wall pressure in a tank under acceleration. Ullage pressure acts everywhere. Hydrostatic head adds pressure that grows linearly with depth, so the highest pressure is at the bottom of the tank (the aft end, toward the engines).">
+<svg viewBox="0 0 600 360" role="img" aria-label="Tank with ullage gas above liquid, and a plot showing wall pressure increasing linearly with depth from the ullage pressure at the surface">
+  <defs>
+    <marker id="l2-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l2-arrow-b-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <path d="M90 80 Q160 30 230 80 L230 290 Q160 340 90 290 Z" className="dg-fill-soft" />
+  <path d="M90 120 L230 120 L230 290 Q160 340 90 290 Z" className="dg-fill" />
+  <text x="104" y="104" className="dg-text-muted">ullage p_u</text>
+  <text x="130" y="200" className="dg-text">liquid</text>
+  <line x1="40" y1="160" x2="40" y2="250" className="dg-line" markerEnd="url(#l2-arrow-b-ink)" />
+  <text x="14" y="150" className="dg-text">n·g</text>
+  <line x1="232" y1="140" x2="248" y2="140" className="dg-accent" markerEnd="url(#l2-arrow-b)" />
+  <line x1="232" y1="180" x2="256" y2="180" className="dg-accent" markerEnd="url(#l2-arrow-b)" />
+  <line x1="232" y1="220" x2="264" y2="220" className="dg-accent" markerEnd="url(#l2-arrow-b)" />
+  <line x1="232" y1="260" x2="272" y2="260" className="dg-accent" markerEnd="url(#l2-arrow-b)" />
+  <line x1="340" y1="120" x2="340" y2="300" className="dg-line" markerEnd="url(#l2-arrow-b-ink)" />
+  <line x1="340" y1="120" x2="570" y2="120" className="dg-thin" />
+  <path d="M340 120 L390 120 L540 290 L340 290 Z" className="dg-fill-soft" />
+  <line x1="390" y1="120" x2="540" y2="290" className="dg-accent" />
+  <line x1="340" y1="120" x2="390" y2="120" className="dg-accent" />
+  <text x="374" y="110" className="dg-text">p_u</text>
+  <text x="552" y="114" className="dg-text-muted">p</text>
+  <text x="300" y="322" className="dg-text-muted">depth h</text>
+  <text x="430" y="320" className="dg-text-accent">p_u + ρ n g h</text>
+  <text x="352" y="210" className="dg-text-muted">head</text>
+</svg>
+</Figure>
+
+Hoop stress at any station uses the **local** pressure, so it grows toward the bottom of the tank: $\sigma_h(h) = p(h)\,R/t$. Axial stress is more complicated in a real vehicle, because it also carries the weight and inertia of the structure and propellant above, plus thrust and bending. Weeks 5 and 6 combine those.
+
+<Callout kind="context" title="Where the head matters on a booster">
+Per the plan, the booster stacks a methane tank above a liquid oxygen tank, separated by a common dome, and the whole stack is about 9 m in diameter. LOX is about 2.7 times denser than liquid methane, so the bottom of the LOX tank under peak acceleration is where hydrostatic head is largest. The common dome sees methane head and methane ullage from above and LOX ullage from below, so its net load depends on the pressure difference between the two tanks.
+</Callout>
+
+## 5. Sizing the wall
+
+Set the hoop stress times the factor of safety equal to the allowable and solve for thickness:
+
+<Formula
+  label="Required wall thickness (hoop stress governs)"
+  tex="t_\text{req} = \frac{FS \cdot p \cdot R}{\sigma_\text{allow}}"
+  vars="t_\text{req} | minimum wall thickness | mm; FS | required factor of safety | —; p | design pressure at the station (ullage plus head) | MPa; R | mean radius | mm; \sigma_\text{allow} | material allowable stress | MPa"
+/>
+
+This is a pressure-only check. A real wall is also checked for axial compression and buckling, combined stress, welds and fatigue, and the thickest requirement wins.
+
+<Example title="Barrel and dome stress">
+
+A barrel has $R = 4500$ mm, $t = 4$ mm and ullage pressure $p = 0.35$ MPa (practice values). Find the hoop and axial stress in the barrel, and the stress in a hemispherical dome of the same radius and thickness.
+
+**Step 1.** Hoop stress:
+
+$$
+\sigma_h = \frac{pR}{t} = \frac{0.35 \times 4500}{4} = \frac{1575}{4} = 393.75 \text{ MPa}
+$$
+
+**Step 2.** Axial stress:
+
+$$
+\sigma_a = \frac{pR}{2t} = \frac{0.35 \times 4500}{2 \times 4} = \frac{1575}{8} = 196.9 \text{ MPa}
+$$
+
+**Step 3.** Hemispherical dome:
+
+$$
+\sigma_\text{dome} = \frac{pR}{2t} = 196.9 \text{ MPa}
+$$
+
+**Result:** $\sigma_h \approx 394$ MPa, $\sigma_a \approx 197$ MPa, dome $\approx 197$ MPa. The barrel hoop direction is the critical one.
+
+</Example>
+
+<Example title="LOX hydrostatic head at 1 g and 3 g">
+
+Liquid oxygen with $\rho = 1141$ kg/m³ stands $h = 20$ m above the bottom of a tank. Find the head pressure at the bottom at 1 g (sitting on the pad) and at 3 g (in flight).
+
+**Step 1.** Head at 1 g, in Pa:
+
+$$
+p_\text{head} = \rho\, n\, g\, h = 1141 \times 1 \times 9.81 \times 20 = 223{,}864 \text{ Pa}
+$$
+
+**Step 2.** Convert to MPa:
+
+$$
+p_\text{head} = \frac{223{,}864}{10^6} \approx 0.224 \text{ MPa}
+$$
+
+**Step 3.** At 3 g the head is linear in $n$, so it triples:
+
+$$
+p_\text{head} = 1141 \times 3 \times 9.81 \times 20 = 671{,}593 \text{ Pa} \approx 0.672 \text{ MPa}
+$$
+
+**Result:** about 0.22 MPa at 1 g and 0.67 MPa at 3 g. At 3 g the head alone is almost twice a 0.35 MPa ullage pressure.
+
+</Example>
+
+<Example title="Sizing the wall (Week 2 self-check)">
+
+Size the barrel for $R = 4500$ mm, $p = 0.35$ MPa, $FS = 1.25$ and a practice allowable of 500 MPa. Then check the margin with a 4 mm wall.
+
+**Step 1.** Required thickness:
+
+$$
+t_\text{req} = \frac{FS \cdot p \cdot R}{\sigma_\text{allow}} = \frac{1.25 \times 0.35 \times 4500}{500} = \frac{1968.75}{500} = 3.94 \text{ mm}
+$$
+
+**Step 2.** With $t = 4$ mm the hoop stress is 393.75 MPa (Example 1). Margin:
+
+$$
+MS = \frac{500}{1.25 \times 393.75} - 1 = \frac{500}{492.2} - 1 = +0.016
+$$
+
+**Result:** $t_\text{req} \approx 3.94$ mm, and a 4 mm wall passes with $MS = +0.02$. That margin covers ullage pressure only.
+
+</Example>
+
+<Example title="Ullage plus head at the bottom of the tank">
+
+Same barrel, but now at the bottom of a LOX tank at 3 g with 20 m of liquid above it. Find the total pressure, the hoop stress in a 4 mm wall, and the required thickness.
+
+**Step 1.** Total wall pressure:
+
+$$
+p = p_u + \rho n g h = 0.35 + 0.672 = 1.022 \text{ MPa}
+$$
+
+**Step 2.** Hoop stress with $t = 4$ mm:
+
+$$
+\sigma_h = \frac{1.022 \times 4500}{4} = 1149 \text{ MPa}
+$$
+
+**Step 3.** Required thickness:
+
+$$
+t_\text{req} = \frac{1.25 \times 1.022 \times 4500}{500} = 11.49 \text{ mm}
+$$
+
+**Result:** the 4 mm wall that worked at the top fails badly at the bottom. With these practice numbers the bottom needs about 11.5 mm. In general, tank walls are sized station by station, and walls are usually thicker toward the bottom where the head is largest.
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Using the sphere formula for the barrel (or the reverse)">
+The barrel's critical stress is $pR/t$. The sphere and the barrel's axial stress are $pR/(2t)$. Mixing them up is a factor of 2 error, in the unsafe direction if you use $pR/(2t)$ for the barrel hoop stress.
+</Callout>
+
+<Callout kind="mistake" title="Forgetting the load factor in the head">
+$\rho g h$ is the head on the pad. In flight the liquid is $n$ times heavier. Using 1 g for a 3 g case underestimates the head by a factor of 3.
+</Callout>
+
+<Callout kind="mistake" title="Pa versus MPa">
+$\rho n g h$ comes out in Pa. Adding 223,864 to an ullage pressure of 0.35 (MPa) is a units disaster. Convert the head to MPa before you add.
+</Callout>
+
+<Callout kind="mistake" title="Using the diameter instead of the radius">
+The formulas use $R$. A 9 m diameter tank has $R = 4500$ mm. Plugging in 9000 mm doubles every stress.
+</Callout>
+
+<Callout kind="mistake" title="Trusting pR/t at the dome joint">
+Membrane formulas are valid away from joints. At the dome-to-barrel weld the discontinuity adds local bending. Use FEA or shell discontinuity analysis there.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A cylinder has $R = 1500$ mm, $t = 3$ mm and $p = 0.6$ MPa. (a) Find the hoop and axial stress. (b) What thickness would a sphere of the same radius need to reach the same peak stress as the barrel?
+
+<Solution>
+**(a)**
+
+$$
+\sigma_h = \frac{0.6 \times 1500}{3} = 300 \text{ MPa}, \qquad \sigma_a = \frac{0.6 \times 1500}{2 \times 3} = 150 \text{ MPa}
+$$
+
+**(b)** Set the sphere stress equal to 300 MPa:
+
+$$
+\frac{pR}{2t_s} = 300 \quad\Rightarrow\quad t_s = \frac{0.6 \times 1500}{2 \times 300} = 1.5 \text{ mm}
+$$
+
+The sphere needs half the thickness of the barrel.
+</Solution>
+</Problem>
+
+<Problem n={2}>
+A thick tube has inner radius $r_i = 100$ mm, wall $t = 10$ mm ($R/t \approx 10$) and $p = 10$ MPa. The exact (Lamé) hoop stress at the inner surface is $\sigma = p\,(r_o^2 + r_i^2)/(r_o^2 - r_i^2)$. Compare it with $pR/t$ using (a) the inner radius and (b) the mean radius.
+
+<Solution>
+**Exact:** $r_o = 110$ mm.
+
+$$
+\sigma_\text{Lamé} = 10 \times \frac{110^2 + 100^2}{110^2 - 100^2} = 10 \times \frac{22{,}100}{2{,}100} = 105.2 \text{ MPa}
+$$
+
+**(a) Inner radius:**
+
+$$
+\sigma = \frac{10 \times 100}{10} = 100 \text{ MPa} \quad (5\% \text{ low})
+$$
+
+**(b) Mean radius** $R = 105$ mm:
+
+$$
+\sigma = \frac{10 \times 105}{10} = 105 \text{ MPa} \quad (0.2\% \text{ low})
+$$
+
+At $R/t = 10$ the thin-wall formula is already good, and the mean radius makes it very good.
+</Solution>
+</Problem>
+
+<Problem n={3}>
+Liquid methane has $\rho \approx 422$ kg/m³. Find the head at the bottom of 15 m of methane at 4 g. How much taller would a LOX column ($\rho = 1141$ kg/m³) need to be to give the same head?
+
+<Solution>
+**Head:**
+
+$$
+p_\text{head} = 422 \times 4 \times 9.81 \times 15 = 248{,}389 \text{ Pa} \approx 0.248 \text{ MPa}
+$$
+
+**Same head from LOX:** $\rho h$ must match, so
+
+$$
+h_\text{LOX} = \frac{422 \times 15}{1141} = 5.55 \text{ m}
+$$
+
+A LOX column only about 37% as tall gives the same head, since LOX is about 2.7 times denser.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+A 2:1 ellipsoidal dome has $a = 4500$ mm, $b = 2250$ mm, $t = 4$ mm and $p = 0.35$ MPa. Find the crown stress and both stresses at the equator.
+
+<Solution>
+**Crown:**
+
+$$
+\sigma_\text{crown} = \frac{p a^2}{2bt} = \frac{0.35 \times 4500^2}{2 \times 2250 \times 4} = \frac{7{,}087{,}500}{18{,}000} = 393.75 \text{ MPa}
+$$
+
+**Equator, meridional:**
+
+$$
+\sigma_{\varphi,\text{eq}} = \frac{pa}{2t} = \frac{0.35 \times 4500}{8} = 196.9 \text{ MPa}
+$$
+
+**Equator, hoop:**
+
+$$
+\sigma_{\theta,\text{eq}} = \frac{pa}{t}\left(1 - \frac{a^2}{2b^2}\right) = 393.75 \times (1 - 2) = -393.75 \text{ MPa}
+$$
+
+The crown is as highly stressed as the barrel's hoop direction (twice a hemisphere), and the equator has a compressive hoop stress of the same size. That compression is a buckling concern for thin heads and it drives a large mismatch at the joint.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+A barrel has $R = 4500$ mm, $t = 6$ mm, ullage pressure 0.35 MPa and a practice allowable of 500 MPa with $FS = 1.25$. At 3 g, how deep can the LOX be at a station before hoop stress gives a negative margin?
+
+<Solution>
+**Step 1.** Largest pressure the wall can take with $MS = 0$:
+
+$$
+p_\text{max} = \frac{\sigma_\text{allow}\, t}{FS\, R} = \frac{500 \times 6}{1.25 \times 4500} = 0.533 \text{ MPa}
+$$
+
+**Step 2.** Head left after the ullage pressure:
+
+$$
+p_\text{head} = 0.533 - 0.35 = 0.183 \text{ MPa} = 183{,}333 \text{ Pa}
+$$
+
+**Step 3.** Depth:
+
+$$
+h = \frac{p_\text{head}}{\rho n g} = \frac{183{,}333}{1141 \times 3 \times 9.81} = 5.46 \text{ m}
+$$
+
+Below about 5.5 m of LOX the 6 mm wall needs to get thicker.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+For the barrel in Example 1 ($\sigma_h = 393.75$ MPa, $\sigma_a = 196.9$ MPa), find the von Mises stress and the yield margin with a practice allowable of 500 MPa and $FS = 1.25$. Compare with the hoop-only margin.
+
+<Solution>
+**Von Mises** (no shear, so these are principal stresses):
+
+$$
+\sigma_{vm} = \sqrt{393.75^2 - (393.75)(196.9) + 196.9^2} = 0.866 \times 393.75 = 341.0 \text{ MPa}
+$$
+
+For any closed thin cylinder $\sigma_a = \sigma_h/2$, so $\sigma_{vm} = \sigma_h\sqrt{1 - 1/2 + 1/4} = 0.866\,\sigma_h$.
+
+**Margin:**
+
+$$
+MS = \frac{500}{1.25 \times 341.0} - 1 = \frac{500}{426.2} - 1 = +0.17
+$$
+
+The hoop-only margin was $+0.016$. Von Mises gives more margin, because biaxial tension delays yielding. Sizing on hoop stress alone is conservative for yield.
+</Solution>
+</Problem>

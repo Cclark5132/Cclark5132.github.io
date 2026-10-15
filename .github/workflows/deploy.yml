@@ -31,12 +31,38 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            booster-prep/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
+
+      # Booster Prep: a private study site served at /booster-prep/, encrypted behind a password.
+      # public/booster-prep/index.html (already copied into dist by the build above) is a committed,
+      # encrypted copy. When the BOOSTER_PREP_PASSWORD secret is set, it is rebuilt from source and
+      # re-encrypted with that password instead.
+      - name: Install Booster Prep dependencies
+        run: pnpm --dir booster-prep install --frozen-lockfile
+
+      - name: Test and lint Booster Prep
+        run: |
+          pnpm --dir booster-prep test
+          pnpm --dir booster-prep lint
+
+      - name: Build and encrypt Booster Prep
+        env:
+          BOOSTER_PREP_PASSWORD: ${{ secrets.BOOSTER_PREP_PASSWORD }}
+        run: |
+          if [ -n "$BOOSTER_PREP_PASSWORD" ]; then
+            pnpm --dir booster-prep build
+            node booster-prep/scripts/encrypt.mjs dist/booster-prep/index.html
+          else
+            echo "::notice::BOOSTER_PREP_PASSWORD is not set; deploying the committed encrypted page."
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -1,0 +1,463 @@
+export const meta = {
+  slug: "welds-and-bolted-joints",
+  title: "Welds and bolted joints",
+  week: 7,
+  summary: "Butt and fillet welds, joint efficiency, the heat-affected zone, weld defects and NDT, torque and preload, and the bolted joint diagram.",
+};
+
+A structure is only as strong as the places where its parts are joined. A booster is built from rolled stainless rings welded into barrels, so welds carry the primary loads. Bolted joints show up wherever things must come apart or attach: engine mounts, flanges, brackets, ground support interfaces. This lesson gives you the hand calcs for both and the vocabulary to talk to welders, inspectors and analysts. You have stood in a welding booth, so many of the terms here will attach to things you have already seen.
+
+## 1. Weld types: butt and fillet
+
+**Butt (groove) welds** join two plates edge to edge in the same plane. A full-penetration butt weld fuses through the whole thickness, so load flows straight across it like it flows through the parent plate. This is the weld used for the longitudinal seams and circumferential joints in a tank barrel.
+
+**Fillet welds** fill the corner between two surfaces at roughly 90°, as in a T-joint or a lap joint. Load passes through the weld's triangular cross-section, and the weld mostly carries shear. Brackets, stiffener attachments and clips are typically filleted.
+
+From the booth: the **root** is where the weld starts at the bottom of the joint, the **face** is the exposed surface, the **toes** are where the face meets the parent metal, and **penetration** is how far the fusion goes into the joint. All of these show up again in defects and inspection.
+
+### Fillet weld strength
+
+The weakest section of an equal-leg fillet weld is the **throat**, the shortest distance from the root to the face. For a 45° fillet with leg size $a$, the throat is $a\cos 45^\circ = 0.707a$.
+
+<Figure caption="Cross-section of an equal-leg fillet weld in a T-joint. The leg a is the size called out on the drawing. The throat, 0.707·a, runs from the root to the face at 45° and is the section that carries the load.">
+<svg viewBox="0 0 560 330" role="img" aria-label="Fillet weld cross-section in a T-joint showing two legs of size a, the root, and the throat line of length 0.707 a from the root to the weld face">
+  <defs>
+    <marker id="l7-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l7-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <rect x="40" y="230" width="400" height="30" className="dg-fill" />
+  <rect x="200" y="60" width="30" height="170" className="dg-fill" />
+  <path d="M230 230 L330 230 L230 130 Z" className="dg-fill-soft" />
+  <line x1="230" y1="230" x2="280" y2="180" className="dg-accent" />
+  <text x="292" y="168" className="dg-text-accent">throat = 0.707·a</text>
+  <line x1="230" y1="130" x2="380" y2="130" className="dg-dash" />
+  <line x1="370" y1="134" x2="370" y2="226" className="dg-line" markerStart="url(#l7-arrow-ink)" markerEnd="url(#l7-arrow-ink)" />
+  <text x="380" y="186" className="dg-text">a</text>
+  <line x1="230" y1="262" x2="230" y2="300" className="dg-dash" />
+  <line x1="330" y1="232" x2="330" y2="300" className="dg-dash" />
+  <line x1="234" y1="292" x2="326" y2="292" className="dg-line" markerStart="url(#l7-arrow-ink)" markerEnd="url(#l7-arrow-ink)" />
+  <text x="274" y="314" className="dg-text">a</text>
+  <text x="120" y="210" className="dg-text-muted">root</text>
+  <line x1="160" y1="206" x2="226" y2="228" className="dg-thin" />
+  <text x="250" y="122" className="dg-text-muted">toe</text>
+  <text x="340" y="250" className="dg-text-muted">toe</text>
+  <text x="305" y="192" className="dg-text-muted">face</text>
+  <line x1="215" y1="52" x2="215" y2="12" className="dg-accent" markerEnd="url(#l7-arrow)" />
+  <text x="226" y="30" className="dg-text-accent">F</text>
+  <text x="56" y="284" className="dg-text-muted">base plate</text>
+  <text x="90" y="80" className="dg-text-muted">attached plate</text>
+</svg>
+</Figure>
+
+The standard hand calc spreads the load evenly as shear on the throat area:
+
+<Formula
+  label="Fillet weld throat and shear stress"
+  tex="t_\text{throat} = 0.707\,a, \qquad \tau = \frac{F}{t_\text{throat}\,L_w}"
+  vars="t_\text{throat} | throat of an equal-leg 45° fillet | mm; a | leg size of the fillet | mm; \tau | average shear stress on the throat | MPa; F | load carried by the weld | N; L_w | total effective weld length (add up all welds sharing the load) | mm"
+/>
+
+### Butt weld strength and joint efficiency
+
+A full-penetration butt weld has the same cross-section as the plate, so the stress is just the plate stress. The weld's weakness shows up in the allowable instead, through the **joint efficiency**:
+
+<Formula
+  label="Weld joint efficiency"
+  tex="\eta = \frac{\sigma_\text{allow,weld}}{\sigma_\text{allow,parent}}, \qquad MS = \frac{\eta\,\sigma_\text{allow,parent}}{FS \times \sigma_\text{applied}} - 1"
+  vars="\eta | joint efficiency (1.0 means as strong as the parent metal) | —; \sigma_\text{allow,weld} | allowable for the welded joint, weld metal and HAZ included | MPa; \sigma_\text{allow,parent} | allowable for the unwelded parent sheet | MPa; MS | margin of safety at the weld | —; FS | factor of safety | —; \sigma_\text{applied} | applied stress across the weld (force / plate area) | MPa"
+/>
+
+Efficiencies come from testing welded specimens made with the real process, or from a design code. Never assume 1.0 without data.
+
+## 2. The heat-affected zone
+
+The **heat-affected zone (HAZ)** is the band of parent metal next to the weld that never melted but got hot enough to change its microstructure. You've seen it as the heat tint (straw to blue colors) beside a stainless bead.
+
+For **cold-worked austenitic stainless steel**, the HAZ is often the weak link. Austenitic stainless can't be hardened by heat treatment. Its extra strength comes from cold work (rolling), which builds up dislocations. Welding heat lets the metal recover and recrystallize, removing that work hardening, so the HAZ drops toward annealed strength. The weld metal itself is a casting, also near annealed strength. A sheet that started well above annealed yield can end up with a welded joint near annealed values, so $\eta$ can be well below 1.
+
+Two other effects to know:
+
+- **Sensitization.** Holding stainless in roughly the 425 to 870 °C range lets chromium carbides form at grain boundaries, which can lead to intergranular corrosion. Low-carbon "L" grades such as 304L reduce this, which is one reason they are chosen for welded structures.
+- **Distortion and residual stress.** The weld shrinks as it cools, pulling the parts out of shape and leaving residual tension near yield in and around the bead.
+
+## 3. Weld defects and inspection
+
+| Defect | What it is | What you saw in the booth |
+|---|---|---|
+| **Porosity** | gas pockets trapped in the weld metal | pinholes; caused by poor shielding gas coverage, contamination or moisture |
+| **Lack of fusion** | weld metal didn't fuse to the parent metal or to a previous pass | cold lap, travel too fast, low heat input |
+| **Incomplete penetration** | fusion didn't reach through the root | root not fused on the back side |
+| **Undercut** | a groove melted into the parent metal at the toe, left unfilled | too much current or the wrong torch angle |
+| **Cracks** | hot cracks during solidification, or cold cracks later | the most serious defect: a sharp crack is a fatigue starter |
+
+Cracks and lack of fusion are planar and sharp, so they are much worse than rounded porosity of the same size. **Non-destructive testing (NDT)** finds defects without cutting the part:
+
+- **Visual (VT):** surface profile, undercut, surface porosity, toe shape. Always first.
+- **Dye penetrant (PT):** dye wicks into surface-breaking cracks and pores, then a developer draws it out. Finds only flaws open to the surface. Magnetic particle testing doesn't work on austenitic stainless because it isn't magnetic, so PT is the usual surface method.
+- **Radiography (RT, X-ray):** shows changes in density through the thickness. Good for volumetric flaws like porosity, inclusions and incomplete penetration. Tight planar flaws (cracks, lack of fusion) can be missed if they aren't lined up with the beam.
+- **Ultrasonic (UT):** sound pulses reflect off interfaces. Good at planar flaws like lack of fusion and cracks, and it gives their depth. Coarse-grained austenitic weld metal scatters sound, which makes UT on stainless welds harder to do well.
+
+**AWS D17.1**, *Specification for Fusion Welding for Aerospace Applications*, is the aerospace fusion welding spec. It covers welder and procedure qualification and sets inspection and acceptance criteria by weld class (Class A for the most critical welds, down to Class C), including how much porosity, undercut and mismatch is allowed.
+
+### Mismatch and peaking
+
+When two rings meet at a circumferential weld, their walls may be offset radially (**mismatch**). An axial load then has to jog sideways through the joint, and that eccentricity adds a local bending stress on top of the membrane stress. **Peaking** is an angular distortion where the weld forms a slight peak or flat instead of following the circle. Under pressure the peak tries to pull round, which also causes local bending. Both raise the peak stress at the weld toe, both are imperfections that lower buckling strength (Week 6), and both get tolerances in the weld spec.
+
+<Callout kind="context" title="Welds on a booster">
+A Super Heavy booster is built by rolling stainless sheet into rings, welding the rings, and stacking them into barrel sections that are joined by long circumferential welds (per public reporting). Every one of those welds needs the right process, inspection and acceptance criteria, at a scale and rate few aerospace programs have attempted. Think about how weld defect rates, NDT coverage and joint efficiency drive both wall thickness and production speed.
+</Callout>
+
+## 4. Bolted joints: torque and preload
+
+You can't measure bolt tension directly with a wrench, so you control torque and rely on an empirical relation. Most of the torque, typically around 90%, goes into friction under the head and in the threads, so the **nut factor** $K$ lumps all of it together:
+
+<Formula
+  label="Torque–preload relation"
+  tex="T = K\,F_i\,d"
+  vars="T | installation torque | N·m; K | nut factor (about 0.2 for dry steel, lower when lubricated) | —; F_i | bolt preload (clamp force) | N; d | nominal bolt diameter | m"
+/>
+
+Units matter: with $T$ in N·m, $d$ must be in meters to get $F_i$ in newtons. Because $K$ depends on friction, the same torque can give widely different preloads. Scatter of ±25% or more is common for plain torque control, which is why aerospace fastener analysis checks both a minimum and a maximum preload.
+
+## 5. The joint diagram
+
+Preload stretches the bolt and squeezes the clamped parts (the **members**). Both act as springs:
+
+<Formula
+  label="Bolt stiffness and load factor"
+  tex="k_b = \frac{A\,E_b}{l}, \qquad C = \frac{k_b}{k_b + k_m}"
+  vars="k_b | bolt axial stiffness | N/mm; A | bolt shank area (use an effective area if threads are in the grip) | mm²; E_b | Young's modulus of the bolt | MPa; l | grip length (clamped thickness) | mm; C | joint load factor, the share of external load felt by the bolt | —; k_m | stiffness of the clamped members | N/mm"
+/>
+
+When an external tensile load $P$ pulls the joint apart, the bolt stretches a little more and the members unload a little. Since they move together, the load splits by stiffness:
+
+<Formula
+  label="Bolt and member loads under external tension"
+  tex="F_b = F_i + C\,P, \qquad F_m = F_i - (1 - C)\,P"
+  vars="F_b | total bolt tension | N; F_i | preload | N; C | joint load factor | —; P | external tensile load on the joint | N; F_m | remaining clamp force between the members (compressive) | N"
+/>
+
+The members **separate** when the clamp force reaches zero, at $(1 - C)P = F_i$. After separation, the bolt carries all of $P$ and the joint starts to rattle, which is bad for fatigue and for sealing.
+
+<Formula
+  label="Separation load"
+  tex="P_\text{sep} = \frac{F_i}{1 - C}"
+  vars="P_\text{sep} | external load at which the members lose contact | N; F_i | preload (use the minimum expected preload for this check) | N; C | joint load factor | —"
+/>
+
+<Figure caption="Joint diagram. The bolt line rises with slope k_b and the member line falls with slope k_m, meeting at the preload F_i. An external load P stretches the joint: the bolt picks up only C·P and the members lose (1 − C)·P of their clamp.">
+<svg viewBox="0 0 600 340" role="img" aria-label="Bolted joint diagram showing force versus deflection, with a rising bolt line and a falling member line meeting at the preload, and an external load split into C P on the bolt and one minus C times P on the members">
+  <defs>
+    <marker id="l7-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+  </defs>
+  <line x1="60" y1="300" x2="420" y2="300" className="dg-line" />
+  <line x1="60" y1="300" x2="60" y2="40" className="dg-line" />
+  <text x="380" y="322" className="dg-text-muted">deflection</text>
+  <text x="18" y="34" className="dg-text-muted">force</text>
+  <line x1="60" y1="300" x2="300" y2="108" className="dg-blue" />
+  <text x="140" y="284" className="dg-text">bolt, slope k_b</text>
+  <line x1="260" y1="140" x2="340" y2="300" className="dg-good" />
+  <text x="346" y="272" className="dg-text">members, slope k_m</text>
+  <line x1="60" y1="140" x2="260" y2="140" className="dg-dash" />
+  <text x="22" y="144" className="dg-text">F_i</text>
+  <circle cx="260" cy="140" r="4" className="dg-ink-fill" />
+  <line x1="285" y1="120" x2="285" y2="190" className="dg-accent" />
+  <circle cx="285" cy="120" r="4" className="dg-accent-fill" />
+  <circle cx="285" cy="190" r="4" className="dg-accent-fill" />
+  <line x1="245" y1="140" x2="285" y2="140" className="dg-thin" />
+  <text x="300" y="134" className="dg-text-accent">C·P</text>
+  <text x="300" y="172" className="dg-text-accent">(1 − C)·P</text>
+  <line x1="420" y1="120" x2="420" y2="190" className="dg-accent" markerStart="url(#l7-arrow-b)" markerEnd="url(#l7-arrow-b)" />
+  <line x1="290" y1="120" x2="414" y2="120" className="dg-thin" />
+  <line x1="290" y1="190" x2="414" y2="190" className="dg-thin" />
+  <text x="430" y="160" className="dg-text-accent">P</text>
+  <text x="430" y="104" className="dg-text-muted">bolt now F_i + C·P</text>
+  <text x="430" y="212" className="dg-text-muted">clamp now</text>
+  <text x="430" y="228" className="dg-text-muted">F_i − (1 − C)·P</text>
+</svg>
+</Figure>
+
+The key insight: because the members are usually stiffer than the bolt ($C$ is often 0.2 to 0.3), a well-preloaded bolt sees only a small part of the external load. That protects it in fatigue. Lose the preload and the bolt sees all of it.
+
+### Tension joints vs shear joints
+
+- **Tension joints** carry load along the bolt axis. Check bolt tension ($F_b$ at maximum preload), separation (at minimum preload) and thread strip.
+- **Shear joints** carry load across the bolt. A **friction (slip-critical)** joint relies on clamp force times the friction coefficient at each faying surface. A **bearing** joint lets the plates slip until the bolt shank bears on the hole, then checks bolt shear $\tau = V/(nA)$ and plate bearing. Avoid putting threads in the shear plane, where the area is smaller.
+
+**NASA-STD-5020**, *Requirements for Threaded Fastening Systems in Spaceflight Hardware*, sets how NASA programs analyze bolted joints: preload with its uncertainty, separation, bolt tension and shear with factors of safety, and fatigue. It is a good reference for how the checks above are done formally.
+
+## 6. Worked examples
+
+<Example title="Preload from torque (from the plan)">
+
+A ½-inch bolt ($d = 12.7$ mm) is torqued to $T = 100$ N·m, dry, with $K = 0.2$. Find the preload.
+
+**Step 1.** Convert the diameter to meters so the units match N·m:
+
+$$
+d = 12.7 \text{ mm} = 0.0127 \text{ m}
+$$
+
+**Step 2.** Solve the torque relation for $F_i$:
+
+$$
+F_i = \frac{T}{K\,d} = \frac{100}{0.2 \times 0.0127} = \frac{100}{0.00254} = 39{,}370 \text{ N} \approx 39{,}400 \text{ N}
+$$
+
+**Result:** about **39.4 kN** of clamp. If you had left $d$ in mm, you'd get 39.4 N, a thousand times too small.
+
+</Example>
+
+<Example title="Joint diagram for the same bolt">
+
+The bolt from Example 1 ($F_i = 39.4$ kN, tensile stress area $A_t = 91.5$ mm² for a ½-13 UNC thread) clamps a joint with $C = 0.25$. The joint sees a practice external tensile load of $P = 20$ kN.
+
+**Step 1.** Bolt load:
+
+$$
+F_b = F_i + C\,P = 39.4 + 0.25 \times 20 = 39.4 + 5.0 = 44.4 \text{ kN}
+$$
+
+**Step 2.** Remaining clamp:
+
+$$
+F_m = F_i - (1 - C)\,P = 39.4 - 0.75 \times 20 = 39.4 - 15.0 = 24.4 \text{ kN}
+$$
+
+**Step 3.** Separation load:
+
+$$
+P_\text{sep} = \frac{F_i}{1 - C} = \frac{39.4}{0.75} = 52.5 \text{ kN}
+$$
+
+**Step 4.** Bolt tensile stress:
+
+$$
+\sigma_b = \frac{F_b}{A_t} = \frac{44{,}400}{91.5} = 485 \text{ MPa}
+$$
+
+**Result:** 20 kN of external load raised the bolt load by only 5 kN (from 430 MPa to 485 MPa in the threads), and the joint stays clamped with 24.4 kN to spare. The joint would separate at 52.5 kN. In a real check you'd redo Step 3 with the *minimum* preload from torque scatter.
+
+</Example>
+
+<Example title="Fillet-welded bracket">
+
+A lap joint is held by two fillet welds, each $L = 150$ mm long, with leg $a = 5$ mm. It carries $F = 60$ kN. The practice weld shear allowable is 150 MPa and $FS = 1.4$.
+
+**Step 1.** Throat and total throat area:
+
+$$
+t_\text{throat} = 0.707 \times 5 = 3.54 \text{ mm}, \qquad A = t_\text{throat}\,L_w = 3.54 \times (2 \times 150) = 1060 \text{ mm}^2
+$$
+
+**Step 2.** Average shear stress on the throat:
+
+$$
+\tau = \frac{60{,}000}{1060} = 56.6 \text{ MPa}
+$$
+
+**Step 3.** Margin:
+
+$$
+MS = \frac{150}{1.4 \times 56.6} - 1 = \frac{150}{79.2} - 1 = +0.89
+$$
+
+**Result:** $MS = +0.89$. Note the area uses the throat (3.54 mm), not the leg (5 mm). Using the leg would overstate the area by 41%.
+
+</Example>
+
+<Example title="Longitudinal seam with joint efficiency">
+
+A barrel has $R = 4500$ mm, $t = 4$ mm and $p = 0.35$ MPa. The practice parent allowable for the cold-worked sheet is 600 MPa, the welded joint has $\eta = 0.6$, and $FS = 1.25$. Check a longitudinal (axial) seam.
+
+**Step 1.** A longitudinal seam runs along the barrel, so the hoop stress pulls straight across it:
+
+$$
+\sigma_\text{hoop} = \frac{p R}{t} = \frac{0.35 \times 4500}{4} = 393.8 \text{ MPa}
+$$
+
+**Step 2.** Weld allowable:
+
+$$
+\sigma_\text{allow,weld} = \eta\,\sigma_\text{allow,parent} = 0.6 \times 600 = 360 \text{ MPa}
+$$
+
+**Step 3.** Margin at the weld:
+
+$$
+MS = \frac{360}{1.25 \times 393.8} - 1 = \frac{360}{492.2} - 1 = -0.27
+$$
+
+**Step 4.** Thickness needed at the weld for $MS = 0$:
+
+$$
+t_\text{weld} = \frac{FS \times p R}{\sigma_\text{allow,weld}} = \frac{1.25 \times 0.35 \times 4500}{360} = 5.47 \text{ mm}
+$$
+
+**Result:** the parent sheet would pass ($600/492.2 - 1 = +0.22$) but the seam fails. Options are a locally thickened **weld land**, a better process with a higher $\eta$, or a thicker wall overall. A circumferential weld on the same barrel sees only the axial stress, $pR/(2t) = 196.9$ MPa (Practice 3).
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Using the leg instead of the throat">
+Fillet weld stress goes on the throat area, $0.707\,a\,L_w$. The leg is the drawing callout, not the load-carrying section.
+</Callout>
+
+<Callout kind="mistake" title="Using the parent allowable at a weld">
+The weld and HAZ of cold-worked stainless can be much weaker than the sheet. Apply the joint efficiency, or use welded-joint allowables from test.
+</Callout>
+
+<Callout kind="mistake" title="Diameter in millimeters in T = K F d">
+With torque in N·m, $d$ must be in meters. Leaving it in mm makes the preload 1000 times too small.
+</Callout>
+
+<Callout kind="mistake" title="Assuming the bolt carries the whole external load">
+A preloaded bolt only sees $C\,P$ until the joint separates. On the other hand, once it separates, it sees all of $P$. Check separation first.
+</Callout>
+
+<Callout kind="mistake" title="Checking with nominal preload only">
+Torque scatter is large. Use minimum preload for separation and slip checks, and maximum preload for bolt strength.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+What torque gives a preload of 25 kN on an M10 bolt ($d = 10$ mm) with $K = 0.2$?
+
+<Solution>
+Convert $d$ to meters and multiply:
+
+$$
+T = K\,F_i\,d = 0.2 \times 25{,}000 \times 0.010 = 50 \text{ N·m}
+$$
+</Solution>
+</Problem>
+
+<Problem n={2}>
+A plate is attached by two fillet welds, each 100 mm long, and carries 40 kN. The practice weld shear allowable is 140 MPa with $FS = 1.4$. What minimum leg size is needed?
+
+<Solution>
+**Allowed throat stress:**
+
+$$
+\tau_\text{max} = \frac{140}{1.4} = 100 \text{ MPa}
+$$
+
+**Required throat area and throat:**
+
+$$
+A = \frac{40{,}000}{100} = 400 \text{ mm}^2, \qquad t_\text{throat} = \frac{400}{2 \times 100} = 2.0 \text{ mm}
+$$
+
+**Leg size:**
+
+$$
+a = \frac{2.0}{0.707} = 2.83 \text{ mm}
+$$
+
+Call out a 3 mm fillet (round up to a standard size).
+</Solution>
+</Problem>
+
+<Problem n={3}>
+For the barrel in Example 4 ($R = 4500$ mm, $t = 4$ mm, $p = 0.35$ MPa, weld allowable 360 MPa, $FS = 1.25$), check a circumferential weld under pressure alone.
+
+<Solution>
+A circumferential weld runs around the barrel, so the axial stress pulls across it:
+
+$$
+\sigma_\text{axial} = \frac{p R}{2t} = \frac{0.35 \times 4500}{2 \times 4} = 196.9 \text{ MPa}
+$$
+
+$$
+MS = \frac{360}{1.25 \times 196.9} - 1 = \frac{360}{246.1} - 1 = +0.46
+$$
+
+It passes under pressure alone, with a positive margin where the longitudinal seam had a negative one. In flight, axial loads from thrust and bending also act on circumferential welds, so this is not the whole check.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+A joint has preload $F_i = 20$ kN and $C = 0.2$. (a) At what external load does it separate? (b) What is the bolt load at that point?
+
+<Solution>
+**(a)**
+
+$$
+P_\text{sep} = \frac{F_i}{1 - C} = \frac{20}{0.8} = 25 \text{ kN}
+$$
+
+**(b)**
+
+$$
+F_b = F_i + C\,P_\text{sep} = 20 + 0.2 \times 25 = 25 \text{ kN}
+$$
+
+At separation the bolt load equals the external load: the members carry nothing, so the bolt carries all of $P$.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+The Example 1 bolt ($T = 100$ N·m, $d = 12.7$ mm) has a nut factor somewhere between 0.15 and 0.25. Find the preload range and say which end you use for which check.
+
+<Solution>
+**Maximum preload** (lowest friction):
+
+$$
+F_{i,\max} = \frac{100}{0.15 \times 0.0127} = 52{,}500 \text{ N}
+$$
+
+**Minimum preload** (highest friction):
+
+$$
+F_{i,\min} = \frac{100}{0.25 \times 0.0127} = 31{,}500 \text{ N}
+$$
+
+Use the maximum (52.5 kN) for bolt tensile strength and for crushing the members. Use the minimum (31.5 kN) for separation, slip and fatigue. The same torque gives a 1.67 to 1 range of clamp force.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+A steel bolt with $d = 12.7$ mm and $E_b = 200$ GPa clamps a 25 mm grip with no threads in the grip. The members have $k_m = 3.5 \times 10^6$ N/mm. Find $k_b$ and $C$.
+
+<Solution>
+**Shank area:**
+
+$$
+A = \frac{\pi}{4} \times 12.7^2 = 126.7 \text{ mm}^2
+$$
+
+**Bolt stiffness:**
+
+$$
+k_b = \frac{A\,E_b}{l} = \frac{126.7 \times 200{,}000}{25} = 1.01 \times 10^6 \text{ N/mm}
+$$
+
+**Load factor:**
+
+$$
+C = \frac{1.01 \times 10^6}{1.01 \times 10^6 + 3.5 \times 10^6} = \frac{1.01}{4.51} = 0.22
+$$
+
+The bolt sees about 22% of any external tensile load while the joint stays clamped.
+</Solution>
+</Problem>
+
+<Problem n={7}>
+Match each inspection need to an NDT method: (a) a suspected surface crack at the toe of a stainless fillet weld, (b) porosity buried inside a butt weld, (c) lack of sidewall fusion in a thick butt weld, where you also want the flaw depth.
+
+<Solution>
+**(a) Dye penetrant (PT).** The crack is open to the surface, and magnetic particle won't work on non-magnetic austenitic stainless.
+
+**(b) Radiography (RT).** Porosity is volumetric and shows clearly as dark spots on the film or detector.
+
+**(c) Ultrasonic (UT).** Lack of fusion is planar and may be invisible to X-ray unless it lines up with the beam. UT reflects strongly off planar flaws and gives depth, though coarse-grained stainless weld metal makes it harder and needs a qualified technique.
+</Solution>
+</Problem>

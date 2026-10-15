@@ -1,0 +1,412 @@
+export const meta = {
+  slug: "stainless-and-thermal-stress",
+  title: "Stainless steel, allowables and thermal stress",
+  week: 3,
+  summary: "Why austenitic stainless stays tough at cryogenic temperature, cold work, A-basis and B-basis allowables, and thermal stress in constrained parts.",
+};
+
+Every margin you calculate has two halves: the applied stress and the allowable. Weeks 1 and 2 were about the applied stress. This lesson is about the other half: what the material can take, how that number is set, and why it changes with temperature and processing. It finishes with a load that comes from temperature alone: thermal stress.
+
+## 1. Austenitic stainless steel
+
+The 300-series stainless steels (301, 304, 304L, 316 and others) are **austenitic**. They contain roughly 18% chromium and 8% nickel, and the nickel keeps the iron in the face-centered cubic (FCC) crystal structure, called austenite, all the way down to cryogenic temperatures. The "L" in 304L means low carbon (0.03% maximum). Low carbon reduces chromium carbide formation at grain boundaries during welding, which keeps the weld zone corrosion resistant.
+
+### Why there is no ductile-to-brittle transition
+
+Ordinary carbon steel is body-centered cubic (BCC), called ferrite. In BCC metals, dislocations (the line defects whose motion *is* plastic flow) need thermal energy to move. As the temperature drops, the stress needed to move them rises steeply. Below a certain temperature it becomes easier for the metal to split along crystal planes (cleavage) than to yield. That is the **ductile-to-brittle transition temperature (DBTT)**. Below it, a notched carbon steel part can fracture with almost no warning and very little energy absorbed.
+
+FCC metals have many close-packed slip systems, and dislocations in them move easily at any temperature. The yield strength rises as they get colder, but cleavage never becomes the easier path. They stay ductile. That is why austenitic stainless steels, aluminum alloys and copper (all FCC) are used for cryogenic hardware, and why plain carbon steel is not.
+
+<Figure caption="Schematic of notched impact energy versus temperature (not to scale). BCC carbon steel drops to a low brittle shelf below its transition temperature. FCC austenitic stainless has no transition and stays tough down to liquid oxygen temperature.">
+<svg viewBox="0 0 600 320" role="img" aria-label="Schematic plot of impact energy versus temperature. Carbon steel shows a steep drop to a brittle shelf at low temperature. Austenitic stainless steel stays high at all temperatures.">
+  <line x1="70" y1="270" x2="570" y2="270" className="dg-line" />
+  <line x1="70" y1="270" x2="70" y2="40" className="dg-line" />
+  <text x="78" y="34" className="dg-text-muted">impact energy</text>
+  <text x="270" y="312" className="dg-text-muted">temperature</text>
+  <path d="M80 72 C 250 68, 420 64, 560 62" className="dg-blue" />
+  <text x="150" y="56" className="dg-text">austenitic stainless (FCC)</text>
+  <path d="M80 245 L340 240 C 390 235, 400 130, 440 122 L560 118" className="dg-accent" />
+  <text x="150" y="232" className="dg-text-accent">carbon steel (BCC)</text>
+  <text x="446" y="146" className="dg-text-muted">upper shelf</text>
+  <line x1="400" y1="100" x2="400" y2="270" className="dg-dash" />
+  <text x="408" y="206" className="dg-text-muted">DBTT</text>
+  <line x1="112" y1="80" x2="112" y2="270" className="dg-dash" />
+  <text x="66" y="290" className="dg-text-muted">−183 °C (LOX)</text>
+  <line x1="502" y1="270" x2="502" y2="276" className="dg-line" />
+  <text x="484" y="290" className="dg-text-muted">20 °C</text>
+</svg>
+</Figure>
+
+### Strength rises at cryogenic temperature
+
+For austenitic stainless steel, both yield and ultimate strength increase as temperature falls, and the elongation stays useful. The ultimate strength rises especially sharply. Part of this comes from the steel itself and part from the fact that 301 and 304 are **metastable**: plastic straining, especially at low temperature, turns some of the austenite into martensite, which is harder. You will plot published yield-versus-temperature data in this week's deliverable, so use real data there rather than a rule of thumb.
+
+Two cautions. First, the design allowable must match the temperature the part actually sees. A part that is cold in flight may be warm during a ground test or during reentry heating. Second, the extra cryogenic strength only helps if the analysis is done at that temperature with allowables that are valid for it.
+
+### Cold work and work hardening
+
+Rolling sheet at room temperature (cold rolling) packs the metal with dislocations. They tangle and block each other, so it takes more stress to make the metal flow again. That is **work hardening**. Austenitic stainless steels work harden strongly, which is why 301 and 304 sheet is sold in tempers such as annealed, 1/4 hard, 1/2 hard and full hard (ASTM A666). The same alloy can have a yield strength several times higher in a full-hard temper than in the annealed condition.
+
+This is why "the yield strength of 304L" is not one number. It depends on:
+
+- **Temper (amount of cold work).** More cold work means higher yield and less elongation.
+- **Direction.** Cold-rolled sheet can have different properties along and across the rolling direction, and in tension versus compression.
+- **Heat.** Welding heats the metal near the weld enough to undo some of the cold work. The heat-affected zone of a cold-worked sheet can be much weaker than the parent sheet, so welds often get their own (lower) allowables.
+- **Temperature.** As above.
+
+## 2. Design allowables
+
+A material allowable is not the average strength. Strength varies from heat to heat, sheet to sheet and specimen to specimen. An allowable is a **statistical lower bound** chosen so that almost all material in service is at least that strong.
+
+- **A-basis:** at least 99% of the population of values is expected to equal or exceed it, with 95% confidence.
+- **B-basis:** at least 90% of the population is expected to equal or exceed it, with 95% confidence.
+- **S-basis:** a specification minimum, the value the material spec requires, without a full statistical basis.
+
+A-basis values are lower than B-basis values. As a common practice, A-basis is used where a single load path carries the load and its failure would lose the structure. B-basis is used for redundant structure, where another load path can pick up the load if one element fails.
+
+The **MMPDS** (Metallic Materials Properties Development and Standardization) handbook, the successor of MIL-HDBK-5, is the standard source of A-basis and B-basis values for aerospace metals. When a company uses its own alloy or processing, it generates its own allowables by testing many specimens and running the same statistics.
+
+For a large sample from a normal distribution, the basis values look like this:
+
+<Formula
+  label="Statistical allowable (normal distribution)"
+  tex="\sigma_\text{basis} = \bar{x} - k\,s"
+  vars="\sigma_\text{basis} | A-basis or B-basis allowable | MPa; \bar{x} | mean of the test results | MPa; s | standard deviation of the test results | MPa; k | one-sided tolerance factor. It grows as the sample gets smaller. For very large samples, k → 2.326 (A-basis) and k → 1.282 (B-basis) | —"
+/>
+
+The tolerance factor $k$ carries the "95% confidence" part. With few specimens you are less sure of the true mean and spread, so $k$ is larger and the allowable drops. Testing more specimens raises the allowable even if the average does not change.
+
+<Callout kind="context" title="Why stainless for Starship">
+The plan lists the public reasons for choosing stainless steel over carbon fiber or aluminum-lithium: low cost, strength at cryogenic temperatures, tolerance of reentry heat, and ease of welding and repair. Public statements also describe SpaceX-developed 300-series variants, but their properties are not public, so every allowable in these lessons is a practice value.
+</Callout>
+
+## 3. Thermal strain
+
+A free bar that changes temperature by $\Delta T$ changes length with no stress at all:
+
+<Formula
+  label="Free thermal strain"
+  tex="\varepsilon_T = \alpha\,\Delta T, \qquad \delta_T = \alpha\,\Delta T\,L"
+  vars="\varepsilon_T | thermal strain | mm/mm; \alpha | coefficient of thermal expansion (about 17 × 10⁻⁶ for 304L near room temperature) | 1/°C; \Delta T | temperature change, final minus initial (negative when cooling) | °C; \delta_T | free change in length | mm; L | original length | mm"
+/>
+
+The total strain at a point is the mechanical part plus the thermal part, $\varepsilon = \sigma/E + \alpha\,\Delta T$. Stress comes only from the mechanical part.
+
+The value of $\alpha$ itself falls as the metal gets colder. Using the room-temperature value over a cooldown from ambient to LOX temperature overestimates the contraction. Real cryogenic calculations use the integrated (total) thermal contraction from published tables. The examples here use a constant $\alpha$ to keep the arithmetic clear.
+
+## 4. Thermal stress
+
+### Fully constrained bar
+
+Put a bar between two rigid walls and cool it. It wants to shrink by $\delta_T = \alpha\,\Delta T\,L$, but the walls hold its length fixed. The walls must pull on the bar with a force $P$ that stretches it back by the same amount.
+
+<Figure caption="A bar between rigid walls is cooled. Free, it would shrink by α·ΔT·L (dashed). The walls hold its length, so they pull it in tension, and σ = E·α·|ΔT|.">
+<svg viewBox="0 0 600 300" role="img" aria-label="Bar fixed between two rigid walls, cooled, with the walls pulling it in tension. A dashed outline below shows the shorter length the bar would have if it were free.">
+  <defs>
+    <marker id="l3-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+    <marker id="l3-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <rect x="50" y="50" width="30" height="210" className="dg-fill" />
+  <rect x="520" y="50" width="30" height="210" className="dg-fill" />
+  <text x="22" y="40" className="dg-text-muted">rigid wall</text>
+  <text x="480" y="40" className="dg-text-muted">rigid wall</text>
+  <rect x="80" y="110" width="440" height="40" className="dg-fill-soft" />
+  <text x="230" y="135" className="dg-text">bar, cooled by ΔT</text>
+  <line x1="160" y1="90" x2="100" y2="90" className="dg-accent" markerEnd="url(#l3-arrow)" />
+  <line x1="440" y1="90" x2="500" y2="90" className="dg-accent" markerEnd="url(#l3-arrow)" />
+  <text x="168" y="95" className="dg-text-accent">P</text>
+  <text x="418" y="95" className="dg-text-accent">P</text>
+  <text x="230" y="80" className="dg-text-accent">tension</text>
+  <rect x="80" y="190" width="400" height="30" className="dg-dash" />
+  <text x="160" y="210" className="dg-text-muted">free length after cooling</text>
+  <line x1="480" y1="225" x2="480" y2="250" className="dg-thin" />
+  <line x1="483" y1="240" x2="517" y2="240" className="dg-line" markerStart="url(#l3-arrow-ink)" markerEnd="url(#l3-arrow-ink)" />
+  <text x="372" y="270" className="dg-text">δT = α·|ΔT|·L</text>
+</svg>
+</Figure>
+
+Compatibility says the total change in length is zero:
+
+$$
+\delta_T + \delta_P = \alpha\,\Delta T\,L + \frac{PL}{EA} = 0 \quad\Rightarrow\quad \sigma = \frac{P}{A} = -E\,\alpha\,\Delta T
+$$
+
+<Formula
+  label="Fully constrained thermal stress (uniaxial)"
+  tex="\sigma_T = -E\,\alpha\,\Delta T, \qquad \left|\sigma_T\right| = E\,\alpha\,\left|\Delta T\right|"
+  vars="\sigma_T | thermal stress, tension positive | MPa; E | Young's modulus (193,000 for 304L) | MPa; \alpha | coefficient of thermal expansion | 1/°C; \Delta T | temperature change, final minus initial | °C"
+/>
+
+Cooling ($\Delta T$ negative) gives tension. Heating gives compression, which can also buckle a slender part. Notice that the length and area cancel. A short thick bar and a long thin bar of the same material see the same thermal stress for the same $\Delta T$.
+
+### Plate restrained in both directions
+
+A patch of tank wall or a plate that is restrained in both in-plane directions is worse. Set both strains to zero with $\sigma_x = \sigma_y = \sigma$:
+
+$$
+\varepsilon_x = \frac{\sigma - \nu\,\sigma}{E} + \alpha\,\Delta T = 0 \quad\Rightarrow\quad \sigma = -\frac{E\,\alpha\,\Delta T}{1 - \nu}
+$$
+
+<Formula
+  label="Thermal stress, plate restrained in both directions"
+  tex="\sigma_x = \sigma_y = -\frac{E\,\alpha\,\Delta T}{1 - \nu}"
+  vars="\sigma_x, \sigma_y | equal biaxial thermal stresses | MPa; E | Young's modulus | MPa; \alpha | coefficient of thermal expansion | 1/°C; \Delta T | temperature change | °C; \nu | Poisson's ratio (about 0.29 for 304L) | —"
+/>
+
+With $\nu = 0.29$ the stress is $1/(1 - 0.29) = 1.41$ times the uniaxial value. In the other direction, Poisson contraction no longer relieves anything because that direction is restrained too.
+
+### Partial constraint
+
+Real supports are not perfectly rigid. Model the support as a spring of stiffness $k$ at one end of the bar. Compatibility now says the bar's change in length equals the spring's movement, which gives:
+
+<Formula
+  label="Bar restrained by a spring"
+  tex="\sigma_T = \frac{-E\,\alpha\,\Delta T}{1 + \dfrac{EA}{kL}}"
+  vars="\sigma_T | thermal stress in the bar | MPa; E | Young's modulus | MPa; \alpha | coefficient of thermal expansion | 1/°C; \Delta T | temperature change | °C; A | bar cross-sectional area | mm²; k | stiffness of the support | N/mm; L | bar length | mm"
+/>
+
+The ratio $EA/(kL)$ compares the bar's stiffness with the support's. A rigid support ($k \to \infty$) gives the full $E\alpha\Delta T$. A support as stiff as the bar halves it. A soft support ($k \to 0$) gives almost no stress. This is the whole design strategy for thermal loads: **let it move**. Flexible brackets, sliding joints, bellows in feed lines and stand-offs all reduce $k$ on purpose.
+
+### Why joints between cold and warm regions matter
+
+On a cryogenic vehicle, a tank wall wetted by LOX (about −183 °C at 1 atm) is welded to structure that may sit near ambient temperature. The cold part wants to shrink and the warm part does not, so the junction is constrained exactly as in the bar above. The same happens through the thickness of a wall with a temperature gradient, at a bolted joint between two materials with different $\alpha$, and across a common dome with a colder propellant on one side.
+
+Thermal stress is **displacement-controlled**. If the material yields, the stress stops growing because the part simply accommodates the strain. Pressure vessel codes such as ASME Section VIII Division 2 therefore classify it as a secondary stress with different limits from pressure stress. It still matters: repeated cooldowns cycle the stress, which drives fatigue at welds, and it adds to the pressure stress at the joint.
+
+<Example title="Fully constrained steel part (Week 3 self-check)">
+
+A steel part is fully constrained and cools by 200 °C. $E = 193$ GPa and $\alpha = 17 \times 10^{-6}$ /°C. Find the thermal stress.
+
+**Step 1.** Convert $E$ to MPa:
+
+$$
+E = 193 \text{ GPa} = 193{,}000 \text{ MPa}
+$$
+
+**Step 2.** Thermal strain that the walls must cancel:
+
+$$
+\alpha\,\Delta T = 17 \times 10^{-6} \times (-200) = -3.4 \times 10^{-3}
+$$
+
+**Step 3.** Stress:
+
+$$
+\sigma_T = -E\,\alpha\,\Delta T = -193{,}000 \times (-3.4 \times 10^{-3}) = +656.2 \text{ MPa}
+$$
+
+**Result:** about 656 MPa in **tension**. The ASTM A240 minimum yield for annealed 304L is 170 MPa, so an annealed part would yield long before reaching this. That is why parts are rarely fully constrained.
+
+</Example>
+
+<Example title="Uniaxial versus biaxial restraint">
+
+A 304L plate ($E = 193{,}000$ MPa, $\alpha = 17 \times 10^{-6}$ /°C, $\nu = 0.29$) cools by 50 °C. Find the thermal stress if it is restrained (a) in one direction only and (b) in both in-plane directions.
+
+**Step 1.** Uniaxial restraint:
+
+$$
+\sigma_T = E\,\alpha\,\left|\Delta T\right| = 193{,}000 \times 17 \times 10^{-6} \times 50 = 164.1 \text{ MPa}
+$$
+
+**Step 2.** Biaxial restraint:
+
+$$
+\sigma_T = \frac{E\,\alpha\,\left|\Delta T\right|}{1 - \nu} = \frac{164.1}{1 - 0.29} = \frac{164.1}{0.71} = 231.1 \text{ MPa}
+$$
+
+**Result:** 164 MPa uniaxial and 231 MPa biaxial, both tension. Restraint in the second direction adds 41%.
+
+</Example>
+
+<Example title="Bar on a flexible support">
+
+A 304L bar has $L = 1000$ mm, $A = 100$ mm², $E = 193{,}000$ MPa and $\alpha = 17 \times 10^{-6}$ /°C. One end is fixed and the other is held by a bracket with $k = 19{,}300$ N/mm. The bar cools by 200 °C. Find the stress.
+
+**Step 1.** Stiffness ratio:
+
+$$
+\frac{EA}{kL} = \frac{193{,}000 \times 100}{19{,}300 \times 1000} = \frac{1.93 \times 10^7}{1.93 \times 10^7} = 1.0
+$$
+
+**Step 2.** Stress:
+
+$$
+\sigma_T = \frac{E\,\alpha\,\left|\Delta T\right|}{1 + EA/(kL)} = \frac{656.2}{1 + 1.0} = 328.1 \text{ MPa}
+$$
+
+**Step 3.** Force in the bracket:
+
+$$
+P = \sigma_T\,A = 328.1 \times 100 = 32{,}810 \text{ N} \approx 32.8 \text{ kN}
+$$
+
+**Result:** a bracket as stiff as the bar cuts the thermal stress in half, to 328 MPa.
+
+</Example>
+
+<Example title="A-basis versus B-basis margin">
+
+A redundant fitting and a single-load-path fitting are made of the same sheet. Practice allowables are 300 MPa (B-basis) and 280 MPa (A-basis). Each sees an applied stress of 200 MPa with $FS = 1.25$. Find each margin.
+
+**Step 1.** Factored stress, same for both:
+
+$$
+FS \times \sigma_\text{applied} = 1.25 \times 200 = 250 \text{ MPa}
+$$
+
+**Step 2.** Redundant fitting, B-basis:
+
+$$
+MS = \frac{300}{250} - 1 = +0.20
+$$
+
+**Step 3.** Single-load-path fitting, A-basis:
+
+$$
+MS = \frac{280}{250} - 1 = +0.12
+$$
+
+**Result:** the same part and load give $+0.20$ or $+0.12$ depending on which allowable basis applies. Always state the basis next to the margin.
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Getting the sign backwards">
+Cooling a constrained part puts it in **tension**, not compression. Write $\Delta T$ as final minus initial and use $\sigma = -E\alpha\Delta T$, or reason it out: the part wants to shrink and the supports pull it back.
+</Callout>
+
+<Callout kind="mistake" title="Mixing GPa and MPa">
+$E = 193$ GPa is 193,000 MPa. Plugging in 193 gives a stress 1000 times too small, which can look reassuringly safe.
+</Callout>
+
+<Callout kind="mistake" title="Using one yield strength for every condition">
+Annealed, cold-rolled, welded, warm and cold 304L all have different allowables. Use the allowable for the actual temper, direction, weld condition and temperature.
+</Callout>
+
+<Callout kind="mistake" title="Treating the mean test strength as the allowable">
+Half of the material is weaker than the mean. Allowables are A-basis or B-basis lower bounds, and they drop when fewer specimens are tested.
+</Callout>
+
+<Callout kind="mistake" title="Ignoring the second direction">
+A plate or shell restrained in both directions sees $E\alpha\Delta T/(1-\nu)$, about 41% more than the uniaxial value for steel.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A 304L ring of 9000 mm diameter cools by 200 °C and is free to shrink. Using a constant $\alpha = 17 \times 10^{-6}$ /°C, how much do its diameter and circumference shrink? Is the constant-$\alpha$ answer high or low?
+
+<Solution>
+**Diameter:**
+
+$$
+\Delta D = \alpha\,\left|\Delta T\right|\,D = 17 \times 10^{-6} \times 200 \times 9000 = 30.6 \text{ mm}
+$$
+
+**Circumference:**
+
+$$
+\Delta C = \pi\,\Delta D = \pi \times 30.6 = 96.1 \text{ mm}
+$$
+
+The answer is **high**, because $\alpha$ is smaller at low temperature. A real calculation would use integrated contraction data. Either way, a tank shrinks by centimeters when it is filled with cryogenic propellant, and everything attached to it has to allow for that.
+</Solution>
+</Problem>
+
+<Problem n={2}>
+Repeat the fully constrained 200 °C cooldown for an aluminum alloy with practice values $E = 72$ GPa and $\alpha = 23 \times 10^{-6}$ /°C. Compare with the 656 MPa for steel.
+
+<Solution>
+$$
+\sigma_T = E\,\alpha\,\left|\Delta T\right| = 72{,}000 \times 23 \times 10^{-6} \times 200 = 331.2 \text{ MPa}
+$$
+
+Aluminum expands more per degree but is much less stiff, so the constrained stress is about half of steel's. Thermal stress depends on the product $E\alpha$, not on either one alone.
+</Solution>
+</Problem>
+
+<Problem n={3}>
+A fully constrained 304L part ($E = 193{,}000$ MPa, $\alpha = 17 \times 10^{-6}$ /°C) has a practice allowable of 300 MPa and $FS = 1.25$. What is the largest temperature change it can take with $MS \geq 0$?
+
+<Solution>
+**Step 1.** Largest allowed stress:
+
+$$
+\sigma_\text{max} = \frac{300}{1.25} = 240 \text{ MPa}
+$$
+
+**Step 2.** Solve $E\alpha|\Delta T| = 240$:
+
+$$
+\left|\Delta T\right| = \frac{240}{193{,}000 \times 17 \times 10^{-6}} = \frac{240}{3.281} = 73.1 \text{ °C}
+$$
+
+A fully constrained steel part can only take about 73 °C of temperature change at this allowable. A cooldown to LOX temperature is close to three times that.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+For the bar in Example 3 ($L = 1000$ mm, $A = 100$ mm², cooled by 200 °C), what bracket stiffness $k$ keeps the thermal stress at 200 MPa?
+
+<Solution>
+**Step 1.** Required stiffness ratio:
+
+$$
+\frac{656.2}{1 + EA/(kL)} = 200 \quad\Rightarrow\quad \frac{EA}{kL} = \frac{656.2}{200} - 1 = 2.281
+$$
+
+**Step 2.** Solve for $k$:
+
+$$
+k = \frac{EA}{2.281\,L} = \frac{193{,}000 \times 100}{2.281 \times 1000} = \frac{19{,}300}{2.281} = 8461 \text{ N/mm}
+$$
+
+The bracket must be less than half as stiff as the bar (19,300 N/mm) to get the stress down to 200 MPa.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+A large number of tensile tests on one sheet product give a mean yield of 320 MPa and a standard deviation of 10 MPa. Treating the sample as very large and normally distributed, estimate the B-basis and A-basis values.
+
+<Solution>
+**B-basis** ($k \approx 1.282$):
+
+$$
+\sigma_B = 320 - 1.282 \times 10 = 307.2 \text{ MPa}
+$$
+
+**A-basis** ($k \approx 2.326$):
+
+$$
+\sigma_A = 320 - 2.326 \times 10 = 296.7 \text{ MPa}
+$$
+
+With a small sample, $k$ would be larger and both values would drop. The spread (standard deviation) matters as much as the mean.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+Explain why 304L stays ductile in liquid oxygen while a carbon steel bracket might shatter, and name one other consequence of cooling 304L.
+
+<Solution>
+**Crystal structure.** 304L is austenitic (FCC). Dislocations in FCC metals move easily at all temperatures, so the metal yields before it can cleave and there is no ductile-to-brittle transition. Carbon steel is ferritic (BCC). Dislocation motion in BCC needs thermal energy, so at low temperature the yield stress climbs until cleavage fracture becomes easier than yielding. Below the DBTT a notched carbon steel part breaks in a brittle way.
+
+**Another consequence.** 304L gets stronger when cold, and some austenite can transform to martensite under strain. It also shrinks, so constrained cold parts pick up tensile thermal stress.
+</Solution>
+</Problem>
+
+<Problem n={7}>
+A weld joins a cold-worked 304L sheet to a ring frame. The weld is the only load path for a pressure load. Which allowable basis and which material condition should you use for the weld margin?
+
+<Solution>
+**Basis:** a single load path whose failure would lose the structure takes an **A-basis** allowable.
+
+**Condition:** welding heat undoes some of the cold work near the weld, so the parent sheet's cold-worked allowable is not valid there. Use a weld or heat-affected-zone allowable for the actual weld process, at the temperature the joint sees in the load case.
+</Solution>
+</Problem>

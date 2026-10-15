@@ -1394,6 +1394,24 @@ a {
   text-underline-offset: 4px;
 }
 
+/* A small orange marker after the name in the footer. It is also the entrance to a private page. */
+.site-footer a.footer-mark {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  /* 24px tap target around a 6px square. */
+  box-sizing: content-box;
+  padding: 9px;
+  margin: -9px -9px -9px 1px;
+  vertical-align: 0.1em;
+  background: var(--color-orange) content-box;
+  text-decoration: none;
+}
+
+.site-footer a.footer-mark:focus-visible {
+  outline-offset: 3px;
+}
+
 /* ---------- Project page ---------- */
 
 .project-page {

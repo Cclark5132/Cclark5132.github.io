@@ -1,0 +1,484 @@
+export const meta = {
+  slug: "stiffeners-kt-gdt",
+  title: "Stiffeners, stress concentrations and GD&T",
+  week: 4,
+  summary: "Ring frames and stringers, beam bending and shear flow, section properties of stiffeners, stress concentration factors and the GD&T controls that matter for large thin rings.",
+};
+
+A booster barrel is a thin shell, and a thin shell on its own is floppy. This week covers three things that decide whether a thin-walled structure actually works: the **stiffeners** that keep it stable, the **stress concentrations** that appear wherever you cut a hole or change shape, and the **GD&T** that tells the shop how close to perfect the hardware has to be.
+
+## 1. Ring frames and stringers
+
+A stiffened shell has two kinds of stiffener, and they do different jobs.
+
+- **Stringers** run **lengthwise** (along the vehicle axis). They share the axial load with the skin and act as small columns that resist **axial buckling**. A stringer adds bending stiffness exactly in the direction the skin wants to buckle under compression.
+- **Ring frames** run **around** the circumference. They keep the shell **round**, set the **bay length** of each stringer (the stringer is a column that spans from one frame to the next), and resist **general instability**, where the whole stiffened shell, stringers and all, buckles as one.
+
+Think of it this way: stringers carry load; frames hold the shape so the stringers can carry load. If you remove the frames, each stringer becomes a very long column and buckles at a much lower load (next week you'll see that doubling the length cuts the buckling load to a quarter). If you remove the stringers, the frames keep the shell round, but the thin skin alone has to resist axial buckling.
+
+<Callout kind="context" title="How the booster is built">
+Public photos and videos show that Starship's stainless-steel booster is built by rolling flat sheet into rings about 9 m in diameter (approx., public sources), welding the rings into barrel sections and stacking the sections. Where stiffeners are used, how many, and what shape they have are design details you'll learn on the team. Don't assume a layout from photos. The physics in this lesson is the same either way.
+</Callout>
+
+## 2. Bending of beams and thin walls
+
+A stringer under a lateral or eccentric load bends. In the elastic range, bending stress varies linearly with distance from the **neutral axis**, which passes through the **centroid** of the cross-section:
+
+<Formula
+  label="Bending stress (flexure formula)"
+  tex="\sigma = \frac{M\,y}{I}"
+  vars="\sigma | normal stress from bending at distance y | MPa; M | bending moment at the section | N·mm; y | distance from the neutral axis to the point of interest | mm; I | second moment of area about the neutral axis | mm⁴"
+/>
+
+The largest stress is at the fiber farthest from the neutral axis, $y = c$. For a non-symmetric section like a T, the two extreme fibers are at different distances, so the two faces see different stresses.
+
+The same formula works for a whole thin-walled barrel. A thin cylinder of radius $R$ and wall $t$ has $I = \pi R^3 t$ and $c = R$, so $\sigma = M/(\pi R^2 t)$, the bending term from Lesson 1.
+
+### Shear flow
+
+A shear force $V$ makes shear stress inside the section. It is zero at the free edges and largest near the neutral axis:
+
+<Formula
+  label="Shear flow and transverse shear stress"
+  tex="q = \frac{V\,Q}{I}, \qquad \tau = \frac{V\,Q}{I\,t}"
+  vars="q | shear flow: shear force per unit length along the wall | N/mm; \tau | average shear stress across the wall at the cut | MPa; V | transverse shear force at the section | N; Q | first moment of area of the part of the section beyond the cut, about the neutral axis | mm³; I | second moment of area of the whole section about the neutral axis | mm⁴; t | wall thickness at the cut | mm"
+/>
+
+**Shear flow** $q = \tau t$ is the natural quantity in thin walls because it stays continuous around the section, like water flowing in a pipe. Where the wall gets thinner, the same $q$ makes a higher $\tau$. Shear flow is also what loads the welds, rivets or bonds that attach a stringer to the skin.
+
+## 3. Section properties of a stiffener
+
+To use the formulas above you need three section properties: the centroid location $\bar{y}$, the second moment of area $I$ and the first moment $Q$.
+
+<Formula
+  label="Centroid of a built-up section"
+  tex="\bar{y} = \frac{\sum A_i\,y_i}{\sum A_i}"
+  vars="\bar{y} | centroid height above the reference line | mm; A_i | area of rectangle i | mm²; y_i | centroid height of rectangle i above the reference line | mm"
+/>
+
+<Formula
+  label="Parallel-axis theorem"
+  tex="I = \sum \left( I_{c,i} + A_i\,d_i^2 \right), \qquad I_{c,i} = \frac{b_i h_i^3}{12}, \qquad d_i = y_i - \bar{y}"
+  vars="I | second moment of area of the section about its centroidal axis | mm⁴; I_{c,i} | second moment of rectangle i about its own centroid | mm⁴; b_i | width of rectangle i (parallel to the bending axis) | mm; h_i | height of rectangle i (perpendicular to the bending axis) | mm; A_i | area of rectangle i | mm²; d_i | distance from the centroid of rectangle i to the section centroid | mm"
+/>
+
+<Formula
+  label="First moment of area"
+  tex="Q = \sum_\text{beyond cut} A_j\,\bar{y}_j"
+  vars="Q | first moment of the area beyond the cut, about the neutral axis | mm³; A_j | area of each piece on the far side of the cut | mm²; \bar{y}_j | distance from the neutral axis to the centroid of piece j | mm"
+/>
+
+The $A d^2$ terms usually dominate. That is why stiffeners put material far from the neutral axis: a flange moved twice as far away contributes four times as much $I$.
+
+<Figure caption="T-section stringer (flange 40 × 4 mm, web 36 × 3 mm) from Worked Example 1. The centroid sits 29.9 mm above the bottom of the web, close to the flange. The bending stress diagram on the right is linear and is zero at the neutral axis (NA).">
+<svg viewBox="0 0 560 300" role="img" aria-label="T-section cross-section with centroid and neutral axis marked, and a linear bending stress distribution to the right">
+  <defs>
+    <marker id="l4-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-ink-fill" />
+    </marker>
+  </defs>
+  <rect x="100" y="90" width="160" height="16" className="dg-fill" />
+  <rect x="174" y="106" width="12" height="144" className="dg-fill" />
+  <text x="152" y="80" className="dg-text">40 × 4</text>
+  <text x="196" y="200" className="dg-text">36 × 3</text>
+  <line x1="80" y1="130" x2="300" y2="130" className="dg-dash" />
+  <circle cx="180" cy="130" r="5" className="dg-accent-fill" />
+  <text x="200" y="125" className="dg-text-accent">NA (centroid)</text>
+  <line x1="70" y1="250" x2="70" y2="134" className="dg-line" markerStart="url(#l4-arrow)" markerEnd="url(#l4-arrow)" />
+  <line x1="60" y1="250" x2="174" y2="250" className="dg-thin" />
+  <text x="20" y="196" className="dg-text">ȳ</text>
+  <text x="12" y="214" className="dg-text-muted">29.9</text>
+  <line x1="400" y1="80" x2="400" y2="262" className="dg-thin" />
+  <polygon points="400,90 373,90 400,130" className="dg-fill-soft" />
+  <polygon points="400,130 480,250 400,250" className="dg-fill-soft" />
+  <line x1="373" y1="90" x2="480" y2="250" className="dg-accent" />
+  <text x="340" y="80" className="dg-text-accent">−53 MPa</text>
+  <text x="420" y="276" className="dg-text-accent">+159 MPa</text>
+  <text x="410" y="134" className="dg-text-muted">σ = 0</text>
+</svg>
+</Figure>
+
+<Example title="Section properties and stresses in a T-section stringer">
+
+A T-section stringer has a flange 40 mm wide and 4 mm thick on top of a web 3 mm thick and 36 mm tall (total height 40 mm). It carries a bending moment $M = 200{,}000$ N·mm (200 N·m) that compresses the flange, and a shear force $V = 2{,}000$ N. Find the centroid, $I$, the extreme-fiber bending stresses and the shear stress at the neutral axis.
+
+**Step 1.** Areas and centroid heights, measured from the bottom of the web:
+
+$$
+A_1 = 40 \times 4 = 160 \text{ mm}^2, \quad y_1 = 36 + 2 = 38 \text{ mm}; \qquad A_2 = 3 \times 36 = 108 \text{ mm}^2, \quad y_2 = 18 \text{ mm}
+$$
+
+**Step 2.** Centroid:
+
+$$
+\bar{y} = \frac{160(38) + 108(18)}{160 + 108} = \frac{6080 + 1944}{268} = \frac{8024}{268} = 29.94 \text{ mm}
+$$
+
+**Step 3.** Parallel-axis theorem, flange then web:
+
+$$
+I_1 = \frac{40 (4)^3}{12} + 160 (38 - 29.94)^2 = 213.3 + 160 (8.06)^2 = 213.3 + 10{,}393 = 10{,}607 \text{ mm}^4
+$$
+
+$$
+I_2 = \frac{3 (36)^3}{12} + 108 (18 - 29.94)^2 = 11{,}664 + 108 (11.94)^2 = 11{,}664 + 15{,}398 = 27{,}062 \text{ mm}^4
+$$
+
+$$
+I = 10{,}607 + 27{,}062 = 37{,}669 \text{ mm}^4
+$$
+
+**Step 4.** Extreme fibers. The top is $c_\text{top} = 40 - 29.94 = 10.06$ mm above the NA, the bottom is $c_\text{bot} = 29.94$ mm below it:
+
+$$
+\sigma_\text{top} = -\frac{200{,}000 \times 10.06}{37{,}669} = -53.4 \text{ MPa}, \qquad \sigma_\text{bot} = +\frac{200{,}000 \times 29.94}{37{,}669} = +159.0 \text{ MPa}
+$$
+
+**Step 5.** $Q$ at the neutral axis. Take the part of the web below the NA, a 3 × 29.94 mm rectangle whose centroid is $29.94/2$ below the NA:
+
+$$
+Q = (3 \times 29.94) \times \frac{29.94}{2} = 89.82 \times 14.97 = 1{,}344.6 \text{ mm}^3
+$$
+
+(Using the part above the NA gives the same $Q$, which is a good check.)
+
+**Step 6.** Shear stress at the NA, where the wall is the 3 mm web:
+
+$$
+\tau = \frac{V Q}{I t} = \frac{2{,}000 \times 1{,}344.6}{37{,}669 \times 3} = 23.8 \text{ MPa}
+$$
+
+**Result:** $\bar{y} = 29.9$ mm, $I \approx 37{,}670$ mm⁴, bending stresses $-53$ MPa (flange) and $+159$ MPa (web tip), $\tau_\text{max} = 23.8$ MPa. The thin web tip is three times as stressed as the flange because it is three times farther from the NA. The simple estimate $V/A_\text{web} = 2000/108 = 18.5$ MPa is 22% low.
+
+</Example>
+
+## 4. Stress concentrations
+
+Any hole, notch, fillet or sudden change in section disturbs the smooth flow of stress. The peak stress at the disturbance is the **nominal stress** times a **stress concentration factor** $K_t$:
+
+<Formula
+  label="Stress concentration factor"
+  tex="\sigma_\text{max} = K_t\,\sigma_\text{nom}"
+  vars="\sigma_\text{max} | peak elastic stress at the edge of the feature | MPa; K_t | theoretical (elastic) stress concentration factor | —; \sigma_\text{nom} | nominal stress, defined by the chart or formula you take K_t from | MPa"
+/>
+
+$K_t$ depends only on geometry and load type, not on material, as long as everything stays elastic. The standard reference is Peterson's *Stress Concentration Factors* (Pilkey and Pilkey), which has charts for hundreds of geometries.
+
+### Small hole in a wide plate
+
+For a circular hole in an infinitely wide plate under uniaxial tension $\sigma$, the elastic solution (Kirsch, 1898) gives the stress across the section through the hole center:
+
+<Formula
+  label="Kirsch solution along the transverse section"
+  tex="\sigma_x(r) = \sigma \left( 1 + \frac{1}{2}\frac{a^2}{r^2} + \frac{3}{2}\frac{a^4}{r^4} \right)"
+  vars="\sigma_x(r) | stress in the load direction on the section through the hole center | MPa; \sigma | remote uniform tension far from the hole | MPa; a | hole radius | mm; r | distance from the hole center, r ≥ a | mm"
+/>
+
+At the hole edge, $r = a$, this gives $1 + 0.5 + 1.5 = 3$. So **$K_t = 3$ for a small hole in a wide plate**. The peak dies off quickly: at one radius from the edge ($r = 2a$) the stress is already down to $1.22\,\sigma$.
+
+<Figure caption="Plate with a central hole under tension (left) and the stress σx along the section A–A through the hole center (right), from the infinite-plate Kirsch solution. The stress is 3σ at the hole edge and falls to near σ within a few radii.">
+<svg viewBox="0 0 560 320" role="img" aria-label="Plate with hole under tension and plot of stress along the section through the hole, peaking at three times the remote stress at the hole edge">
+  <defs>
+    <marker id="l4-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" className="dg-accent-fill" />
+    </marker>
+  </defs>
+  <rect x="60" y="40" width="180" height="240" className="dg-fill" />
+  <circle cx="150" cy="160" r="24" className="dg-fill-soft" />
+  <line x1="150" y1="30" x2="150" y2="290" className="dg-dash" />
+  <text x="132" y="24" className="dg-text-muted">A</text>
+  <text x="132" y="306" className="dg-text-muted">A</text>
+  <line x1="60" y1="100" x2="20" y2="100" className="dg-accent" markerEnd="url(#l4-arrow-acc)" />
+  <line x1="60" y1="220" x2="20" y2="220" className="dg-accent" markerEnd="url(#l4-arrow-acc)" />
+  <line x1="240" y1="100" x2="280" y2="100" className="dg-accent" markerEnd="url(#l4-arrow-acc)" />
+  <line x1="240" y1="220" x2="280" y2="220" className="dg-accent" markerEnd="url(#l4-arrow-acc)" />
+  <text x="252" y="164" className="dg-text-accent">σ</text>
+  <line x1="340" y1="40" x2="340" y2="280" className="dg-thin" />
+  <line x1="390" y1="40" x2="390" y2="280" className="dg-dash" />
+  <line x1="340" y1="136" x2="340" y2="184" className="dg-line" />
+  <polyline points="490.0,136 465.8,134 448.9,132 436.7,130 424.2,127 415.9,124 408.7,120 403.2,115 399.7,110 395.9,100 394.0,90 392.5,75 391.7,60 391.1,40" className="dg-accent" />
+  <polyline points="490.0,184 465.8,186 448.9,188 436.7,190 424.2,193 415.9,196 408.7,200 403.2,205 399.7,210 395.9,220 394.0,230 392.5,245 391.7,260 391.1,280" className="dg-accent" />
+  <text x="440" y="164" className="dg-text-accent">3σ</text>
+  <text x="300" y="164" className="dg-text-muted">hole</text>
+  <text x="396" y="300" className="dg-text-muted">σ (remote)</text>
+  <text x="320" y="300" className="dg-text-muted">0</text>
+</svg>
+</Figure>
+
+### Net section vs. gross section: read the chart's definition
+
+A plate of width $W$, thickness $t$ and hole diameter $d$ carries a force $P$. Two different nominal stresses are in common use:
+
+<Formula
+  label="Gross and net nominal stress"
+  tex="\sigma_\text{gross} = \frac{P}{W\,t}, \qquad \sigma_\text{net} = \frac{P}{(W - d)\,t}"
+  vars="\sigma_\text{gross} | nominal stress on the full width, away from the hole | MPa; \sigma_\text{net} | nominal stress on the reduced section through the hole | MPa; P | axial force | N; W | plate width | mm; d | hole diameter | mm; t | plate thickness | mm"
+/>
+
+Each has its own $K_t$, and both must give the same $\sigma_\text{max}$:
+
+<Formula
+  label="Converting between gross and net Kt"
+  tex="\sigma_\text{max} = K_{tg}\,\sigma_\text{gross} = K_{tn}\,\sigma_\text{net}, \qquad K_{tg} = \frac{K_{tn}}{1 - d/W}"
+  vars="K_{tg} | stress concentration factor based on gross stress | —; K_{tn} | stress concentration factor based on net stress | —; d/W | hole diameter to plate width ratio | —"
+/>
+
+Peterson's charts for a hole in a finite-width plate give $K_{tn}$, which goes from 3 at $d/W \to 0$ down toward 2 as the hole fills the plate. A widely quoted fit (Heywood) is $K_{tn} \approx 2 + (1 - d/W)^3$. **Always use the nominal stress that matches the chart.** Multiplying a net-section $K_t$ by the gross stress underestimates the peak.
+
+### Why FEA peaks at sharp corners can't be trusted
+
+For a perfectly sharp re-entrant corner (zero radius), the elastic solution has **infinite** stress at the tip: a **singularity**. $K_t$ grows without bound as the radius goes to zero. In FEA, this shows up as a peak stress that keeps rising each time you refine the mesh and never converges. The number you read depends on your element size, not on the part. The fixes:
+
+- Model the **real fillet radius** and refine until the peak converges.
+- Or read stresses a set distance away from the corner, or use the nominal stress with a $K_t$ from Peterson.
+- Point loads and single-node constraints are singularities too. Spread loads over a realistic area.
+
+## 5. GD&T basics (ASME Y14.5)
+
+A dimension with a plus/minus tolerance says how big a feature is. **Geometric dimensioning and tolerancing** (GD&T), defined in ASME Y14.5, says how well its **form, orientation and location** must match the ideal shape. Each control defines a **tolerance zone**; the actual surface or axis must lie inside it.
+
+- **Datums and the datum reference frame (DRF).** Datum features (labeled A, B, C) are real surfaces on the part that define a coordinate system for measurement. The primary datum (A) usually contacts the inspection setup at three points and removes three degrees of freedom; the secondary (B) removes two more; the tertiary (C) removes the last one. The DRF answers "measured from where?" so that design, machining and inspection all use the same reference.
+- **Flatness.** The surface must lie between two parallel planes a distance apart equal to the tolerance. It is a form control and takes no datum. Typical use: a flange face that must seal or seat evenly.
+- **Circularity (roundness).** At each cross-section, the surface must lie between two concentric circles whose radii differ by the tolerance. The circles can have any center, so no datum is used.
+- **Profile of a surface (or of a line).** The surface must lie within a zone around the true profile defined by basic (exact) dimensions. Without datums it controls only form; with datums it also controls orientation and location. It is the most versatile control for large, shaped parts.
+- **Position.** The axis or center plane of a feature (such as a bolt hole) must lie within a zone, usually a cylinder of diameter equal to the tolerance, around its true position defined by basic dimensions from the DRF.
+
+### Why large thin rings need profile and roundness controls
+
+A ring several meters across and a few millimeters thick is **non-rigid**: it sags and ovalizes under its own weight. A plain diameter tolerance can't capture this, because the "diameter" depends on where you measure. Profile and circularity controls fix the shape directly. Out-of-roundness matters structurally for two reasons:
+
+1. **Weld fit-up.** When two rings are stacked and welded, any mismatch makes an offset at the joint. An offset in a loaded wall creates local bending, which acts like a stress concentration.
+2. **Buckling.** Thin cylinders under axial compression are very sensitive to shape imperfections (Week 6). Tighter shape tolerance means less knockdown.
+
+Y14.5 also has rules for non-rigid parts: a tolerance can apply in the **free state** (marked with a circled F) or in a **restrained** condition described in a drawing note, such as "measured while bolted to the fixture." Always check which one a drawing calls for.
+
+<Example title="Net vs. gross stress for a hole in a finite plate">
+
+A plate is $W = 100$ mm wide and $t = 4$ mm thick, with a centered hole $d = 10$ mm. It carries $P = 20$ kN in tension. Find the peak stress both ways.
+
+**Step 1.** Nominal stresses:
+
+$$
+\sigma_\text{gross} = \frac{20{,}000}{100 \times 4} = 50.0 \text{ MPa}, \qquad \sigma_\text{net} = \frac{20{,}000}{(100 - 10) \times 4} = 55.6 \text{ MPa}
+$$
+
+**Step 2.** Net-section $K_t$ from the Heywood fit with $d/W = 0.1$:
+
+$$
+K_{tn} = 2 + (1 - 0.1)^3 = 2 + 0.729 = 2.729
+$$
+
+**Step 3.** Peak stress from the net definition:
+
+$$
+\sigma_\text{max} = K_{tn}\,\sigma_\text{net} = 2.729 \times 55.6 = 151.6 \text{ MPa}
+$$
+
+**Step 4.** Check with the gross definition:
+
+$$
+K_{tg} = \frac{2.729}{1 - 0.1} = 3.032, \qquad \sigma_\text{max} = 3.032 \times 50.0 = 151.6 \text{ MPa}
+$$
+
+**Result:** $\sigma_\text{max} \approx 152$ MPa either way. A small hole ($d/W = 0.1$) gives $K_{tg} \approx 3$, matching the wide-plate value. Mixing the definitions, for example $2.729 \times 50 = 136$ MPa, would be 10% unconservative.
+
+</Example>
+
+<Example title="Inspecting a ring section for profile and circularity">
+
+A ring with a 4,500 mm nominal radius (a practice part) has a profile-of-a-surface tolerance of 4.0 mm (equal-bilateral, so ±2.0 mm) to datum axis B, and a circularity tolerance of 3.0 mm. At one cross-section, the radius is measured from datum axis B at eight equally spaced angles. The deviations from 4,500 mm are:
+
+| Angle | 0° | 45° | 90° | 135° | 180° | 225° | 270° | 315° |
+|---|---|---|---|---|---|---|---|---|
+| Deviation (mm) | +1.2 | +0.8 | −0.5 | −1.6 | −0.9 | +0.4 | +1.9 | +0.3 |
+
+**Step 1.** Profile. Every point must lie within ±2.0 mm of the true radius, measured from the datum:
+
+$$
+\max \left| \text{deviation} \right| = 1.9 \text{ mm} \le 2.0 \text{ mm} \quad \Rightarrow \quad \text{profile passes}
+$$
+
+**Step 2.** Radial spread about the datum axis:
+
+$$
+1.9 - (-1.6) = 3.5 \text{ mm}
+$$
+
+This is more than the 3.0 mm circularity tolerance, but it is **not** the circularity error. Circularity allows the two concentric circles to have **any** center, and measuring from datum B mixes in how far the ring's own center is from B.
+
+**Step 3.** Fit a center. A least-squares fit of $r = r_0 + a\cos\theta + b\sin\theta$ to the eight points gives a center offset of $a = 0.93$ mm, $b = -0.87$ mm. The residuals about the fitted circle range from $-1.17$ to $+0.83$ mm:
+
+$$
+\text{circularity} \approx 0.83 - (-1.17) = 2.0 \text{ mm} \le 3.0 \text{ mm} \quad \Rightarrow \quad \text{circularity passes}
+$$
+
+**Result:** Both controls pass at this section. Note the logic: profile to a datum controls location **and** form, so the circularity tolerance (a pure form refinement) must be tighter than the profile tolerance to add anything. In practice a CMM or laser tracker uses many more points and a minimum-zone fit, and the inspection must follow the drawing's free-state or restrained note.
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Mixing net and gross Kt">
+A $K_t$ is only meaningful together with its nominal stress definition. Check whether the chart says $\sigma_\text{nom} = P/(Wt)$ or $P/((W-d)t)$ before multiplying.
+</Callout>
+
+<Callout kind="mistake" title="Reporting an FEA peak at a sharp corner">
+A stress that keeps growing as the mesh gets finer is a singularity, not a result. Model the real radius and do a mesh convergence check, or use nominal stress with Peterson.
+</Callout>
+
+<Callout kind="mistake" title="Forgetting the parallel-axis term">
+Adding up $bh^3/12$ for each rectangle without the $A d^2$ terms gives an $I$ that is far too small. For the T-section above, it would be 11,877 mm⁴ instead of 37,669 mm⁴.
+</Callout>
+
+<Callout kind="mistake" title="Using the wrong thickness in τ = VQ/(It)">
+$t$ is the wall thickness **at the cut** where you want $\tau$, not the overall section width. At the flange-web junction of a T, the web thickness and flange width give very different stresses for the same $Q$.
+</Callout>
+
+<Callout kind="mistake" title="Mixing up stringers and frames">
+Stringers run lengthwise and mainly help against axial buckling. Frames run around the circumference, keep the shell round and shorten the stringer bays. Adding frames does not replace adequate stringers, and vice versa.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A wide plate with a small hole carries a gross stress of 80 MPa. The practice yield allowable is 400 MPa and the yield FS is 1.25. Using $K_t = 3$, what is the peak stress and the yield margin at the hole edge?
+
+<Solution>
+**Peak stress:**
+
+$$
+\sigma_\text{max} = K_t\,\sigma_\text{nom} = 3 \times 80 = 240 \text{ MPa}
+$$
+
+**Margin:**
+
+$$
+MS = \frac{400}{1.25 \times 240} - 1 = \frac{400}{300} - 1 = +0.33
+$$
+
+Whether a static margin must include $K_t$ for a ductile metal depends on the program's rules (local yielding can redistribute a static peak). For fatigue, $K_t$ always matters.
+</Solution>
+</Problem>
+
+<Problem n={2}>
+A flat-bar stringer is 6 mm thick and 30 mm tall, bending about its strong axis with $M = 100$ N·m. Find $I$ and the maximum bending stress.
+
+<Solution>
+**Second moment of area** (width 6, height 30):
+
+$$
+I = \frac{b h^3}{12} = \frac{6 \times 30^3}{12} = \frac{162{,}000}{12} = 13{,}500 \text{ mm}^4
+$$
+
+**Max stress** at $c = 15$ mm, with $M = 100{,}000$ N·mm:
+
+$$
+\sigma = \frac{M c}{I} = \frac{100{,}000 \times 15}{13{,}500} = 111.1 \text{ MPa}
+$$
+</Solution>
+</Problem>
+
+<Problem n={3}>
+An equal-leg angle is 30 × 30 × 3 mm. Treat it as a horizontal leg 30 × 3 mm along the bottom plus a vertical leg 3 × 27 mm standing on it. Find the height of the centroid above the bottom and $I$ about the horizontal centroidal axis.
+
+<Solution>
+**Pieces** (heights from the bottom):
+
+$$
+A_1 = 30 \times 3 = 90 \text{ mm}^2, \; y_1 = 1.5; \qquad A_2 = 3 \times 27 = 81 \text{ mm}^2, \; y_2 = 3 + 13.5 = 16.5
+$$
+
+**Centroid:**
+
+$$
+\bar{y} = \frac{90(1.5) + 81(16.5)}{171} = \frac{135 + 1336.5}{171} = 8.61 \text{ mm}
+$$
+
+**Parallel axis:**
+
+$$
+I = \left[\frac{30 (3)^3}{12} + 90(1.5 - 8.61)^2\right] + \left[\frac{3 (27)^3}{12} + 81(16.5 - 8.61)^2\right]
+$$
+
+$$
+I = [67.5 + 4{,}544] + [4{,}921 + 5{,}048] = 14{,}580 \text{ mm}^4
+$$
+</Solution>
+</Problem>
+
+<Problem n={4}>
+A strap is $W = 60$ mm wide and $t = 3$ mm thick, with a centered hole $d = 12$ mm, carrying $P = 9$ kN. Use $K_{tn} \approx 2 + (1 - d/W)^3$. Find $\sigma_\text{gross}$, $\sigma_\text{net}$, $K_{tn}$, $K_{tg}$ and $\sigma_\text{max}$.
+
+<Solution>
+**Nominal stresses:**
+
+$$
+\sigma_\text{gross} = \frac{9{,}000}{60 \times 3} = 50.0 \text{ MPa}, \qquad \sigma_\text{net} = \frac{9{,}000}{48 \times 3} = 62.5 \text{ MPa}
+$$
+
+**Factors** with $d/W = 0.2$:
+
+$$
+K_{tn} = 2 + 0.8^3 = 2.512, \qquad K_{tg} = \frac{2.512}{0.8} = 3.14
+$$
+
+**Peak, both ways:**
+
+$$
+\sigma_\text{max} = 2.512 \times 62.5 = 157.0 \text{ MPa} = 3.14 \times 50.0
+$$
+
+Note $K_{tg}$ is above 3 here: a bigger hole removes more material, so relative to the gross stress the peak goes up even though $K_{tn}$ goes down.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+Show that for a solid rectangle of width $b$ and height $h$ the maximum shear stress is $1.5\,V/A$. Then evaluate it for $b = 6$ mm, $h = 30$ mm and $V = 3{,}000$ N.
+
+<Solution>
+**$Q$ at the neutral axis** is the half above it, area $b h/2$, with centroid $h/4$ from the NA:
+
+$$
+Q = \frac{b h}{2} \cdot \frac{h}{4} = \frac{b h^2}{8}
+$$
+
+**Shear stress** with $I = b h^3/12$ and $t = b$:
+
+$$
+\tau_\text{max} = \frac{V (b h^2/8)}{(b h^3/12)\, b} = \frac{12}{8} \cdot \frac{V}{b h} = 1.5\,\frac{V}{A}
+$$
+
+**Numbers:**
+
+$$
+\tau_\text{max} = 1.5 \times \frac{3{,}000}{6 \times 30} = 1.5 \times 16.7 = 25.0 \text{ MPa}
+$$
+
+Check with the full formula: $Q = 6 \times 15 \times 7.5 = 675$ mm³, $I = 13{,}500$ mm⁴, so $\tau = 3000 \times 675/(13{,}500 \times 6) = 25.0$ MPa.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+A mesh refinement study on a bracket with a sharp inside corner gives peak von Mises stresses of 210, 290, 400 and 560 MPa as the element size is halved each time. Far from the corner, the stress changes less than 1%. What is happening, and what should you report?
+
+<Solution>
+**Diagnosis:** The peak grows by roughly 1.4× each time the mesh is halved and shows no sign of leveling off. That is the signature of a **singularity** at a zero-radius corner. The elastic stress there is theoretically infinite, so no mesh will converge.
+
+**What to do:**
+
+1. Model the real fillet radius from the drawing and repeat the study until the peak converges (changes by a few percent or less).
+2. Or report the converged nominal stress away from the corner and apply a $K_t$ from Peterson for the real radius.
+3. Never report 560 MPa (or any of these values) as "the stress." It is a property of your mesh.
+</Solution>
+</Problem>
+
+<Problem n={7}>
+Pick the GD&T control for each requirement: (a) a flange face must seat evenly on its mate; (b) a ring must be round at every cross-section regardless of where its center is; (c) a bolt hole must be in the right place relative to datums A and B; (d) the entire outer surface of a ring must lie within ±2 mm of its nominal shape and location relative to datum A.
+
+<Solution>
+1. **(a) Flatness.** A form control, two parallel planes, no datum.
+2. **(b) Circularity.** Two concentric circles at each section, any center, no datum.
+3. **(c) Position.** A cylindrical zone around the true position set by basic dimensions from the datum reference frame.
+4. **(d) Profile of a surface** to datum A, 4 mm total zone, equally disposed. It controls form, orientation and location together.
+</Solution>
+</Problem>

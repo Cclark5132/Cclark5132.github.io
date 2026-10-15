@@ -1,0 +1,499 @@
+export const meta = {
+  slug: "fatigue-fracture-proof",
+  title: "Fatigue, fracture and proof testing",
+  week: 8,
+  summary: "Cyclic stress terms, S-N curves, the Goodman line, Miner's rule over a flight spectrum, stress intensity and critical crack size, Paris-law crack growth, leak-before-burst and what a proof test really proves.",
+};
+
+A part that survives one flight can still crack after many. **Fatigue** is damage that builds up from repeated loading, at stresses well below yield. **Fracture mechanics** asks a different question: if a crack is already there, how big can it get before the part breaks, and how fast does it grow? A **proof test** joins the two ideas. This lesson covers all three, using hand calcs you can script.
+
+<Callout kind="context" title="Why reusability changes everything">
+An expendable stage sees one flight's worth of load cycles. A booster that is caught and flown again sees the same cycles over and over: tank fill and drain, pressurization, liftoff, max-Q, landing burn and catch. Fatigue and crack growth go from a side check to a sizing driver. Every load and material number in this lesson is a made-up **practice value**, not SpaceX data.
+</Callout>
+
+## 1. Describing a cyclic load
+
+A cyclic stress swings between a maximum and a minimum. Four numbers describe it, and any two of them fix the other two:
+
+<Formula
+  label="Mean stress, alternating stress, range and stress ratio"
+  tex="\sigma_m = \frac{\sigma_\text{max} + \sigma_\text{min}}{2}, \qquad \sigma_a = \frac{\sigma_\text{max} - \sigma_\text{min}}{2}, \qquad \Delta\sigma = 2\sigma_a, \qquad R = \frac{\sigma_\text{min}}{\sigma_\text{max}}"
+  vars="\sigma_\text{max} | largest stress in the cycle | MPa; \sigma_\text{min} | smallest stress in the cycle (negative if compressive) | MPa; \sigma_m | mean stress | MPa; \sigma_a | alternating stress (amplitude) | MPa; \Delta\sigma | stress range | MPa; R | stress ratio | —"
+/>
+
+Three common cases:
+
+- **Fully reversed**, $R = -1$: $\sigma_m = 0$. This is how most S-N data are measured (rotating-beam tests).
+- **Zero to max**, $R = 0$: a tank pressurized from empty to operating and back. Here $\sigma_a = \sigma_m = \sigma_\text{max}/2$.
+- **Tension-tension**, $0 \lt R \lt 1$: a load that never fully unloads, like a pressurized wall with an extra bending cycle on top.
+
+## 2. S-N curves and the Basquin law
+
+An S-N curve plots alternating stress against the number of cycles to failure, $N$, from constant-amplitude tests. On log-log axes the high-cycle part is close to a straight line. The **Basquin** relation writes that line as a power law:
+
+<Formula
+  label="Basquin relation (fully reversed, R = −1)"
+  tex="\sigma_a = \sigma_f' \,(2N)^{b} \quad\Longleftrightarrow\quad N = \frac{1}{2}\left(\frac{\sigma_a}{\sigma_f'}\right)^{1/b}"
+  vars="\sigma_a | alternating stress amplitude | MPa; \sigma_f' | fatigue strength coefficient (fitted to test data) | MPa; N | cycles to failure | cycles; 2N | reversals to failure (two per cycle) | reversals; b | fatigue strength exponent, negative, often about −0.05 to −0.12 | —"
+/>
+
+The exponent is small and negative, so life is extremely sensitive to stress. With $b = -0.1$, cutting the stress by 10% raises the life by a factor of $0.9^{-10} \approx 2.9$. That is why a small stress concentration at a weld toe matters so much.
+
+<Figure caption="Practice S-N curve, σa = 1000·(2N)^−0.1 MPa (made-up values). The dashed line shows the knee that some steels show near 10^6 cycles. Many other alloys keep sloping down, so never assume a knee without data.">
+<svg viewBox="0 0 560 300" role="img" aria-label="Log-log S-N curve: alternating stress falls from about 590 MPa at 100 cycles to about 150 MPa at 100 million cycles, with a dashed horizontal knee at 234 MPa from one million cycles and a marked point at 300 MPa and about 85,000 cycles">
+  <line x1="70" y1="250" x2="530" y2="250" className="dg-thin" />
+  <line x1="70" y1="20" x2="70" y2="250" className="dg-thin" />
+  <line x1="70" y1="250" x2="70" y2="256" className="dg-thin" />
+  <line x1="220" y1="250" x2="220" y2="256" className="dg-thin" />
+  <line x1="370" y1="250" x2="370" y2="256" className="dg-thin" />
+  <line x1="520" y1="250" x2="520" y2="256" className="dg-thin" />
+  <text x="70" y="272" textAnchor="middle" className="dg-text-muted">10²</text>
+  <text x="220" y="272" textAnchor="middle" className="dg-text-muted">10⁴</text>
+  <text x="370" y="272" textAnchor="middle" className="dg-text-muted">10⁶</text>
+  <text x="520" y="272" textAnchor="middle" className="dg-text-muted">10⁸</text>
+  <text x="295" y="294" textAnchor="middle" className="dg-text-muted">cycles to failure N (log)</text>
+  <line x1="64" y1="30" x2="70" y2="30" className="dg-thin" />
+  <line x1="64" y1="96.2" x2="70" y2="96.2" className="dg-thin" />
+  <line x1="64" y1="183.8" x2="70" y2="183.8" className="dg-thin" />
+  <text x="60" y="34" textAnchor="end" className="dg-text-muted">1000</text>
+  <text x="60" y="100" textAnchor="end" className="dg-text-muted">500</text>
+  <text x="60" y="188" textAnchor="end" className="dg-text-muted">200</text>
+  <text x="60" y="254" textAnchor="end" className="dg-text-muted">100</text>
+  <text x="80" y="24" className="dg-text-muted">σa (MPa, log)</text>
+  <polyline points="70.0,80.6 88.8,86.1 107.5,91.6 126.2,97.1 145.0,102.6 163.8,108.1 182.5,113.6 201.2,119.1 220.0,124.6 238.8,130.1 257.5,135.6 276.2,141.1 295.0,146.6 313.8,152.1 332.5,157.6 351.2,163.1 370.0,168.6 388.8,174.1 407.5,179.6 426.2,185.1 445.0,190.6 463.8,196.1 482.5,201.6 501.2,207.1 520.0,212.6" className="dg-accent" />
+  <line x1="370" y1="168.6" x2="520" y2="168.6" className="dg-dash" />
+  <text x="400" y="160" className="dg-text-muted">knee (some steels)</text>
+  <text x="440" y="232" className="dg-text-accent">Basquin</text>
+  <line x1="289.6" y1="145" x2="289.6" y2="250" className="dg-dash" />
+  <circle cx="289.6" cy="145" r="5" className="dg-ink-fill" />
+  <text x="130" y="60" className="dg-text">σa = 300 MPa → N ≈ 85,000</text>
+  <line x1="220" y1="64" x2="284" y2="140" className="dg-thin" />
+</svg>
+</Figure>
+
+### The endurance limit, stated carefully
+
+Plain carbon and low-alloy steels tested in air often show a **knee**: below a stress called the **endurance limit** $S_e$ (typically reached around $10^6$ to $10^7$ cycles), the curve flattens and tests run out without failing. Many other metals do not behave this way. Aluminum alloys have no true endurance limit, so data sheets quote a **fatigue strength at a stated life** (for example $5 \times 10^8$ cycles). For austenitic stainless steels like 304L, the long-life behavior depends on the data set and environment, and design curves are usually treated as continuing to slope down. The safe habit: **use the fatigue strength at your required number of cycles, from data for your material, and do not assume a flat knee.**
+
+For a booster this is partly academic. Even hundreds of flights times a handful of big cycles per flight is only thousands to tens of thousands of cycles, well left of any knee. Booster fatigue lives in the low and medium cycle region where the curve is steep.
+
+## 3. Mean stress and the Goodman line
+
+S-N data are usually fully reversed ($\sigma_m = 0$). A tensile mean stress shortens life, which matters a lot for a pressurized tank where every cycle sits on top of a large hoop stress. The **modified Goodman** line is the standard conservative correction for tensile mean stress:
+
+<Formula
+  label="Modified Goodman criterion"
+  tex="\frac{\sigma_a}{S_e} + \frac{\sigma_m}{S_u} = \frac{1}{n_f}"
+  vars="\sigma_a | alternating stress | MPa; \sigma_m | mean stress (tensile, ≥ 0) | MPa; S_e | fully reversed fatigue strength at the required life (endurance limit only if the material has one) | MPa; S_u | ultimate tensile strength | MPa; n_f | fatigue factor of safety ($n_f = 1$ is on the line) | —"
+/>
+
+<Formula
+  label="Fatigue margin from Goodman"
+  tex="MS_f = n_f - 1 = \frac{1}{\sigma_a/S_e + \sigma_m/S_u} - 1"
+  vars="MS_f | fatigue margin of safety (pass when ≥ 0) | —; n_f | fatigue factor of safety from Goodman | —"
+/>
+
+Geometrically, $n_f$ is how far you can scale the point $(\sigma_m, \sigma_a)$ out along a line through the origin before it hits the Goodman line. Also check that $\sigma_\text{max} = \sigma_m + \sigma_a$ stays below yield; Goodman alone does not catch first-cycle yielding. For a compressive mean stress the usual conservative choice is to take no credit and set $\sigma_m = 0$.
+
+<Figure caption="Goodman diagram with practice values Su = 700 MPa and Se = 280 MPa. The operating point (σm = 200, σa = 120) can be scaled by 1.4 along the dashed load line before it reaches the line, so nf = 1.4.">
+<svg viewBox="0 0 560 300" role="img" aria-label="Goodman diagram: a straight line from 280 MPa on the alternating stress axis to 700 MPa on the mean stress axis, with an operating point at mean 200 and alternating 120 and a dashed load line from the origin reaching the Goodman line at mean 280 and alternating 168">
+  <line x1="70" y1="250" x2="530" y2="250" className="dg-thin" />
+  <line x1="70" y1="40" x2="70" y2="250" className="dg-thin" />
+  <text x="300" y="290" textAnchor="middle" className="dg-text-muted">mean stress σm (MPa)</text>
+  <text x="80" y="36" className="dg-text-muted">alternating σa (MPa)</text>
+  <polygon points="70,250 70,82 490,250" className="dg-fill-soft" />
+  <line x1="70" y1="82" x2="490" y2="250" className="dg-accent" />
+  <text x="62" y="86" textAnchor="end" className="dg-text-accent">280</text>
+  <text x="490" y="270" textAnchor="middle" className="dg-text-accent">700</text>
+  <text x="70" y="270" textAnchor="middle" className="dg-text-muted">0</text>
+  <text x="360" y="150" className="dg-text-accent">Goodman line</text>
+  <text x="360" y="168" className="dg-text-muted">σa/Se + σm/Su = 1</text>
+  <line x1="70" y1="250" x2="238" y2="149.2" className="dg-dash" />
+  <circle cx="190" cy="178" r="5" className="dg-ink-fill" />
+  <text x="200" y="194" className="dg-text">(200, 120)</text>
+  <circle cx="238" cy="149.2" r="5" className="dg-accent-fill" />
+  <text x="248" y="140" className="dg-text">(280, 168)</text>
+  <text x="300" y="236" className="dg-text-muted">safe side</text>
+</svg>
+</Figure>
+
+## 4. Variable loads: Miner's rule
+
+Real structures don't see one constant amplitude. A flight has a few big cycles and many small ones. **Miner's rule** (Palmgren-Miner linear damage) says each block of cycles uses up a fraction of life equal to the cycles applied divided by the cycles to failure at that level, and the fractions add:
+
+<Formula
+  label="Miner's rule"
+  tex="D = \sum_i \frac{n_i}{N_i}, \qquad \text{failure predicted when } D \geq 1"
+  vars="D | cumulative damage fraction | —; n_i | cycles applied at stress level i | cycles; N_i | cycles to failure at level i, from the S-N curve (mean-stress corrected) | cycles"
+/>
+
+For a repeated mission, find the damage per flight $D_\text{flight}$ and the predicted life is $1/D_\text{flight}$ flights.
+
+**Limitations.** Miner's rule is simple and widely used, but it is only an estimate:
+
+- It ignores **load order**. A few high cycles followed by low ones usually do more damage than the reverse, and Miner can't tell them apart.
+- Test results at failure scatter widely; measured $D$ at failure often falls anywhere from about 0.3 to 3.
+- It assumes the S-N data apply to the real detail (same surface, weld quality, temperature and environment).
+
+### Scatter factors on life
+
+Because fatigue lives scatter by large factors even for identical parts, a common practice is to require the **calculated life to be a multiple of the service life**. A scatter factor of 4 on life is a widely used example: a part that must fly 100 times should show a calculated fatigue life of at least 400 flights. The exact factor is set by the program's requirements, so treat 4 here as a practice value.
+
+<Example title="Miner's rule from the Week 8 self-check">
+
+A part sees 1,000 cycles at a level where $N = 10{,}000$ and 50 cycles at a level where $N = 500$. Find the damage.
+
+**Step 1.** Damage from the first block:
+
+$$
+\frac{n_1}{N_1} = \frac{1000}{10{,}000} = 0.1
+$$
+
+**Step 2.** Damage from the second block:
+
+$$
+\frac{n_2}{N_2} = \frac{50}{500} = 0.1
+$$
+
+**Step 3.** Add them:
+
+$$
+D = 0.1 + 0.1 = 0.2
+$$
+
+**Result:** $D = 0.2$, so 20% of the predicted life is used. Notice that only 50 big cycles did as much damage as 1,000 smaller ones. The rare high-stress events (like a catch or a hard landing) often dominate.
+
+</Example>
+
+<Example title="Goodman fatigue margin for a pressurized wall">
+
+A weld land sees stress cycling between $\sigma_\text{min} = 80$ MPa and $\sigma_\text{max} = 320$ MPa every flight. Practice values: $S_u = 700$ MPa, yield 500 MPa, and fully reversed fatigue strength at the required life (with scatter factor included) $S_e = 280$ MPa. Find the fatigue margin.
+
+**Step 1.** Mean and alternating stress:
+
+$$
+\sigma_m = \frac{320 + 80}{2} = 200 \text{ MPa}, \qquad \sigma_a = \frac{320 - 80}{2} = 120 \text{ MPa}, \qquad R = \frac{80}{320} = 0.25
+$$
+
+**Step 2.** Goodman sum:
+
+$$
+\frac{\sigma_a}{S_e} + \frac{\sigma_m}{S_u} = \frac{120}{280} + \frac{200}{700} = 0.4286 + 0.2857 = 0.7143
+$$
+
+**Step 3.** Factor of safety and margin:
+
+$$
+n_f = \frac{1}{0.7143} = 1.40, \qquad MS_f = 1.40 - 1 = +0.40
+$$
+
+**Step 4.** First-cycle yield check:
+
+$$
+\sigma_\text{max} = 320 \text{ MPa} \lt 500 \text{ MPa}
+$$
+
+**Result:** $MS_f = +0.40$. Without the mean stress correction you would get $280/120 - 1 = +1.33$, far too optimistic. The tensile mean stress uses up a big share of the capability.
+
+</Example>
+
+## 5. Fracture mechanics: when a crack is already there
+
+Welds, forming and handling can leave small flaws. Linear elastic fracture mechanics describes the stress field at a crack tip with one number, the **stress intensity factor**:
+
+<Formula
+  label="Stress intensity factor"
+  tex="K = Y\,\sigma\,\sqrt{\pi a}"
+  vars="K | stress intensity factor | MPa·√m; Y | geometry factor (1.0 for a center crack in a wide plate, about 1.12 for a shallow edge crack) | —; \sigma | remote stress normal to the crack | MPa; a | crack size (half-length of a center crack, depth of an edge crack) | m"
+/>
+
+The crack grows unstably when $K$ reaches the material's **fracture toughness** $K_{Ic}$. Setting $K = K_{Ic}$ and solving for $a$ gives the **critical crack size**:
+
+<Formula
+  label="Critical crack size"
+  tex="a_c = \frac{1}{\pi}\left(\frac{K_{Ic}}{Y\,\sigma}\right)^2"
+  vars="a_c | critical crack size at stress σ | m; K_{Ic} | plane-strain fracture toughness | MPa·√m; Y | geometry factor | —; \sigma | applied stress | MPa"
+/>
+
+Keep $a$ in meters so the units work: MPa times √m gives MPa·√m. Because $a_c \propto 1/\sigma^2$, raising the stress by 25% shrinks the critical crack by a factor of $1.25^2 = 1.5625$.
+
+<Callout kind="note" title="Tough, thin materials">
+$K_{Ic}$ is a plane-strain value, valid when the part is thick compared with the crack-tip plastic zone. Austenitic stainless steels are very tough and tank walls are thin, so real analyses often use a thickness-specific $K_c$, a resistance curve, or elastic-plastic methods. The low practice toughness used below is picked to make the arithmetic clear, not to represent a real alloy.
+</Callout>
+
+## 6. Crack growth: the Paris law
+
+Under cyclic load a crack grows a little each cycle. In the middle range of growth rates, the rate follows a power law in the stress intensity range:
+
+<Formula
+  label="Paris law"
+  tex="\frac{da}{dN} = C\,(\Delta K)^m, \qquad \Delta K = Y\,\Delta\sigma\,\sqrt{\pi a}"
+  vars="da/dN | crack growth per cycle | m/cycle; C | Paris coefficient (with ΔK in MPa·√m) | (m/cycle)/(MPa·√m)^m; m | Paris exponent, often about 3 for steels | —; \Delta K | stress intensity range | MPa·√m; \Delta\sigma | stress range | MPa; a | crack size | m"
+/>
+
+With constant amplitude and constant $Y$, separate variables and integrate from the initial size $a_i$ to the final size $a_f$:
+
+<Formula
+  label="Crack growth life (constant amplitude, constant Y, m ≠ 2)"
+  tex="N_f = \frac{a_f^{\,1 - m/2} - a_i^{\,1 - m/2}}{C\,\left(Y\,\Delta\sigma\,\sqrt{\pi}\right)^m \left(1 - m/2\right)}"
+  vars="N_f | cycles to grow from $a_i$ to $a_f$ | cycles; a_i | initial crack size | m; a_f | final crack size (usually $a_c$ at the operating stress) | m; C, m | Paris constants | see above; Y | geometry factor | —; \Delta\sigma | stress range | MPa"
+/>
+
+For $m = 3$ the exponent $1 - m/2 = -0.5$, so both numerator and denominator are negative and $N_f$ comes out positive. Most of the life is spent while the crack is small, because the growth rate rises as $a^{m/2}$.
+
+## 7. Leak-before-burst and proof testing
+
+**Leak-before-burst (LBB).** In a pressure vessel, a surface crack that grows through the wall becomes a through crack. If that through crack is still smaller than the critical size at operating stress, the tank **leaks** (a detectable, survivable event) instead of bursting. A simple check: a semicircular surface crack breaks through at a length of about $2t$, so LBB holds when the critical through-crack half-length at operating stress is larger than the wall thickness $t$.
+
+**Proof testing.** Pressurize the tank to a proof level above flight, giving wall stress $\sigma_\text{proof}$ greater than $\sigma_\text{op}$. If it survives, every crack in it must be smaller than the critical size at proof stress:
+
+$$
+a_\text{initial} \lt a_{c,\text{proof}} = \frac{1}{\pi}\left(\frac{K_{Ic}}{Y\,\sigma_\text{proof}}\right)^2
+$$
+
+At the lower operating stress the critical size is larger, $a_{c,\text{op}}$. So any crack that survived proof must **grow** from below $a_{c,\text{proof}}$ to $a_{c,\text{op}}$ before it can cause failure in service. The Paris-law life for that growth is a **guaranteed (screened) life**, without ever finding the crack by inspection. After that life (divided by a scatter factor) the tank can be re-proofed to restart the clock.
+
+<Figure caption="Proof test logic with practice values. Surviving proof caps any crack at 2.89 mm. At operating stress the crack must grow to 4.51 mm before it is critical, which takes about 3,520 pressure cycles.">
+<svg viewBox="0 0 560 300" role="img" aria-label="Crack size versus cycles: a curve rises from 2.89 mm at zero cycles to 4.51 mm at about 3,520 cycles, with dashed horizontal lines marking the critical crack size at proof stress and at operating stress">
+  <line x1="70" y1="250" x2="500" y2="250" className="dg-thin" />
+  <line x1="70" y1="30" x2="70" y2="250" className="dg-thin" />
+  <text x="70" y="268" textAnchor="middle" className="dg-text-muted">0</text>
+  <text x="175" y="268" textAnchor="middle" className="dg-text-muted">1000</text>
+  <text x="280" y="268" textAnchor="middle" className="dg-text-muted">2000</text>
+  <text x="385" y="268" textAnchor="middle" className="dg-text-muted">3000</text>
+  <text x="490" y="268" textAnchor="middle" className="dg-text-muted">4000</text>
+  <text x="280" y="292" textAnchor="middle" className="dg-text-muted">pressure cycles after proof</text>
+  <text x="60" y="254" textAnchor="end" className="dg-text-muted">2</text>
+  <text x="60" y="184" textAnchor="end" className="dg-text-muted">3</text>
+  <text x="60" y="114" textAnchor="end" className="dg-text-muted">4</text>
+  <text x="60" y="44" textAnchor="end" className="dg-text-muted">5</text>
+  <text x="80" y="24" className="dg-text-muted">crack size a (mm)</text>
+  <line x1="70" y1="187.9" x2="500" y2="187.9" className="dg-dash" />
+  <text x="300" y="206" className="dg-text-muted">a_c at proof = 2.89 mm</text>
+  <line x1="70" y1="74.2" x2="500" y2="74.2" className="dg-dash" />
+  <text x="92" y="66" className="dg-text-muted">a_c at operating = 4.51 mm</text>
+  <polyline points="70.0,187.9 88.5,183.8 107.0,179.6 125.5,175.2 144.0,170.7 162.5,166.1 181.0,161.3 199.5,156.3 218.0,151.2 236.5,145.9 255.0,140.5 273.5,134.9 292.0,129.0 310.5,123.0 329.0,116.7 347.5,110.3 366.0,103.6 384.6,96.6 403.1,89.4 421.6,82.0 440.1,74.2" className="dg-accent" />
+  <circle cx="440.1" cy="74.2" r="5" className="dg-accent-fill" />
+  <text x="300" y="150" className="dg-text-accent">Paris-law growth</text>
+  <line x1="440.1" y1="80" x2="440.1" y2="250" className="dg-dash" />
+  <text x="436" y="240" textAnchor="end" className="dg-text">N ≈ 3,520</text>
+</svg>
+</Figure>
+
+<Example title="What a proof test guarantees">
+
+A tank wall has operating hoop stress $\sigma_\text{op} = 300$ MPa and is proof tested at 1.25 times operating, $\sigma_\text{proof} = 375$ MPa. Practice values: $K_{Ic} = 40$ MPa·√m, edge-crack factor $Y = 1.12$, Paris constants $C = 1 \times 10^{-11}$ (m/cycle, $\Delta K$ in MPa·√m) and $m = 3$. Each flight pressurizes the wall from 0 to $\sigma_\text{op}$, so $\Delta\sigma = 300$ MPa. The tank survives proof. How many pressure cycles is it guaranteed to survive?
+
+**Step 1.** Largest crack that could survive proof:
+
+$$
+a_{c,\text{proof}} = \frac{1}{\pi}\left(\frac{40}{1.12 \times 375}\right)^2 = \frac{1}{\pi}(0.09524)^2 = \frac{0.009070}{\pi} = 0.002887 \text{ m} = 2.89 \text{ mm}
+$$
+
+**Step 2.** Critical crack size at operating stress:
+
+$$
+a_{c,\text{op}} = \frac{1}{\pi}\left(\frac{40}{1.12 \times 300}\right)^2 = \frac{1}{\pi}(0.11905)^2 = \frac{0.014172}{\pi} = 0.004511 \text{ m} = 4.51 \text{ mm}
+$$
+
+The ratio is $4.51/2.89 = 1.5625 = 1.25^2$, as expected from $a_c \propto 1/\sigma^2$.
+
+**Step 3.** Paris-law denominator with $1 - m/2 = -0.5$:
+
+$$
+Y\,\Delta\sigma\,\sqrt{\pi} = 1.12 \times 300 \times 1.7725 = 595.5, \qquad (595.5)^3 = 2.112 \times 10^8
+$$
+
+$$
+C\,(595.5)^3\,(1 - m/2) = 1 \times 10^{-11} \times 2.112 \times 10^8 \times (-0.5) = -1.056 \times 10^{-3}
+$$
+
+**Step 4.** Numerator:
+
+$$
+a_f^{-0.5} - a_i^{-0.5} = (0.004511)^{-0.5} - (0.002887)^{-0.5} = 14.889 - 18.611 = -3.722
+$$
+
+**Step 5.** Screened life:
+
+$$
+N_f = \frac{-3.722}{-1.056 \times 10^{-3}} = 3524 \text{ cycles}
+$$
+
+**Result:** any crack that survived proof needs about 3,520 cycles to become critical. With a practice scatter factor of 4 on life, the tank is cleared for $3524/4 \approx 881$ pressure cycles before it must be re-proofed. A higher proof factor screens smaller cracks and buys more life, at the cost of a harsher test.
+
+</Example>
+
+## Common mistakes
+
+<Callout kind="mistake" title="Mixing up amplitude and range">
+$\sigma_a$ is half of $\Delta\sigma$. S-N curves are usually plotted against amplitude; Paris law uses the range $\Delta K$. Using the wrong one changes the life by a factor of $2^{1/|b|}$ in fatigue or $2^m$ in crack growth.
+</Callout>
+
+<Callout kind="mistake" title="Ignoring mean stress">
+Fully reversed S-N data applied to a pressurized tank cycle are unconservative. Correct for the tensile mean stress with Goodman, or use S-N data measured at the right $R$ ratio.
+</Callout>
+
+<Callout kind="mistake" title="Assuming every metal has an endurance limit">
+The flat knee is a property of some steels in air, not a law of nature. Aluminum has none, and stainless steel design curves usually keep sloping. Use the fatigue strength at your required life.
+</Callout>
+
+<Callout kind="mistake" title="Millimeters in the stress intensity formula">
+With $K$ in MPa·√m, the crack size $a$ must be in meters. Plugging in $a = 3$ (mm) instead of $0.003$ (m) makes $K$ about 32 times too large ($\sqrt{1000} \approx 31.6$).
+</Callout>
+
+<Callout kind="mistake" title="Treating D = 1 as a sharp line">
+Miner's rule is an estimate with wide scatter and no load-order effects. That is why requirements put a scatter factor on life rather than accepting a design at $D$ just under 1.
+</Callout>
+
+## Practice problems
+
+<Problem n={1}>
+A stiffener sees stress cycling between $\sigma_\text{min} = -50$ MPa and $\sigma_\text{max} = 250$ MPa. Find $\sigma_m$, $\sigma_a$, $\Delta\sigma$ and $R$.
+
+<Solution>
+$$
+\sigma_m = \frac{250 + (-50)}{2} = 100 \text{ MPa}, \qquad \sigma_a = \frac{250 - (-50)}{2} = 150 \text{ MPa}
+$$
+
+$$
+\Delta\sigma = 2 \times 150 = 300 \text{ MPa}, \qquad R = \frac{-50}{250} = -0.2
+$$
+</Solution>
+</Problem>
+
+<Problem n={2}>
+Using the practice Basquin curve $\sigma_a = 1000\,(2N)^{-0.1}$ MPa, find the life at $\sigma_a = 300$ MPa (fully reversed).
+
+<Solution>
+**Step 1.** Solve for reversals:
+
+$$
+2N = \left(\frac{300}{1000}\right)^{1/(-0.1)} = (0.3)^{-10} = 169{,}351
+$$
+
+**Step 2.** Halve to get cycles:
+
+$$
+N = \frac{169{,}351}{2} \approx 84{,}700 \text{ cycles}
+$$
+
+This is the marked point on the S-N figure.
+</Solution>
+</Problem>
+
+<Problem n={3}>
+A made-up flight spectrum for one detail lists, per flight: 1 tank pressure cycle ($N = 20{,}000$), 1 liftoff cycle ($N = 10{,}000$), 5 max-Q buffet cycles ($N = 50{,}000$) and 1 catch cycle ($N = 4{,}000$). (a) What is the damage per flight? (b) What is the predicted life in flights? (c) How many flights can be certified with a practice scatter factor of 4 on life?
+
+<Solution>
+**(a)** Sum the blocks for one flight:
+
+$$
+D_\text{flight} = \frac{1}{20{,}000} + \frac{1}{10{,}000} + \frac{5}{50{,}000} + \frac{1}{4{,}000} = 0.00005 + 0.0001 + 0.0001 + 0.00025 = 0.0005
+$$
+
+**(b)** Life when $D = 1$:
+
+$$
+N_\text{flights} = \frac{1}{0.0005} = 2000 \text{ flights}
+$$
+
+**(c)** Apply the scatter factor:
+
+$$
+\frac{2000}{4} = 500 \text{ flights}
+$$
+
+The single catch cycle is half of the damage per flight. It is the load to focus on.
+</Solution>
+</Problem>
+
+<Problem n={4}>
+With practice values $S_u = 700$ MPa and $S_e = 280$ MPa, a pressurized wall has a mean stress $\sigma_m = 350$ MPa. What is the largest alternating stress that still gives a Goodman fatigue factor of safety $n_f = 1.25$?
+
+<Solution>
+**Step 1.** Rearrange Goodman for $\sigma_a$:
+
+$$
+\frac{\sigma_a}{S_e} = \frac{1}{n_f} - \frac{\sigma_m}{S_u} \quad\Rightarrow\quad \sigma_a = S_e\left(\frac{1}{n_f} - \frac{\sigma_m}{S_u}\right)
+$$
+
+**Step 2.** Plug in:
+
+$$
+\sigma_a = 280\left(\frac{1}{1.25} - \frac{350}{700}\right) = 280\,(0.8 - 0.5) = 84 \text{ MPa}
+$$
+
+A high mean stress leaves little room for cycling: only 84 MPa of amplitude, compared with $280/1.25 = 224$ MPa at zero mean.
+</Solution>
+</Problem>
+
+<Problem n={5}>
+A tank wall is $t = 4$ mm thick with operating hoop stress 300 MPa. Using a practice toughness of 40 MPa·√m and $Y = 1.0$ for a through crack, does the simple leak-before-burst check pass?
+
+<Solution>
+**Step 1.** Critical through-crack half-length at operating stress:
+
+$$
+a_c = \frac{1}{\pi}\left(\frac{40}{1.0 \times 300}\right)^2 = \frac{(0.1333)^2}{\pi} = \frac{0.01778}{\pi} = 0.00566 \text{ m} = 5.66 \text{ mm}
+$$
+
+**Step 2.** Compare with the wall thickness (a crack that just breaks through has a half-length of about $t$):
+
+$$
+a_c = 5.66 \text{ mm} \gt t = 4 \text{ mm}
+$$
+
+The check passes: a crack that grows through the wall is still subcritical, so the tank leaks before it bursts.
+</Solution>
+</Problem>
+
+<Problem n={6}>
+An edge crack ($Y = 1.12$) grows from 1 mm to 2 mm under constant-amplitude cycling with $\Delta\sigma = 200$ MPa. Practice Paris constants: $C = 1 \times 10^{-11}$, $m = 3$ (m/cycle, MPa·√m). How many cycles does this take?
+
+<Solution>
+**Step 1.** Denominator:
+
+$$
+Y\,\Delta\sigma\,\sqrt{\pi} = 1.12 \times 200 \times 1.7725 = 397.0, \qquad (397.0)^3 = 6.258 \times 10^7
+$$
+
+$$
+C\,(397.0)^3\,(1 - 1.5) = 1 \times 10^{-11} \times 6.258 \times 10^7 \times (-0.5) = -3.129 \times 10^{-4}
+$$
+
+**Step 2.** Numerator with $a$ in meters:
+
+$$
+(0.002)^{-0.5} - (0.001)^{-0.5} = 22.361 - 31.623 = -9.262
+$$
+
+**Step 3.** Life:
+
+$$
+N_f = \frac{-9.262}{-3.129 \times 10^{-4}} \approx 29{,}600 \text{ cycles}
+$$
+
+Doubling the crack size took about 29,600 cycles at this stress. Growing from 2 mm to 4 mm would take fewer, about $29{,}600/\sqrt{2} \approx 20{,}900$ cycles, because the crack speeds up as it grows.
+</Solution>
+</Problem>
+
+<Problem n={7}>
+After the self-check part has accumulated $D = 0.2$, how many more cycles at the high level ($N = 500$) does Miner's rule predict it can take? Why is a successful proof test a different kind of evidence than this number?
+
+<Solution>
+**Step 1.** Remaining damage capacity:
+
+$$
+1 - D = 1 - 0.2 = 0.8
+$$
+
+**Step 2.** Cycles at the $N = 500$ level that use it up:
+
+$$
+n = 0.8 \times 500 = 400 \text{ cycles}
+$$
+
+(before any scatter factor). **Why proof is different:** Miner's rule is a prediction built on average S-N data and assumes no initial flaw. A proof test is a measurement on the actual part: surviving it proves every crack is smaller than $a_{c,\text{proof}}$, and crack growth from there to $a_{c,\text{op}}$ sets a guaranteed life without needing to find the cracks.
+</Solution>
+</Problem>
