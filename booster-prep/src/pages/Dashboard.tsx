@@ -10,6 +10,7 @@ import { phaseColor, START_DATE, weeks } from "../data/plan";
 import { stats, validSessions } from "../lib/progress";
 import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
 import { daysSince, lastExport } from "../lib/backup";
+import { cardsDueToday } from "../lib/cards";
 import { actualHours, movedTo } from "../lib/catchup";
 import { studyStreak, useProgress } from "../lib/store";
 import { readSettings, useSyncStatus } from "../lib/sync";
@@ -126,6 +127,20 @@ function TodayCard({ today }: { today: string }) {
         </span>
       </div>
     </section>
+  );
+}
+
+/** Cards due today (reviews plus today's new cards), linking to the deck. */
+function CardsDueTile({ today }: { today: string }) {
+  const progress = useProgress();
+  const n = cardsDueToday(progress, today);
+  return (
+    <Link to="/flashcards" className="card tile-link" data-testid="cards-due">
+      <span className="eyebrow">Flashcards</span>
+      <span className="num stat-big">
+        {n} <span className="stat-sub">{n === 1 ? "card" : "cards"} due today</span>
+      </span>
+    </Link>
   );
 }
 
@@ -251,6 +266,7 @@ export function Dashboard() {
               ))}
             </div>
           </section>
+          <CardsDueTile today={today} />
           <WeakTopicsCard />
           <BackupCard />
         </div>

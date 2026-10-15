@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Formula } from "../components/Formula";
 import { Rich } from "../components/Tex";
 import { weeks } from "../data/plan";
-import { activeDeck, schedule, type Card } from "../lib/cards";
+import { activeDeck, dailyQueue, NEW_PER_DAY, schedule, type Card, type CardGrade } from "../lib/cards";
 import { addDays, localToday } from "../lib/schedule";
 import { setCard, useProgress } from "../lib/store";
 
@@ -30,23 +30,47 @@ export function Flashcards() {
     () => deck.filter((c) => (weekFilter === "all" || String(c.week) === weekFilter) && (track === "all" || c.track === track)),
     [deck, weekFilter, track],
   );
-  const isDue = (c: Card) => {
-    const state = progress.cards[c.id];
-    return !state || state.due <= today;
-  };
-  const queue = filtered.filter((c) => (mode === "all" || isDue(c)) && !skipped.includes(c.id));
+  const daily = dailyQueue(filtered, progress.cards, today);
+  const queue = (mode === "all" ? filtered : daily.queue).filter((c) => !skipped.includes(c.id));
   const card = queue[0];
-  const dueCount = filtered.filter(isDue).length;
+  const dueCount = daily.queue.length;
   const newCount = filtered.filter((c) => !progress.cards[c.id]).length;
 
-  const grade = (g: "again" | "good" | "easy") => {
+  const grade = (g: CardGrade) => {
     if (!card) return;
-    const next = schedule(progress.cards[card.id], g);
-    setCard(card.id, { ...next, due: addDays(today, next.interval) });
+    const prev = progress.cards[card.id];
+    const next = schedule(prev, g);
+    setCard(card.id, { ...next, due: addDays(today, next.interval), added: prev?.added ?? (prev ? undefined : today) });
     // "Again" stays due today; move it to the back of this session's queue.
     if (g === "again" || mode === "all") setSkipped((s) => [...s, card.id]);
     setFlipped(false);
   };
+
+  // Keyboard: Space flips, 1–4 grade. Ignored while typing in a field.
+  const flip = () => setFlipped((f) => !f);
+  const keys = useRef({ card, flipped, grade, flip });
+  useEffect(() => {
+    keys.current = { card, flipped, grade, flip };
+  });
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const k = keys.current;
+      if (!k.card) return;
+      if (event.key === " ") {
+        event.preventDefault();
+        if (target instanceof HTMLButtonElement) target.blur(); // so the button doesn't also click on key up
+        k.flip();
+      } else if (k.flipped && ["1", "2", "3", "4"].includes(event.key)) {
+        event.preventDefault();
+        k.grade((["again", "hard", "good", "easy"] as const)[Number(event.key) - 1]);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div className="content narrow">
@@ -54,8 +78,8 @@ export function Flashcards() {
         <span className="eyebrow">Flashcards</span>
         <h1>Formulas, definitions and self-checks</h1>
         <p className="lede">
-          {deck.length} cards with simple spaced repetition. <strong>Again</strong> brings a card back today, <strong>Good</strong> doubles its interval and{" "}
-          <strong>Easy</strong> triples it.
+          {deck.length} cards with simple spaced repetition. <strong>Again</strong> brings a card back today, <strong>Hard</strong> stretches its interval by 1.2×,{" "}
+          <strong>Good</strong> doubles it and <strong>Easy</strong> triples it. Up to {NEW_PER_DAY} new cards a day, only from weeks that have started.
         </p>
       </header>
 
@@ -106,7 +130,7 @@ export function Flashcards() {
           </div>
         </div>
         <p className="hint">
-          {filtered.length} cards in this filter · {newCount} new · {queue.length} left in this session
+          {filtered.length} cards in this filter · {daily.reviews.length} reviews due · {daily.fresh.length} of {newCount} new today ({daily.room} of {NEW_PER_DAY} new left) · {queue.length} left in this session
         </p>
       </div>
 
@@ -138,21 +162,25 @@ export function Flashcards() {
               </div>
               <div className="grade-row">
                 <button type="button" className="btn grade-again" onClick={() => grade("again")}>
-                  Again
+                  Again <kbd>1</kbd>
+                </button>
+                <button type="button" className="btn grade-hard" onClick={() => grade("hard")}>
+                  Hard <kbd>2</kbd>
                 </button>
                 <button type="button" className="btn grade-good" onClick={() => grade("good")}>
-                  Good
+                  Good <kbd>3</kbd>
                 </button>
                 <button type="button" className="btn grade-easy" onClick={() => grade("easy")}>
-                  Easy
+                  Easy <kbd>4</kbd>
                 </button>
               </div>
             </>
           ) : (
             <button type="button" className="btn primary" onClick={() => setFlipped(true)} style={{ alignSelf: "center" }}>
-              Show answer
+              Show answer <kbd>Space</kbd>
             </button>
           )}
+          <p className="hint kbd-hint">Keys: Space flips the card, 1–4 grade it (Again, Hard, Good, Easy).</p>
         </section>
       )}
     </div>
