@@ -30,20 +30,28 @@ Each week also has a short **Starship context** reading, one **deliverable** you
 | Thu | Structures: worked problems | Code |
 | Fri | CAD / FEA | Code: turn this week's hand calc into a script |
 | Sat | Deliverable build | Deliverable build |
-| Sun | Starship context reading (30 min) | Flashcards and self-check (30 min), rest |
+| Sun | Starship context reading (30 min), then flashcards (30 min) | Redo the week's hardest problem with no notes, then plan next week in the notebook |
+
+Week 0 (one setup day) and Week 1 (ten days) have their own day-by-day plans below. Every day in them is a full 2 hours.
 
 ### Time budget
 
+- Week 0: **1 day × 2 hrs = 2 hrs** of setup
+- Week 1: **10 days × 2 hrs = 20 hrs**
 - Normal weeks: **7 days × 2 hrs = 14 hrs**
-- Light weeks (Thanksgiving, finals): **about 7 hrs**
-- Total: **10 normal weeks × 14 hrs + 2 light weeks × 7 hrs = 154 hrs**, plus about 4 hrs of setup in Week 0
+- Light weeks (Thanksgiving, finals): **7 days × 1 hr = 7 hrs**
+- Total:
+
+  2 + 20 + 9 × 14 + 2 × 7 = **162 hrs**
+
+  The site derives this total from the dated sessions in code and a test checks that it equals 162.
 
 ### Calendar
 
 | Week | Dates | Phase | Load |
 |---|---|---|---|
-| 0 | Oct 15 – Oct 18 | Setup | ~4 hrs |
-| 1 | Oct 19 – Oct 25 | Foundations | 14 hrs |
+| 0 | Oct 15 (Thu, one day) | Setup | 2 hrs |
+| 1 | Oct 16 – Oct 25 (10 days) | Foundations | 20 hrs |
 | 2 | Oct 26 – Nov 1 | Foundations | 14 hrs |
 | 3 | Nov 2 – Nov 8 | Foundations | 14 hrs |
 | 4 | Nov 9 – Nov 15 | Foundations | 14 hrs |
@@ -56,28 +64,44 @@ Each week also has a short **Starship context** reading, one **deliverable** you
 | 11 | Dec 28 – Jan 3 | Capstone | 14 hrs |
 | 12 | Jan 4 – Jan 10 | Launch prep | 14 hrs |
 
-Check your own exam schedule and slide Week 9 if finals land differently.
+**Sliding the finals week.** Week 9 (the light review week) sits on Dec 14 – Dec 20 by default. If your VT exams land in a different week, change the one constant `FINALS_WEEK_START` in `src/data/plan.ts` to that week's Monday (Nov 30, Dec 7, Dec 14 or Dec 21). The site moves Week 9 to that calendar week and shifts Weeks 7–10 around it in order. Week content and progress check-offs stay attached to their week numbers.
 
 ---
 
-## Week 0: Setup (Oct 15 – Oct 18)
+## Week 0: Setup (Thursday, Oct 15, one day, 2 hours)
 
-- Install **Ansys Student** (free; structural problems are capped at about 128,000 nodes/elements, so learn to use shells and symmetry early).
-- Get **Siemens NX** access. Try the NX student edition from Siemens first. If that doesn't work, ask the VT ME department which labs or remote desktops carry NX.
-- Install **MATLAB** through Virginia Tech's campus license.
-- Install **Python** (Anaconda or plain Python plus VS Code) with numpy, scipy, matplotlib, pandas, and Jupyter.
-- Create a portfolio folder and a GitHub repo called `booster-prep`. Every deliverable goes there.
-- Start a paper or digital **engineering notebook**. Date every page. This habit matters at SpaceX.
+Setup is Day 1 only. Then Week 1 starts the next morning at full intensity.
+
+**Hour 1: start every big download in parallel, then build the Python side while they run.**
+- Start the downloads:
+  - **Ansys Student 2026 R1.** Free; structural problems are capped at 128K nodes/elements (so learn shells and symmetry early); Windows 10/11 64-bit only. The built-in license runs to Mar 31, 2027, which covers the whole prep window.
+  - **Siemens Designcenter Student Edition (includes NX).** Free; Windows 64-bit only. If it doesn't work out, ask the VT ME department which labs or remote desktops carry NX.
+  - **MATLAB** through Virginia Tech's campus license.
+- Install **Python** (Miniconda or Anaconda) and **VS Code**. Create an environment with numpy, scipy, matplotlib, pandas, jupyter and pytest.
+- Create the `booster-prep` GitHub repo with folders `calcs/`, `tests/`, `cad/`, `fea/`, `notes/` and a README. Add a trivial passing `pytest` test so testing is part of the workflow from day one.
+
+**Hour 2: finish and verify.**
+- Finish the installs and launch Ansys, NX and MATLAB once each to confirm the licenses work.
+- Start the dated **engineering notebook**. Page 1 is your goals and how you'll track your time. Date every page; this habit matters at SpaceX.
+- Skim the Roadmap and Week 1 on this site.
+
+**On a Mac:** Ansys Student and the NX student edition are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.
 
 ---
 
 ## Phase 1: Foundations (Weeks 1–4)
 
-### Week 1: Stress, loads, and margins (Oct 19 – Oct 25)
+### Week 1: Stress, loads, margins, and running loads (Fri Oct 16 – Sun Oct 25, 10 days, 20 hrs)
 
 **Structures**
 - Free body diagrams for a vertical rocket stage: thrust, weight, inertia, aerodynamic bending.
-- Stress and strain, Hooke's law, Mohr's circle, principal stresses.
+- **Running loads:** structures engineers talk in force per unit length of circumference (N/mm or lbf/in). Axial force and bending combine into a peak running load and an equivalent axial load:
+
+  N_x = P / (2πR) ± M / (πR²)
+  P_eq = P + 2M / R
+  σ = N_x / t
+
+- Stress and strain, biaxial Hooke's law, strain gauges, Mohr's circle, principal stresses (review speed).
 - Von Mises equivalent stress:
 
   σ_vm = √( σ₁² − σ₁σ₂ + σ₂² )   (2D, principal stresses)
@@ -87,19 +111,38 @@ Check your own exam schedule and slide Week 9 if finals land differently.
   MS = σ_allowable / (FS × σ_applied) − 1
 
   A part passes when **MS ≥ 0**. Aerospace work talks in margins far more than in factors of safety.
+- **Limit vs. ultimate load.** Limit load is the maximum load expected in service. Ultimate load is limit load × FS. Pair the yield FS with the yield allowable and the ultimate FS with the ultimate allowable, and report the lowest margin with its load case.
+- **Units drill:** redo three examples in US customary units (ksi, lbf/in, in·lbf).
 
 **CAD / FEA (NX)**
 - NX interface tour. Map SolidWorks words to NX words (Feature Manager → Part Navigator, Sketch → Sketch, Extrude → Extrude, Mates → Assembly Constraints).
-- Sketch, extrude, revolve, holes, patterns.
+- Sketch, extrude (Boolean inside the dialog), Hole, Pattern Feature, Revolve: build a bolted flange ring.
+- Expressions (parametric bolt count and diameter), Part Navigator hygiene, first drawing.
 
 **Code (Python)**
-- Variables, functions, lists, f-strings, plotting a simple line.
-- Write `margin_of_safety(allowable, applied, fs)`.
+- Environment check, git workflow, and `margin_of_safety(allowable, applied, fs)` with its first pytest test.
+- `mos.py`: a load-case table (list of dicts or pandas) with yield and ultimate margins, flagging the minimum margin, with a plot.
+- `running_load()` and `equivalent_axial_load()` with tests, vectorized over stations with numpy.
+
+**Day by day** (Hour 1 is structures, Hour 2 is a tool)
+
+| Date | Hour 1 | Hour 2 |
+|---|---|---|
+| Fri Oct 16 | Loads on a vertical stage: FBD, load factor n, axial force at a station (Lesson 1 §1, Problem 4) | NX: interface tour, SolidWorks → NX vocabulary map, first part (sketch, extrude, Boolean inside the dialog) |
+| Sat Oct 17 | Running loads and bending: σ = P/(2πRt), σ_b = M/(πR²t), running load and equivalent axial load (Lesson 1 §1b) | Python: environment check, git workflow, `margin_of_safety()` plus its first pytest test |
+| Sun Oct 18 | Stress and strain, biaxial Hooke's law, strain gauges, Mohr's circle, principal stresses (review speed) | Lesson 1 Problems 3 and 5, worked by hand in the notebook |
+| Mon Oct 19 | Von Mises; FS vs. MS; limit vs. ultimate load; pairing yield/ultimate FS with the right allowable; how margins are reported | NX: Hole, Pattern Feature, Revolve; build the bolted flange ring |
+| Tue Oct 20 | Lesson 1 Problems 1, 2, 6, plus the running-load problems | Python: `mos.py`, a load-case table with yield and ultimate margins, flagging the minimum margin, with a plot |
+| Wed Oct 21 | Units drill: redo three of the week's examples in US customary units (ksi, lbf/in, in·lbf) | NX: Expressions (parametric bolt count and diameter), Part Navigator hygiene, first drawing of the flange |
+| Thu Oct 22 | Self-checks with no notes, then flashcards; fix anything you missed | Python: `running_load()` and `equivalent_axial_load()` with tests; vectorize over stations with numpy |
+| Fri Oct 23 | Head start on Week 2: Lesson 2 §1–2 (hoop and axial derivations, spheres) | Head start on Week 2: NX tank revolve (barrel plus two domes) |
+| Sat Oct 24 | Deliverable build: flange ring model and drawing, pushed to the repo | Deliverable build: `mos.py` with passing tests and a README, pushed |
+| Sun Oct 25 | Starship context: the V3 booster changes, the Booster 18 pressure-test anomaly and Flight 12; note one structures lesson from each | Flashcards and self-check, then plan Week 2 in the notebook |
 
 **Starship context**
 - The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter, and burn liquid methane and liquid oxygen.
 
-**Deliverable:** NX model of a bolted flange ring, plus `mos.py` that prints margins for a list of load cases.
+**Deliverable:** an NX model and drawing of a bolted flange ring, plus `mos.py` and `test_mos.py` in the repo, running the load-case margins table with yield and ultimate checks.
 
 **Self-check**
 1. Why do aerospace engineers report margins instead of just factors of safety?
@@ -109,6 +152,8 @@ Check your own exam schedule and slide Week 9 if finals land differently.
 ---
 
 ### Week 2: Thin-walled pressure vessels (Oct 26 – Nov 1)
+
+Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and the sphere are already done, so Monday's first hour goes to the **shell discontinuity worked example** at the dome-to-barrel joint (Lesson 2 §3) instead.
 
 **Structures**
 - Thin-wall cylinder, radius R and wall thickness t, internal pressure p:
@@ -341,10 +386,12 @@ Check your own exam schedule and slide Week 9 if finals land differently.
 
 ---
 
-## Week 9: Review (Dec 14 – Dec 20, finals, light week)
+## Week 9: Review (Dec 14 – Dec 20 by default, finals, light week)
+
+You've written pytest tests since Week 1, so this week consolidates rather than starting testing from scratch. The calendar week is set by `FINALS_WEEK_START` (see the Calendar).
 
 - 30 minutes a day of flashcards and self-check questions from Weeks 1–8.
-- Clean up your Python toolkit into one module, `booster_calcs.py`, with a test for every function using the worked examples in this plan.
+- Consolidate your Python toolkit into one module, `booster_calcs.py`, and fill any test gaps, using the worked examples in this plan.
 - Read the capstone spec below and sketch your model plan.
 
 ---

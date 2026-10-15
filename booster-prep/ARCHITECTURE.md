@@ -22,7 +22,9 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 ## Content
 
 - `data/plan.ts`: every week from PLAN.md (tracks, formulas with variable tables, context, deliverable, self-checks with answers), the capstone spec and launch prep.
-- `lib/schedule.ts`: turns the weekly rhythm (and custom plans for Weeks 0, 6, 9–12) into dated 1-hour sessions. 158 planned hours.
+- `lib/schedule.ts`: turns the weekly rhythm (and custom plans for Weeks 0, 1, 6, 9–12) into dated 1-hour sessions. Week 0 is one 2-hour setup day (Oct 15) and Week 1 runs 10 days (Oct 16 – Oct 25). The total, `plannedHours`, is derived from the sessions: 162 hours, checked by `tests/schedule.test.ts`.
+- `data/plan.ts` `FINALS_WEEK_START`: the Monday of the light finals week (Week 9). Change it to slide finals; `placeFinalsWeek()` re-dates Weeks 7–10 around it.
+- `lib/schedule.ts` `dateOverride()`: in `pnpm dev` only, `?date=YYYY-MM-DD` before the `#` (for example `http://localhost:5173/?date=2026-10-15#/`) mocks today's date.
 - `lessons/NN-slug.mdx`: `export const meta`, then MDX using `<Formula>`, `<Example>`, `<Problem>`/`<Solution>`, `<Callout>`, `<Figure>` with inline SVG using the `dg-*` theme classes.
 - `lib/cards.ts`: the flashcard deck, built from every lesson `<Formula>`, week formulas, self-checks and glossary terms.
 - `lib/search.ts`: global search over pages, lessons, weeks, glossary, flashcards and tool steps.

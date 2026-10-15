@@ -74,8 +74,10 @@ export function WeekPage() {
   const days = scheduleByWeek[week.n];
   const lesson = week.lesson ? lessonBySlug(week.lesson) : undefined;
   const wp = weekProgress(progress, week.n);
-  const prev = weeks.find((w) => w.n === week.n - 1);
-  const next = weeks.find((w) => w.n === week.n + 1);
+  // Neighbors in calendar order (the finals week can be moved; see FINALS_WEEK_START).
+  const at = weeks.indexOf(week);
+  const prev = weeks[at - 1];
+  const next = weeks[at + 1];
   const trackCards = [
     week.structures.length > 0 && { label: "Structures", cls: "structures", tool: "Hand calcs", items: week.structures },
     week.cad && { label: "CAD / FEA", cls: "cad", tool: week.cad.tool, items: week.cad.items },
@@ -195,7 +197,7 @@ export function WeekPage() {
           <h2 id="schedule-h" className="section-h">
             Day-by-day schedule
           </h2>
-          {week.n >= 1 && week.n <= 8 && !week.light && (
+          {week.n >= 2 && week.n <= 8 && !week.light && (
             <p className="hint">Follows the weekly rhythm: {rhythm.map((r) => r.day).join(", ")}, two 1-hour sessions a day.</p>
           )}
           <div className="days">

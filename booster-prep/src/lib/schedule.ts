@@ -29,8 +29,20 @@ export function addDays(iso: string, days: number) {
 export function dayName(iso: string) {
   return DAY_NAMES[new Date(parseDate(iso)).getUTCDay()];
 }
+/**
+ * Dev-only date override for checking the schedule: open http://localhost:5173/?date=2026-10-15#/ in `pnpm dev`.
+ * Production builds ignore it.
+ */
+export function dateOverride() {
+  if (!import.meta.env.DEV || typeof window === "undefined") return undefined;
+  const value = new URLSearchParams(window.location.search).get("date");
+  return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined;
+}
+
 /** Today's date in the viewer's own time zone, as YYYY-MM-DD. */
 export function localToday(now = new Date()) {
+  const override = dateOverride();
+  if (override) return override;
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, "0");
   const d = String(now.getDate()).padStart(2, "0");
@@ -57,11 +69,60 @@ function planWeek(week: Week): Plan[] {
 
   if (week.n === 0) {
     const t = week.tasks ?? [];
+    const strip = (task = "") => task.replace(/^\*\*Hour \d\.\*\* /, "");
     return [
-      [s("Install Ansys Student and Python", join([t[0], t[3]]), "setup")],
-      [s("Get NX access and install MATLAB", join([t[1], t[2]]), "setup")],
-      [s("Create the booster-prep repo and portfolio folder", t[4], "setup")],
-      [s("Start your engineering notebook", `${t[5]} Then walk through this site's Roadmap and Week 1.`, "setup")],
+      [
+        s("Setup hour 1: start downloads, build the Python side", [t[0], t[1], t[2]].map(strip).join(" "), "setup"),
+        s("Setup hour 2: finish, verify and start the notebook", [t[3], t[4], t[5]].map(strip).join(" ") + " " + (t[6] ?? ""), "setup"),
+      ],
+    ];
+  }
+
+  if (week.n === 1) {
+    const st = (title: string, detail: string) => s(title, detail, "structures", "structures");
+    const nx = (title: string, detail: string) => s(title, detail, "cad", "cad");
+    const py = (title: string, detail: string) => s(title, detail, "code", "code");
+    return [
+      [
+        st("Loads on a vertical stage", "Free body diagram, load factor $n$, axial force at a station (Lesson 1 §1, Practice 4)."),
+        nx("NX: interface tour and first part", "SolidWorks → NX vocabulary map, then a first part: sketch, extrude, and the Boolean choice inside the Extrude dialog."),
+      ],
+      [
+        st("Running loads and bending", "$\\sigma = P/(2\\pi R t)$ and $\\sigma_b = M/(\\pi R^2 t)$, then running load $N_x$ and equivalent axial load $P_\\text{eq}$ (Lesson 1 §1b)."),
+        py("Python: environment, git and margin_of_safety()", "Environment check, git workflow, and `margin_of_safety()` plus its first pytest test, pushed to the repo."),
+      ],
+      [
+        st("Stress, strain and Mohr's circle (review speed)", "Biaxial Hooke's law, strain gauges, Mohr's circle and principal stresses (Lesson 1 §2–3)."),
+        st("Worked problems by hand", "Lesson 1 Practice 3 and 5, worked by hand in the notebook."),
+      ],
+      [
+        st("Von Mises, margins, limit vs. ultimate", "Von Mises; FS vs. MS; limit vs. ultimate load; pairing the yield and ultimate FS with the right allowable; how margins are reported (Lesson 1 §4–5)."),
+        nx("NX: Hole, Pattern Feature, Revolve", "Build the bolted flange ring."),
+      ],
+      [
+        st("Worked problems: margins and running loads", "Lesson 1 Practice 1, 2 and 6, plus the running-load problems."),
+        py("Python: mos.py load-case table", "A load-case table (list of dicts or pandas) with yield and ultimate margins, flagging the minimum margin, with a plot."),
+      ],
+      [
+        st("Units drill", "Redo three of the week's examples in US customary units: ksi, lbf/in, in·lbf. Use the US toggle on the Calculators page to check."),
+        nx("NX: Expressions and the first drawing", "Expressions for a parametric bolt count and diameter, Part Navigator hygiene, and the first drawing of the flange."),
+      ],
+      [
+        s("Self-checks and flashcards", "Week 1 self-checks with no notes, then flashcards. Fix anything you missed.", "review"),
+        py("Python: running_load() and equivalent_axial_load()", "Write both with pytest tests, then vectorize over stations with numpy."),
+      ],
+      [
+        st("Head start on Week 2: hoop and axial stress", "Lesson 2 §1–2: the hoop and axial derivations, and spheres."),
+        nx("Head start on Week 2: NX tank revolve", "Revolve a tank: barrel plus two domes."),
+      ],
+      [
+        s("Deliverable: flange ring model and drawing", "Finish the NX flange ring model and drawing and push them to the repo.", "deliverable"),
+        s("Deliverable: mos.py with tests", "`mos.py` and `test_mos.py` passing, with a README, pushed to the repo.", "deliverable"),
+      ],
+      [
+        s("Starship context: V3, Booster 18, Flight 12", join(week.context), "context"),
+        s("Flashcards, self-check, plan Week 2", "Flashcards and the self-check, then plan Week 2 in the notebook.", "review"),
+      ],
     ];
   }
 
@@ -81,13 +142,13 @@ function planWeek(week: Week): Plan[] {
   if (week.n === 9) {
     const fc = "Flashcards and self-checks from Weeks 1–8 (30 min). ";
     return [
-      [s("Review: margins and pressure vessels", fc + "Start `booster_calcs.py`: margin and pressure-vessel functions.", "review", "code")],
-      [s("Review: materials and stiffeners", fc + "Add tests using the Week 1–2 worked examples.", "review", "code")],
-      [s("Review: buckling", fc + "Add the column and cylinder buckling functions and their tests.", "review", "code")],
-      [s("Review: joints and fatigue", fc + "Add thermal, bolt and Miner's-rule functions and tests.", "review", "code")],
+      [s("Review and consolidate: margins and pressure vessels", fc + "Start `booster_calcs.py`: move in your margin, running-load and pressure-vessel functions with their tests.", "review", "code")],
+      [s("Review and consolidate: thermal and stiffeners", fc + "Move in the thermal-stress and section-property functions, and fill test gaps from the Week 2–4 worked examples.", "review", "code")],
+      [s("Review and consolidate: buckling", fc + "Move in the column and cylinder buckling functions and check their tests.", "review", "code")],
+      [s("Review and consolidate: joints and fatigue", fc + "Move in the bolt, weld and Miner's-rule functions and fill any test gaps.", "review", "code")],
       [s("Read the capstone spec", fc + "Read the full capstone spec on the Capstone page.", "review")],
       [s("Sketch the capstone model plan", fc + "Sketch the NX and Ansys model plan in your notebook.", "review")],
-      [s("Light review and rest", fc + "Then rest.", "review")],
+      [s("Light review", fc + "Run the whole `booster_calcs.py` test suite once more, then rest.", "review")],
     ];
   }
 
@@ -129,24 +190,31 @@ function planWeek(week: Week): Plan[] {
 
   // Normal weeks follow the weekly rhythm table.
   const [learnA, learnB] = half(week.structures);
+  // Week 1's Friday already covered Lesson 2 §1–2, so Week 2 opens on the shell discontinuity example.
+  const mondayH1 =
+    week.n === 2
+      ? s("Structures: shell discontinuity at the dome joint", "The hoop and axial derivations were done on Fri Oct 23. Work the dome-to-barrel discontinuity example (Lesson 2 §3), then read §2–3 on domes.", "structures", "structures")
+      : s(rhythm[0].h1, join(learnA), "structures", "structures");
   const cad = week.cad?.items ?? [];
   const code = week.code?.items ?? [];
   const cadLabel = `CAD / FEA (${week.cad?.tool ?? "NX"})`;
   const codeLabel = `Code (${week.code?.tool ?? "Python"})`;
   return [
-    [s(rhythm[0].h1, join(learnA), "structures", "structures"), s(cadLabel, cad[0] ?? "", "cad", "cad")],
+    [mondayH1, s(cadLabel, cad[0] ?? "", "cad", "cad")],
     [s(rhythm[1].h1, "Rework the lesson's worked examples, then practice problems 1–3.", "structures", "structures"), s(codeLabel, code[0] ?? "", "code", "code")],
     [s(rhythm[2].h1, join(learnB.length ? learnB : learnA), "structures", "structures"), s(cadLabel, cad[1] ?? cad[0] ?? "", "cad", "cad")],
     [s(rhythm[3].h1, "Finish the practice problems and answer the self-checks without notes.", "structures", "structures"), s(codeLabel, code[1] ?? code[0] ?? "", "code", "code")],
     [s(cadLabel, "Finish this week's CAD / FEA work.", "cad", "cad"), s("Code: turn this week's hand calc into a script", code[code.length - 1] ?? "", "code", "code")],
     [s(rhythm[5].h1, week.deliverable, "deliverable"), s(rhythm[5].h2, week.deliverable, "deliverable")],
-    [s(rhythm[6].h1, join(week.context), "context"), s(rhythm[6].h2, "Flashcards for this week, then the self-check questions.", "review")],
+    [
+      s(rhythm[6].h1, `${join(week.context)} Then this week's flashcards.`, "context"),
+      s(rhythm[6].h2, "Redo this week's hardest worked problem with no notes and check it against the lesson. Then plan next week in the notebook.", "review"),
+    ],
   ];
 }
 
 function buildSessions(week: Week): Session[][] {
   const plan = planWeek(week);
-  // Every session is a one-hour block (Sunday's two half-hour items share one block each).
   return plan.map((day, i) => {
     const date = addDays(week.start, i);
     return day.map(([title, detail, kind, track], slot) => ({

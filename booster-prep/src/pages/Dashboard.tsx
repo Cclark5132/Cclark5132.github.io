@@ -4,7 +4,7 @@ import { SessionCheck } from "../components/Checks";
 import { ProgressIO } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
 import { phaseColor, START_DATE, weeks } from "../data/plan";
-import { stats } from "../lib/progress";
+import { stats, validSessions } from "../lib/progress";
 import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
 import { studyStreak, useProgress } from "../lib/store";
 
@@ -81,7 +81,7 @@ function TodayCard({ today }: { today: string }) {
       <div className="card-title">
         <div>
           <div className="eyebrow">
-            Week {week.n} · Day {dayIndex + 1} of {week.days} · {formatDate(today, { weekday: "long", month: "short", day: "numeric" })}
+            Week {week.n} · Day {dayIndex + 1} of {week.days} · {week.title} · {formatDate(today, { weekday: "long", month: "short", day: "numeric" })}
           </div>
           <h2 style={{ marginTop: 4 }}>Today: {week.title}</h2>
         </div>
@@ -116,7 +116,7 @@ export function Dashboard() {
   const progress = useProgress();
   const today = localToday(new Date(useNow(60_000)));
   const s = stats(progress);
-  const streak = studyStreak(progress.sessions, today, addDays);
+  const streak = studyStreak(validSessions(progress.sessions), today, addDays);
   const onPlan = plannedHoursThrough(today);
   const trackRows = [
     ["Structures", s.tracks.structures, "var(--phase-foundations)"],

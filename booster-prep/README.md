@@ -6,6 +6,10 @@ A private study site for the 12-week Starship booster structures internship prep
 
 Mission dashboard (countdown, today's sessions, progress, streak, hours), roadmap, a page per week, eight structures lessons, tool tracks (NX, Ansys, Python, MATLAB, FEA best practices), calculators, the capstone with a hand-calc panel, an interactive booster anatomy page, flashcards with spaced repetition, resources, glossary, launch prep and global search (Ctrl K or /).
 
+The plan runs October 15, 2026 to January 10, 2027: Week 0 is one 2-hour setup day (Thu Oct 15), Week 1 runs 10 days (Oct 16 – Oct 25, 20 hours), then nine normal 14-hour weeks and two light 7-hour weeks, for **162 hours** in total.
+
+**Finals week.** Week 9 is the light finals week, Dec 14 – Dec 20 by default. If your exams land in a different week, set `FINALS_WEEK_START` in [`src/data/plan.ts`](src/data/plan.ts) to that week's Monday (`2026-11-30`, `2026-12-07`, `2026-12-14` or `2026-12-21`). The site moves Week 9 there and shifts Weeks 7–10 around it.
+
 Progress is stored in the browser's localStorage. Use **Export / Import** (sidebar or dashboard) to back it up or move it to another device.
 
 ## Run locally
@@ -15,7 +19,7 @@ Requires Node.js 20+ and pnpm 10+.
 ```bash
 cd booster-prep
 pnpm install
-pnpm dev          # http://localhost:5173 (no password in dev)
+pnpm dev          # http://localhost:5173 (no password in dev); add ?date=2026-10-15 before the # to mock today
 pnpm test         # Vitest: calculator math against the PLAN.md worked examples, and every lesson renders
 pnpm lint         # ESLint
 pnpm build        # type-check and build one self-contained dist/index.html

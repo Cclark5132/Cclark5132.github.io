@@ -145,17 +145,19 @@ export const toolTracks: ToolTrack[] = [
   {
     id: "python",
     name: "Python",
-    blurb: "Weeks 1, 2, 4–7, 9–11. You're building one toolkit, booster_calcs.py, that you'll keep using at work.",
+    blurb: "Weeks 1, 2, 4–7, 9–11. Python is your main toolkit: pytest from Week 1, one module (booster_calcs.py) you'll keep using at work, and the capstone.",
     path: [
       {
         week: 1,
-        title: "Basics and your first function",
+        title: "Basics, pytest from day one, and running loads",
         steps: [
-          "Write `def margin_of_safety(allowable, applied, fs): return allowable / (fs * applied) - 1`.",
-          "Store load cases as a list of dicts and loop over them, printing with f-strings: `f\"{name}: MS = {ms:+.2f}\"`.",
+          "Check the environment (`python -c \"import numpy, scipy, matplotlib, pandas, pytest\"`) and run the trivial Week 0 test with `pytest`.",
+          "Write `def margin_of_safety(allowable, applied, fs): return allowable / (fs * applied) - 1` and a first test in `tests/test_mos.py`: `assert abs(margin_of_safety(300, 200, 1.4) - 0.0714) < 1e-3`. Commit and push.",
+          "Store load cases as a list of dicts (or a pandas DataFrame) with yield and ultimate checks. Print them with f-strings, `f\"{name}: MS = {ms:+.2f}\"`, and flag the minimum margin.",
           "Plot MS vs. applied stress with matplotlib and draw a horizontal line at MS = 0.",
+          "Write `running_load(P, M, R)` and `equivalent_axial_load(P, M, R)` with tests (30 MN and 20 MN·m at R = 4500 mm give 1375.4 N/mm and 38.89 MN), then vectorize over stations with numpy.",
         ],
-        check: "Deliverable: `mos.py` prints margins for a list of load cases.",
+        check: "Deliverable: `mos.py` and `test_mos.py` pass with `pytest` and print the load-case margins table.",
       },
       {
         week: 2,
@@ -201,13 +203,13 @@ export const toolTracks: ToolTrack[] = [
       },
       {
         week: 9,
-        title: "booster_calcs.py with tests",
+        title: "Consolidate booster_calcs.py and fill test gaps",
         steps: [
-          "Move every function into one module.",
-          "Write a pytest test for each one using the worked examples in the plan (`assert abs(x - expected) < tol`).",
+          "Move every function you've written since Week 1 into one module, `booster_calcs.py`.",
+          "You've had tests since Week 1. List any function without one and add a test from the plan's worked examples (`assert abs(x - expected) < tol`).",
           "Run `pytest` and get everything green.",
         ],
-        check: "One module, one passing test per function.",
+        check: "One module, and every function has a passing test.",
       },
       {
         week: 10,

@@ -23,7 +23,7 @@ export interface Week {
   n: number;
   title: string;
   start: string; // ISO date of first day
-  days: number; // number of days in the week (Week 0 has 4)
+  days: number; // number of days in the week (Week 0 has 1, Week 1 has 10)
   phase: Phase;
   light: boolean;
   hours: number;
@@ -42,6 +42,13 @@ export interface Week {
 export const START_DATE = "2027-01-11";
 export const PREP_START = "2026-10-15";
 
+/**
+ * Monday of the calendar week that holds the light finals week (Week 9, Review). Move it to match your VT
+ * exam schedule: "2026-11-30", "2026-12-07", "2026-12-14" (default) or "2026-12-21". Weeks 7–10 shift around
+ * it in order; week content and progress IDs stay attached to their week numbers.
+ */
+export const FINALS_WEEK_START = "2026-12-14";
+
 export const tracks: { id: Track; label: string; share: string; covers: string }[] = [
   { id: "structures", label: "Structures", share: "about 40%", covers: "The theory behind booster structures, done as hand calcs" },
   { id: "cad", label: "CAD / FEA", share: "about 35%", covers: "NX for modeling and drawings, then Ansys for analysis" },
@@ -55,59 +62,71 @@ export const rhythm: { day: string; h1: string; h2: string }[] = [
   { day: "Thu", h1: "Structures: worked problems", h2: "Code" },
   { day: "Fri", h1: "CAD / FEA", h2: "Code: turn this week's hand calc into a script" },
   { day: "Sat", h1: "Deliverable build", h2: "Deliverable build" },
-  { day: "Sun", h1: "Starship context reading (30 min)", h2: "Flashcards and self-check (30 min), rest" },
+  { day: "Sun", h1: "Starship context (30 min), then flashcards (30 min)", h2: "Hardest problem again with no notes, then plan next week" },
 ];
 
 const v = (s: string, m: string, u: string): Var => [s, m, u];
 
-export const weeks: Week[] = [
+/** Weeks in their default calendar positions (finals in Dec 14 – Dec 20). */
+export const baseWeeks: Week[] = [
   {
     n: 0,
     title: "Setup",
     start: "2026-10-15",
-    days: 4,
+    days: 1,
     phase: "Setup",
     light: false,
-    hours: 4,
+    hours: 2,
+    note: "One day, two hours. Setup is Day 1 only; Week 1 starts tomorrow at full intensity.",
     structures: [],
     formulas: [],
     context: [],
-    deliverable: "Tools installed, a `booster-prep` GitHub repo, and a dated engineering notebook.",
+    deliverable: "Tools downloading or installed, a `booster-prep` GitHub repo with a passing pytest test, and a dated engineering notebook.",
     selfChecks: [],
     tasks: [
-      "Install **Ansys Student** (free; structural problems are capped at about 128,000 nodes/elements, so learn to use shells and symmetry early).",
-      "Get **Siemens NX** access. Try the NX student edition from Siemens first. If that doesn't work, ask the VT ME department which labs or remote desktops carry NX.",
-      "Install **MATLAB** through Virginia Tech's campus license.",
-      "Install **Python** (Anaconda or plain Python plus VS Code) with numpy, scipy, matplotlib, pandas, and Jupyter.",
-      "Create a portfolio folder and a GitHub repo called `booster-prep`. Every deliverable goes there.",
-      "Start a paper or digital **engineering notebook**. Date every page. This habit matters at SpaceX.",
+      "**Hour 1.** Start every big download in parallel: **Ansys Student 2026 R1** (free; structural problems capped at 128K nodes/elements; Windows 10/11 64-bit only; built-in license runs to Mar 31, 2027), **Siemens Designcenter Student Edition (includes NX)** (free; Windows 64-bit only), and **MATLAB** through VT's campus license.",
+      "**Hour 1.** While they run, install **Python** (Miniconda or Anaconda) and **VS Code**, and create an environment with numpy, scipy, matplotlib, pandas, jupyter and pytest.",
+      "**Hour 1.** Create the `booster-prep` GitHub repo with folders `calcs/`, `tests/`, `cad/`, `fea/`, `notes/` and a README. Add a trivial passing `pytest` test so testing is part of the workflow from day one.",
+      "**Hour 2.** Finish the installs and launch Ansys, NX and MATLAB once each to confirm the licenses work. If NX won't work out, ask the VT ME department which labs or remote desktops carry NX.",
+      "**Hour 2.** Start the dated **engineering notebook**. Page 1 is your goals and how you'll track your time. Date every page; this habit matters at SpaceX.",
+      "**Hour 2.** Skim the Roadmap and Week 1 on this site.",
+      "**On a Mac:** Ansys Student and the NX student edition are Windows-only. Use a VT lab or remote-desktop machine, or a Windows virtual machine. If a download is still running when the hour ends, let it finish while Week 1 starts. Don't push setup into another day.",
     ],
   },
   {
     n: 1,
-    title: "Stress, loads, and margins",
-    start: "2026-10-19",
-    days: 7,
+    title: "Stress, loads, margins, and running loads",
+    start: "2026-10-16",
+    days: 10,
     phase: "Foundations",
     light: false,
-    hours: 14,
+    hours: 20,
+    note: "Ten days, Fri Oct 16 to Sun Oct 25, at full intensity: 2 hours every day. Hour 1 is structures; Hour 2 is a tool. Fri Oct 23 gives you a head start on Week 2.",
     lesson: "stress-and-margins",
     structures: [
       "Free body diagrams for a vertical rocket stage: thrust, weight, inertia, aerodynamic bending.",
-      "Stress and strain, Hooke's law, Mohr's circle, principal stresses.",
+      "**Running loads:** force per unit length of circumference (N/mm or lbf/in). Axial force and bending combine into a peak running load $N_x$ and an equivalent axial load $P_\\text{eq}$.",
+      "Stress and strain, biaxial Hooke's law, strain gauges, Mohr's circle, principal stresses (review speed).",
       "Von Mises equivalent stress (2D, principal stresses).",
       "Factor of safety (FS) and margin of safety (MS). A part passes when **MS ≥ 0**. Aerospace work talks in margins far more than in factors of safety.",
+      "**Limit vs. ultimate load.** Limit load is the maximum expected in service; ultimate load is limit × FS. Pair the yield FS with the yield allowable and the ultimate FS with the ultimate allowable.",
+      "**Units drill:** redo three examples in US customary units (ksi, lbf/in, in·lbf).",
     ],
     cad: {
       tool: "NX",
       items: [
-        "NX interface tour. Map SolidWorks words to NX words (Feature Manager → Part Navigator, Sketch → Sketch, Extrude → Extrude, Mates → Assembly Constraints).",
-        "Sketch, extrude, revolve, holes, patterns.",
+        "NX interface tour. Map SolidWorks words to NX words (Feature Manager → Part Navigator, Sketch → Sketch, Extrude → Extrude, Mates → Assembly Constraints). First part: sketch, extrude, Boolean inside the dialog.",
+        "Hole, Pattern Feature and Revolve: build the bolted flange ring.",
+        "Expressions (parametric bolt count and diameter), Part Navigator hygiene, and a first drawing of the flange.",
       ],
     },
     code: {
       tool: "Python",
-      items: ["Variables, functions, lists, f-strings, plotting a simple line.", "Write `margin_of_safety(allowable, applied, fs)`."],
+      items: [
+        "Environment check, git workflow, and `margin_of_safety(allowable, applied, fs)` with its first pytest test.",
+        "`mos.py`: a load-case table (list of dicts or pandas) with yield and ultimate margins, flagging the minimum margin, with a plot.",
+        "`running_load()` and `equivalent_axial_load()` with tests, vectorized over stations with numpy.",
+      ],
     },
     formulas: [
       {
@@ -122,14 +141,26 @@ export const weeks: Week[] = [
           v("MS", "margin of safety (pass when MS ≥ 0)", "—"),
           v("\\sigma_\\text{allowable}", "material allowable", "MPa"),
           v("FS", "factor of safety", "—"),
-          v("\\sigma_\\text{applied}", "applied stress", "MPa"),
+          v("\\sigma_\\text{applied}", "applied (limit) stress", "MPa"),
+        ],
+      },
+      {
+        label: "Running load and equivalent axial load",
+        tex: "N_x = \\frac{P}{2\\pi R} \\pm \\frac{M}{\\pi R^2}, \\qquad P_\\text{eq} = P + \\frac{2M}{R}, \\qquad \\sigma = \\frac{N_x}{t}",
+        vars: [
+          v("N_x", "axial running load (force per unit length of circumference)", "N/mm"),
+          v("P", "axial force", "N"),
+          v("M", "bending moment", "N·mm"),
+          v("R", "mean radius", "mm"),
+          v("t", "wall thickness", "mm"),
+          v("P_\\text{eq}", "uniform axial load giving the same peak running load as P plus M", "N"),
         ],
       },
     ],
     context: [
       "The full stack: Super Heavy booster below, Starship upper stage on top. Both are stainless steel, about 9 m in diameter, and burn liquid methane and liquid oxygen.",
     ],
-    deliverable: "NX model of a bolted flange ring, plus `mos.py` that prints margins for a list of load cases.",
+    deliverable: "An NX model and drawing of a bolted flange ring, plus `mos.py` and `test_mos.py` in the repo, running the load-case margins table with yield and ultimate checks.",
     selfChecks: [
       {
         q: "Why do aerospace engineers report margins instead of just factors of safety?",
@@ -521,15 +552,15 @@ export const weeks: Week[] = [
     phase: "Review",
     light: true,
     hours: 7,
-    note: "Finals week. About 1 hour a day. Check your own exam schedule and slide this week if finals land differently.",
+    note: "Finals week. About 1 hour a day. If your exams land in a different week, change `FINALS_WEEK_START` in `src/data/plan.ts` and this week moves there.",
     structures: [],
     formulas: [],
     context: [],
-    deliverable: "`booster_calcs.py`: one clean module with a test for every function, plus a sketched capstone model plan.",
+    deliverable: "`booster_calcs.py`: one consolidated module with any test gaps filled, plus a sketched capstone model plan.",
     selfChecks: [],
     tasks: [
       "30 minutes a day of flashcards and self-check questions from Weeks 1–8.",
-      "Clean up your Python toolkit into one module, `booster_calcs.py`, with a test for every function using the worked examples in this plan.",
+      "Consolidate your Python toolkit into one module, `booster_calcs.py`, and fill any test gaps using the worked examples in this plan (you've written tests since Week 1).",
       "Read the capstone spec and sketch your model plan.",
     ],
   },
@@ -595,6 +626,25 @@ export const weeks: Week[] = [
     ],
   },
 ];
+
+/**
+ * Places the light finals week (Week 9) on the calendar week named by FINALS_WEEK_START. Weeks 2–12 occupy
+ * consecutive 7-day slots from Oct 26; Week 9 takes the chosen slot and the other weeks keep their order.
+ * Returns the weeks in calendar order.
+ */
+export const FINALS_SLOTS = ["2026-11-30", "2026-12-07", "2026-12-14", "2026-12-21"];
+export function placeFinalsWeek(list: Week[], finalsStart: string): Week[] {
+  const fixed = list.filter((w) => w.n <= 1);
+  const slotted = list.filter((w) => w.n >= 2).sort((a, b) => a.n - b.n);
+  const slots = slotted.map((w) => w.start);
+  const index = FINALS_SLOTS.includes(finalsStart) ? slots.indexOf(finalsStart) : -1;
+  if (index < 0) return [...fixed, ...slotted];
+  const order = slotted.filter((w) => w.n !== 9);
+  order.splice(index, 0, slotted.find((w) => w.n === 9)!);
+  return [...fixed, ...order.map((w, i) => ({ ...w, start: slots[i] }))];
+}
+
+export const weeks: Week[] = placeFinalsWeek(baseWeeks, FINALS_WEEK_START);
 
 export const weekByNumber = (n: number) => weeks.find((week) => week.n === n);
 
