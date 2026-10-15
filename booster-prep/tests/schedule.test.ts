@@ -4,7 +4,7 @@ import { stats, validSessions } from "../src/lib/progress";
 import { addDays, allSessions, locate, plannedHours, scheduleByWeek, weekEnd } from "../src/lib/schedule";
 import { studyStreak, type Progress } from "../src/lib/store";
 
-const emptyProgress = (sessions: Record<string, string>): Progress => ({ version: 1, sessions, deliverables: {}, notes: {}, checks: {}, cards: {} });
+const emptyProgress = (sessions: Record<string, string>): Progress => ({ version: 1, sessions, deliverables: {}, notes: {}, checks: {}, cards: {}, capstone: {} });
 
 describe("schedule", () => {
   it("every date from Oct 15 to Jan 10 falls in exactly one week, with no gaps or overlaps", () => {

@@ -83,7 +83,7 @@ export const toolTracks: ToolTrack[] = [
           "Geometry: a 200 × 100 × 2 mm plate with a 10 mm center hole (d/W = 0.1, so $K_t$ ≈ 3 on gross stress).",
           "Use quarter symmetry: model one quarter with Frictionless Supports on the two symmetry faces.",
           "Apply a pressure (or force) on the far edge to give 100 MPa nominal stress. Mesh with a refinement around the hole.",
-          "Solve; read the maximum normal stress at the hole edge and compare with $K_t \\times$ nominal.",
+          "Solve; read the maximum normal stress at the hole edge and compare with $K_t \\times$ nominal. The Lesson 4 Heywood fit gives $K_{tg} \\approx 3.03$ on gross stress for d/W = 0.1, so about **303 MPa** at 100 MPa nominal is the right target.",
         ],
         check: "Deliverable: FEA peak within about 5% of the $K_t$ hand calc, with a short write-up.",
       },
@@ -125,7 +125,7 @@ export const toolTracks: ToolTrack[] = [
         title: "Capstone static cases",
         steps: [
           "Shell model of the barrel and ring frames using symmetry.",
-          "Proof case: 0.45 MPa internal pressure. Flight case: ullage plus hydrostatic head (a hydrostatic pressure load or a linearly varying pressure) plus 30 MN axial compression.",
+          "Proof case: 1.25 × MEOP ≈ 1.277 MPa internal pressure (practice), checked for no yield at proof with FS 1.0. Flight case: ullage plus hydrostatic head (a hydrostatic pressure load or a linearly varying pressure) plus 30 MN axial compression.",
           "Run a mesh convergence study on the peak stress.",
         ],
         check: "Static results compare with hand calcs within about 10%.",
@@ -214,13 +214,20 @@ export const toolTracks: ToolTrack[] = [
       {
         week: 10,
         title: "Capstone hand calcs",
-        steps: ["Write a function that runs all three load cases for a given t and returns a margins table.", "Sweep t to find the minimum thickness with MS ≥ 0 everywhere."],
-        check: "Your minimum thickness matches the Capstone page's hand-calc panel.",
+        steps: [
+          "Write a function that runs all three load cases for a given t and returns a margins table. Apply the buckling FS to the axial load only, never to the pressure relief.",
+          "Sweep t to find the minimum thickness with MS ≥ 0 everywhere.",
+        ],
+        check: "Enter your minimum thickness and margins in the Capstone page's answer check. It tells you which are within 2% before you reveal the reference solution.",
       },
       {
         week: 11,
         title: "Trade study plots",
-        steps: ["Plot mass and minimum margin vs. thickness on twin axes.", "Repeat for 1–6 ring frames."],
+        steps: [
+          "Plot mass and minimum margin vs. thickness on twin axes.",
+          "Plot mass vs. ring frame count. The unstiffened hand-calc margin doesn't change with frames (Batdorf Z ≫ 2.85); say so in the report.",
+          "Stretch, with stringers: sweep 1–6 ring frames and check skin panels between stringers (Lesson 5 plate formula) and stringers as columns between frames (Euler/Johnson with effective width). Now frame count changes the margin.",
+        ],
         check: "Plots ready for the report.",
       },
     ],

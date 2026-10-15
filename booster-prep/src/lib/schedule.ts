@@ -133,7 +133,7 @@ function planWeek(week: Week): Plan[] {
       [s("Structures: worked problems", "Work the SP-8007 example by hand, then the lesson's practice problems.", "structures", "structures")],
       [s("Structures: learn the topic", join(more), "structures", "structures")],
       [s("Code: cylinder_buckling()", week.code!.items[0], "code", "code")],
-      [s("Code: test it", "Check your function against the worked example: σ_cr ≈ 103.8 MPa, γ ≈ 0.21, σ_design ≈ 21.8 MPa.", "code", "code")],
+      [s("Code: test it", "Check your function against the worked example: $\\sigma_{cr} \\approx 103.8$ MPa, $\\gamma \\approx 0.210$, $\\sigma_\\text{design} \\approx 21.8$ MPa.", "code", "code")],
       [s("Deliverable build", week.deliverable, "deliverable")],
       [s("Starship context and flashcards", join(week.context), "context")],
     ];
@@ -155,10 +155,10 @@ function planWeek(week: Week): Plan[] {
   if (week.n === 10) {
     return [
       [s("Hand calcs: hoop and axial stress", "All three load cases, in Python.", "capstone", "structures"), s("Hand calcs: flight case", "Hydrostatic head at 3 g at the bottom of the section, plus 0.35 MPa ullage.", "capstone", "structures")],
-      [s("Hand calcs: buckling with knockdown", "SP-8007 knockdown for the flight and handling cases.", "capstone", "structures"), s("Hand calcs: margins and minimum thickness", "Margins table for every load case; find the minimum t with MS ≥ 0 everywhere.", "capstone", "structures")],
+      [s("Hand calcs: buckling with knockdown", "SP-8007 knockdown for the flight and handling cases. FS 1.4 on the applied load only; the minimum ullage pressure relief is never factored.", "capstone", "structures"), s("Hand calcs: margins and minimum thickness", "Margins table for every load case; find the minimum t with MS ≥ 0 everywhere. Then enter your numbers in the Capstone page's answer check.", "capstone", "structures")],
       [s("NX: barrel midsurface", "Midsurface at R = 4.5 m, 6 m long, for shell meshing.", "capstone", "cad"), s("NX: ring frames", "3 internal ring frames, evenly spaced.", "capstone", "cad")],
       [s("NX: drawing", "Views, sections and dimensions.", "capstone", "cad"), s("Ansys: set up shells and symmetry", "Import the midsurface, assign shell thickness, and use symmetry to stay under the student limit.", "capstone", "cad")],
-      [s("Ansys static: proof case", "0.45 MPa internal pressure.", "capstone", "cad"), s("Ansys static: flight case", "Ullage plus hydrostatic head, plus 30 MN axial compression.", "capstone", "cad")],
+      [s("Ansys static: proof case", "Proof pressure 1.25 × MEOP ≈ 1.277 MPa (practice). Check no yield at proof: von Mises below the yield allowable with FS 1.0.", "capstone", "cad"), s("Ansys static: flight case", "Ullage plus hydrostatic head, plus 30 MN axial compression.", "capstone", "cad")],
       [s("Mesh convergence study", "Refine until peak stress changes by less than about 5%.", "capstone", "cad"), s("Mesh convergence plot", "Plot peak stress vs. element count and record it in your notebook.", "capstone", "cad")],
       [s("Write down assumptions", "Every assumption, unit and source so far.", "capstone"), s("Review and rest", "Flashcards, then rest.", "review")],
     ];
@@ -169,7 +169,7 @@ function planWeek(week: Week): Plan[] {
       [s("Ansys buckling: handling case", "Linear buckling with 2 MN axial compression.", "capstone", "cad"), s("Ansys buckling: handling case", "Check mode shapes and compare the load factor with your hand calc.", "capstone", "cad")],
       [s("Ansys buckling: flight case", "Prestressed buckling with pressure applied first.", "capstone", "cad"), s("Ansys buckling: flight case", "Compare with the unpressurized result.", "capstone", "cad")],
       [s("Compare FEA to hand calcs", "Explain the gap between FEA and SP-8007.", "capstone", "structures"), s("Trade study: thickness", "Plot mass and minimum margin vs. wall thickness.", "capstone", "code")],
-      [s("Trade study: ring frames", "Plot mass and minimum margin vs. number of ring frames.", "capstone", "code"), s("Recommend a design", "Pick t and frame count and justify it.", "capstone", "structures")],
+      [s("Trade study: ring frames", "Hand calc: mass vs. frame count, and why unstiffened buckling ignores frame spacing at this Batdorf Z. FEA: buckling load factors and mode shapes for 0, 3 and 6 frames.", "capstone", "code"), s("Recommend a design", "Pick t and frame count and justify it.", "capstone", "structures")],
       [s("Report: Summary, Assumptions, Hand Calcs", "4 pages max in total.", "capstone"), s("Report: FEA and Comparison", "Every number has a unit and a source.", "capstone")],
       [s("Report: Trade Study and Recommendation", "Finish the report draft.", "capstone"), s("5-slide deck", "Summary, model, results, trade study, recommendation.", "capstone")],
       [s("Proofread the report", "Could a reviewer follow your assumptions without asking you?", "capstone"), s("Rest", "Rest.", "review")],

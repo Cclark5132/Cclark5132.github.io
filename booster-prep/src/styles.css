@@ -1822,3 +1822,10 @@ ol.bullets {
   color: var(--bad, #ff6b6b);
   font-size: 0.8rem;
 }
+
+/* Answer checking (Capstone answer check, Practice page) */
+.input.pos { border-color: var(--good); }
+.input.neg { border-color: var(--bad); }
+.check-verdict { margin-top: 8px; font-size: 0.9rem; }
+.check-verdict.pos { color: var(--good); }
+.check-verdict.neg { color: var(--bad); }

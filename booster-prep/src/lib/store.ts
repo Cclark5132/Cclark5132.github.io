@@ -18,10 +18,12 @@ export interface Progress {
   /** Any other checklist item (setup tasks, capstone steps, launch prep) → checked. */
   checks: Record<string, boolean>;
   cards: Record<string, CardState>;
+  /** Capstone answer-check entries (your own minimum thickness and margins), as typed. */
+  capstone: Record<string, string>;
 }
 
 const KEY = "booster-prep:progress:v1";
-const empty = (): Progress => ({ version: 1, sessions: {}, deliverables: {}, notes: {}, checks: {}, cards: {} });
+const empty = (): Progress => ({ version: 1, sessions: {}, deliverables: {}, notes: {}, checks: {}, cards: {}, capstone: {} });
 
 function load(): Progress {
   try {
@@ -44,6 +46,7 @@ function normalize(value: unknown): Progress {
     notes: { ...base.notes, ...(v.notes ?? {}) },
     checks: { ...base.checks, ...(v.checks ?? {}) },
     cards: { ...base.cards, ...(v.cards ?? {}) },
+    capstone: { ...base.capstone, ...(v.capstone ?? {}) },
   };
 }
 
@@ -112,6 +115,10 @@ export function setDeliverable(week: number, value: { done: boolean; link: strin
 
 export function setCard(id: string, card: CardState) {
   update((p) => ({ ...p, cards: { ...p.cards, [id]: card } }));
+}
+
+export function setCapstoneEntry(id: string, value: string) {
+  update((p) => ({ ...p, capstone: { ...p.capstone, [id]: value } }));
 }
 
 export function exportProgress() {

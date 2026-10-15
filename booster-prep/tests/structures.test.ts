@@ -11,6 +11,8 @@ import {
   marginOfSafety,
   minersDamage,
   netAxialCompression,
+  netAxialCompressionFactored,
+  bucklingMargin,
   preloadFromTorque,
   requiredThickness,
   thermalStress,
@@ -103,12 +105,14 @@ describe("capstone", () => {
     expect(result.minMargin).toBeLessThan(0);
   });
 
-  it("finds a minimum thickness where every margin is ≥ 0", () => {
+  it("finds a minimum thickness where every margin is ≥ 0, about 11.85 mm, governed by flight yield", () => {
     const t = capstoneMinThickness(capstoneDefaults);
-    expect(t).toBeGreaterThan(10);
-    expect(t).toBeLessThan(13);
+    expect(t).toBeCloseTo(11.85, 1);
     expect(capstone({ ...capstoneDefaults, t }).minMargin).toBeGreaterThanOrEqual(0);
     expect(capstone({ ...capstoneDefaults, t: t - 0.05 }).minMargin).toBeLessThan(0);
+    const governing = capstone({ ...capstoneDefaults, t }).rows.reduce((a, b) => (b.ms < a.ms ? b : a));
+    expect(governing.loadCase).toBe("2. Flight, pressurized");
+    expect(governing.check).toBe("Yield (von Mises)");
   });
 
   it("mass grows with thickness and frames", () => {
@@ -118,5 +122,68 @@ describe("capstone", () => {
     expect(b.mass).toBeGreaterThan(a.mass);
     expect(c.mass).toBeGreaterThan(b.mass);
     expect(a.skinMass).toBeCloseTo((8000 * 2 * Math.PI * 4.5 * 0.01 * 6), 3);
+  });
+});
+
+const flightBuckling = (t: number) => capstone({ ...capstoneDefaults, t }).rows.find((r) => r.loadCase.startsWith("2.") && r.check.startsWith("Axial"))!;
+
+describe("capstone buckling factors only the destabilizing load (2.1)", () => {
+  it("P_net = FS × P − p_min πR², relief never factored", () => {
+    const n = netAxialCompressionFactored(30e6, 1.4, 0.35, 4500, 4);
+    expect(n.factoredLoad).toBeCloseTo(42e6, 0);
+    expect(n.pressureRelief / 1e6).toBeCloseTo(22.27, 2);
+    expect(n.netLoad / 1e6).toBeCloseTo(19.73, 2);
+    expect(n.stress).toBeCloseTo(174.5, 1);
+    expect(bucklingMargin(1e6, -5)).toBe(Infinity);
+  });
+
+  it("flight buckling MS: −0.875 at 4 mm and +0.968 at 12 mm (was −0.773 and +2.587)", () => {
+    expect(flightBuckling(4).ms).toBeCloseTo(-0.875, 3);
+    expect(flightBuckling(12).ms).toBeCloseTo(0.968, 3);
+  });
+
+  it("flight buckling alone needs about 9.12 mm", () => {
+    let lo = 4;
+    let hi = 12;
+    while (hi - lo > 1e-4) {
+      const mid = (lo + hi) / 2;
+      if (flightBuckling(mid).ms >= 0) hi = mid;
+      else lo = mid;
+    }
+    expect(hi).toBeCloseTo(9.12, 2);
+  });
+
+  it("handling case: 2 MN × 1.4 with no pressure", () => {
+    const row = capstone({ ...capstoneDefaults, t: 4 }).rows.find((r) => r.loadCase.startsWith("3.") && r.check.startsWith("Axial"))!;
+    const pAllow = cylinderBuckling(4500, 4, 193_000).loadCapacity;
+    expect(row.ms).toBeCloseTo(pAllow / 2.8e6 - 1, 6);
+  });
+});
+
+describe("Lesson 6 Example 2: 30 MN limit × 1.4 (2.2)", () => {
+  it("matches the rewritten example", () => {
+    const pAllow = cylinderBuckling(4500, 4, 193_000).loadCapacity;
+    expect(pAllow / 1e6).toBeCloseTo(2.46, 2);
+    const n = netAxialCompressionFactored(30e6, 1.4, 0.35, 4500, 4);
+    expect(n.stress).toBeGreaterThan(cylinderBuckling(4500, 4, 193_000).sigmaCr);
+    expect(bucklingMargin(pAllow, n.netLoad)).toBeCloseTo(-0.875, 3);
+    expect((42e6 - pAllow) / (Math.PI * 4500 ** 2)).toBeCloseTo(0.62, 2);
+    expect(2.46 / 42 - 1).toBeCloseTo(-0.94, 2);
+  });
+});
+
+describe("capstone proof case: 1.25 × MEOP, no yield at proof (2.4)", () => {
+  it("MEOP ≈ 1.022 MPa and proof ≈ 1.277 MPa", () => {
+    const r = capstone(capstoneDefaults);
+    expect(r.meop).toBeCloseTo(1.022, 3);
+    expect(r.proofPressure).toBeCloseTo(1.277, 3);
+  });
+
+  it("one yield row at FS 1.0: +0.19 at 11.85 mm, +0.005 at 10 mm", () => {
+    const proofRows = (t: number) => capstone({ ...capstoneDefaults, t }).rows.filter((r) => r.loadCase.startsWith("1."));
+    expect(proofRows(10)).toHaveLength(1);
+    expect(proofRows(10)[0].fs).toBe(1);
+    expect(proofRows(11.85)[0].ms).toBeCloseTo(0.19, 2);
+    expect(proofRows(10)[0].ms).toBeCloseTo(0.005, 3);
   });
 });

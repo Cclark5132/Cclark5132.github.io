@@ -129,11 +129,11 @@ A pressurized tank buckles much less easily than an empty one, for two separate 
 
 <Formula
   label="Net axial compression with internal pressure"
-  tex="P_\text{net} = P - p\,\pi R^2"
-  vars="P_\text{net} | net axial compressive force the wall must carry | N; P | applied axial compressive force (thrust, inertia, bending equivalent) | N; p | internal (ullage) pressure, gauge | MPa; R | mean radius | mm"
+  tex="P_\text{net} = FS \times P - p_\text{min}\,\pi R^2, \qquad MS = \frac{P_\text{allow}}{P_\text{net}} - 1"
+  vars="P_\text{net} | factored net axial compressive force the wall must carry | N; FS | buckling factor of safety, on the destabilizing load only | —; P | applied limit axial compression (thrust, inertia, bending equivalent) | N; p_\text{min} | minimum guaranteed internal (ullage) pressure, gauge, never factored | MPa; R | mean radius | mm; P_\text{allow} | knocked-down axial load capacity | N"
 />
 
-If $P_\text{net}$ is zero or negative, the wall is in net axial tension and cannot buckle axially at that station. If it is positive, compare it with $P_\text{allow}$.
+If $P_\text{net}$ is zero or negative, the wall is in net axial tension and cannot buckle axially at that station. If it is positive, compare it with $P_\text{allow}$. The factor of safety multiplies only the load that causes buckling. The relieving pressure is taken at its minimum and is never multiplied by the factor of safety.
 
 **Reason 2: pressure reduces imperfection sensitivity.** Pressure tends to pull out the inward dents and stiffens the wall against the buckle pattern. SP-8007 credits this with an **increase in the knockdown factor**, $\Delta\gamma$, read from a design chart against a pressure parameter of the form $(p/E)(R/t)^2$. The increase grows with pressure and levels off at high pressure. There is no simple closed-form version in the monograph, so read the chart rather than inventing a fit. In this lesson's hand calcs we take credit only for Reason 1, which is conservative.
 
@@ -181,43 +181,57 @@ $$
 
 <Example title="Pressure relief on the same barrel">
 
-The same barrel ($R = 4500$ mm, $t = 4$ mm, $P_\text{allow} = 2.46$ MN from Example 1) carries a practice factored axial compression of $P = 30$ MN. The guaranteed minimum ullage pressure is $p = 0.35$ MPa. Take credit only for the pressure end load (no $\Delta\gamma$).
+The same barrel ($R = 4500$ mm, $t = 4$ mm, $P_\text{allow} = 2.46$ MN from Example 1) carries a practice **limit** axial compression of $P = 30$ MN, the same limit load as the capstone flight case. The buckling factor of safety is $FS = 1.4$ (practice). The guaranteed minimum ullage pressure is $p_\text{min} = 0.35$ MPa. Take credit only for the pressure end load (no $\Delta\gamma$).
 
-**Step 1.** Unpressurized margin, for reference:
-
-$$
-MS = \frac{P_\text{allow}}{P} - 1 = \frac{2.46}{30} - 1 = -0.92
-$$
-
-Empty, the barrel would buckle at less than a tenth of the load.
-
-**Step 2.** Pressure end load:
+**Step 1.** Factor the destabilizing load, and only that load:
 
 $$
-p\,\pi R^2 = 0.35 \times \pi \times 4500^2 = 0.35 \times 6.362 \times 10^7 = 2.227 \times 10^7 \text{ N} = 22.27 \text{ MN}
+P_\text{ult} = FS \times P = 1.4 \times 30 = 42 \text{ MN}
 $$
 
-**Step 3.** Net compression and the stress it causes:
+**Step 2.** Unpressurized margin, for reference:
 
 $$
-P_\text{net} = 30 - 22.27 = 7.73 \text{ MN}, \qquad \sigma_\text{net} = \frac{7.73 \times 10^6}{2\pi \times 4500 \times 4} = \frac{7.73 \times 10^6}{113{,}097} = 68.4 \text{ MPa}
+MS = \frac{P_\text{allow}}{P_\text{ult}} - 1 = \frac{2.46}{42} - 1 = -0.94
 $$
 
-**Step 4.** Margin with pressure relief:
+Empty, the barrel would buckle at well under a tenth of the factored load.
+
+**Step 3.** Pressure end load at the minimum pressure, **unfactored**:
 
 $$
-MS = \frac{2.46}{7.73} - 1 = -0.68
+p_\text{min}\,\pi R^2 = 0.35 \times \pi \times 4500^2 = 0.35 \times 6.362 \times 10^7 = 2.227 \times 10^7 \text{ N} = 22.27 \text{ MN}
 $$
 
-**Step 5.** Minimum pressure that would close the gap by end-load relief alone:
+**Step 4.** Net compression and the stress it causes:
 
 $$
-p_\text{min} = \frac{P - P_\text{allow}}{\pi R^2} = \frac{30 \times 10^6 - 2.46 \times 10^6}{6.362 \times 10^7} = 0.433 \text{ MPa}
+P_\text{net} = FS \times P - p_\text{min}\,\pi R^2 = 42 - 22.27 = 19.73 \text{ MN}
 $$
 
-**Result:** pressure takes three quarters of the load off the wall, but end-load relief alone is not enough at 0.35 MPa. The options are more pressure (0.43 MPa), taking credit for $\Delta\gamma$ from the SP-8007 chart, a thicker wall, or stiffening (stringers and ring frames). Note also that 68.4 MPa is below the classical 103.8 MPa; the knockdown factor is what makes this fail.
+$$
+\sigma_\text{net} = \frac{P_\text{net}}{2\pi R t} = \frac{19.73 \times 10^6}{2\pi \times 4500 \times 4} = \frac{19.73 \times 10^6}{113{,}097} \approx 174.5 \text{ MPa}
+$$
+
+**Step 5.** Margin with pressure relief:
+
+$$
+MS = \frac{P_\text{allow}}{P_\text{net}} - 1 = \frac{2.46}{19.73} - 1 \approx -0.875
+$$
+
+**Step 6.** Minimum pressure that would close the gap by end-load relief alone:
+
+$$
+p_\text{min} = \frac{FS \times P - P_\text{allow}}{\pi R^2} = \frac{42 \times 10^6 - 2.46 \times 10^6}{\pi \times 4500^2} = \frac{39.54 \times 10^6}{6.362 \times 10^7} \approx 0.62 \text{ MPa}
+$$
+
+**Result:** pressure takes about half of the factored load off the wall, but end-load relief alone is nowhere near enough at 0.35 MPa. Look at the net stress: 174.5 MPa is **above** the classical buckling stress of 103.8 MPa. So this wall would fail even a perfect, imperfection-free shell; the knockdown factor only makes it worse. A 4 mm wall is simply too thin for a 30 MN limit load at this pressure. The options are more pressure (about 0.62 MPa), a thicker wall, or stiffening (stringers and ring frames). Taking credit for $\Delta\gamma$ from the SP-8007 chart can't rescue a wall that is above even the classical value. The capstone hand-calc panel uses exactly this formula: with these practice numbers the flight buckling check needs a wall of about 9.1 mm.
 
 </Example>
+
+<Callout kind="mistake" title="Factoring the pressure relief">
+Writing $MS = \sigma_\text{design} \big/ \left(FS \times \frac{P - p\pi R^2}{2\pi R t}\right) - 1$ multiplies the relieving end load by the factor of safety too, which makes the margin look better than it is (unconservative). The factor of safety goes on the destabilizing load only: $P_\text{net} = FS \times P - p_\text{min}\,\pi R^2$.
+</Callout>
 
 <Callout kind="context" title="Why boosters fly pressurized">
 Stainless steel propellant tanks like those on Super Heavy carry axial load through their walls, and the tanks are pressurized in flight. Pressure stabilization is a big part of why a thin metal tank can carry large thrust loads. The highest axial compression typically occurs near liftoff, around max-Q (where bending adds to it on one side) and late in the burn when acceleration is highest, so each of those moments needs a buckling check at the pressure guaranteed at that time. Specific SpaceX wall thicknesses, pressures and design criteria are not public, so keep your numbers labeled as practice values.
@@ -356,7 +370,7 @@ In words: why does a thin cylinder lose so much more strength to imperfections t
 </Problem>
 
 <Problem n={6}>
-The Example 1 barrel ($P_\text{allow} = 2.46$ MN unpressurized) sees a practice factored compression of 24 MN with a guaranteed minimum pressure of 0.35 MPa. Using end-load relief only, find the margin.
+The Example 1 barrel ($P_\text{allow} = 2.46$ MN unpressurized) sees a practice compression of 24 MN with a guaranteed minimum pressure of 0.35 MPa. **This 24 MN is already factored** (it is an ultimate load, limit × FS), so don't apply the FS again. Using end-load relief only, find the margin.
 
 <Solution>
 **Net compression** (pressure end load from Example 2 is 22.27 MN):
@@ -371,6 +385,6 @@ $$
 MS = \frac{2.46}{1.73} - 1 = +0.42
 $$
 
-The barrel passes. Without pressure the margin would be $2.46/24 - 1 = -0.90$, so this case depends entirely on the tank being pressurized. That dependence should be stated in the analysis.
+The barrel passes. Without pressure the margin would be $2.46/24 - 1 = -0.90$, so this case depends entirely on the tank being pressurized. That dependence should be stated in the analysis. Compare Example 2: there the 30 MN was a limit load, so it was multiplied by 1.4 to 42 MN before the (unfactored) relief was subtracted.
 </Solution>
 </Problem>

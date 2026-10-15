@@ -17,6 +17,21 @@ export function hydrostaticHead(rho: number, n: number, hMm: number) {
   return (rho * n * G * (hMm / 1000)) / 1e6;
 }
 
+/**
+ * Axial running load (force per unit length of circumference) in a thin cylinder from axial force P (N) and
+ * bending moment M (N·mm): N_x = P/(2πR) ± M/(πR²), in N/mm. `peak` is the side where bending adds to P.
+ */
+export function runningLoad(P: number, M: number, R: number) {
+  const axial = P / (2 * Math.PI * R);
+  const bending = M / (Math.PI * R * R);
+  return { axial, bending, peak: axial + bending, min: axial - bending };
+}
+
+/** Uniform axial load giving the same peak running load as P plus M: P_eq = P + 2M/R (N, with M in N·mm, R in mm). */
+export function equivalentAxialLoad(P: number, M: number, R: number) {
+  return P + (2 * M) / R;
+}
+
 /** Thin-wall cylinder and dome membrane stresses for internal pressure p (MPa). */
 export function thinWall(p: number, R: number, t: number) {
   return {
@@ -92,6 +107,24 @@ export function netAxialCompression(P: number, p: number, R: number, t: number) 
   return { pressureRelief, netLoad: net, stress: net / (2 * Math.PI * R * t) };
 }
 
+/**
+ * Net axial compression with the factor of safety on the destabilizing load only:
+ *   P_net = FS · P − p_min · π R²
+ * The relieving pressure end load is never factored up; use the minimum guaranteed pressure.
+ * Returns the net load (N) and the net wall stress (MPa). Positive = compression.
+ */
+export function netAxialCompressionFactored(P: number, fs: number, pMin: number, R: number, t: number) {
+  const pressureRelief = pMin * Math.PI * R * R;
+  const factoredLoad = fs * P;
+  const netLoad = factoredLoad - pressureRelief;
+  return { pressureRelief, factoredLoad, netLoad, stress: netLoad / (2 * Math.PI * R * t) };
+}
+
+/** Buckling margin on load: MS = P_allow / P_net − 1, with P_net from netAxialCompressionFactored. Infinity in net tension. */
+export function bucklingMargin(pAllow: number, netLoad: number) {
+  return netLoad > 0 ? pAllow / netLoad - 1 : Infinity;
+}
+
 /** Fully constrained thermal stress σ = E α ΔT (MPa). */
 export function thermalStress(E: number, alpha: number, dT: number) {
   return E * alpha * dT;
@@ -126,8 +159,9 @@ export interface CapstoneInputs {
   ultAllow: number; // MPa
   fsYield: number;
   fsUlt: number;
-  fsBuckling: number;
-  proofPressure: number; // MPa
+  fsBuckling: number; // on the destabilizing load only
+  proofFactor: number; // proof pressure = proofFactor × MEOP
+  fsProof: number; // FS on yield at proof pressure (1.0: no yield at proof)
   ullage: number; // MPa
   loxDensity: number; // kg/m³
   headHeight: number; // mm
@@ -135,6 +169,9 @@ export interface CapstoneInputs {
   flightAxial: number; // N
   handlingAxial: number; // N
   frameArea: number; // ring frame cross-section area, mm²
+  includeMaxQ: boolean; // stretch goal: add load case 4, max-Q bending
+  maxQAxial: number; // N, practice
+  maxQMoment: number; // N·mm, practice
 }
 
 export const capstoneDefaults: CapstoneInputs = {
@@ -150,7 +187,8 @@ export const capstoneDefaults: CapstoneInputs = {
   fsYield: 1.25,
   fsUlt: 1.4,
   fsBuckling: 1.4,
-  proofPressure: 0.45,
+  proofFactor: 1.25,
+  fsProof: 1.0,
   ullage: 0.35,
   loxDensity: 1141,
   headHeight: 20_000,
@@ -158,6 +196,9 @@ export const capstoneDefaults: CapstoneInputs = {
   flightAxial: 30e6,
   handlingAxial: 2e6,
   frameArea: 2000,
+  includeMaxQ: false,
+  maxQAxial: 25e6,
+  maxQMoment: 30e9,
 };
 
 export interface MarginRow {
@@ -167,9 +208,10 @@ export interface MarginRow {
   allowable: number; // MPa
   fs: number;
   ms: number;
+  note?: string;
 }
 
-/** Runs all three capstone load cases and returns a margins table plus mass. */
+/** Runs the capstone load cases (three, plus max-Q bending when enabled) and returns a margins table plus mass. */
 export function capstone(inp: CapstoneInputs) {
   const { t, R } = inp;
   const rows: MarginRow[] = [];
@@ -179,35 +221,58 @@ export function capstone(inp: CapstoneInputs) {
     rows.push({ loadCase, check: "Ultimate (von Mises)", applied: vm, allowable: inp.ultAllow, fs: inp.fsUlt, ms: marginOfSafety(inp.ultAllow, vm, inp.fsUlt) });
   };
   const buckle = cylinderBuckling(R, t, inp.E);
-  const bucklingRow = (loadCase: string, compression: number) => {
-    // A section in net tension cannot buckle axially; report it as not applicable with a large margin.
+  /** FS on the applied compression only; relieving pressure at its minimum, unfactored. MS = P_allow / P_net − 1. */
+  const bucklingRow = (loadCase: string, P: number, pMin: number) => {
+    const net = netAxialCompressionFactored(P, inp.fsBuckling, pMin, R, t);
     rows.push({
       loadCase,
       check: "Axial buckling (SP-8007)",
-      applied: compression,
+      applied: net.stress, // factored net compression; ≤ 0 means net tension
       allowable: buckle.sigmaDesign,
       fs: inp.fsBuckling,
-      ms: compression > 0 ? marginOfSafety(buckle.sigmaDesign, compression, inp.fsBuckling) : Infinity,
+      ms: bucklingMargin(buckle.loadCapacity, net.netLoad),
+      note: "FS on P only",
     });
+    return net;
   };
 
-  // 1. Proof pressure: membrane stresses only.
-  const proof = thinWall(inp.proofPressure, R, t);
-  strength("1. Proof pressure", proof.axial, proof.hoop);
+  const head = hydrostaticHead(inp.loxDensity, inp.loadFactor, inp.headHeight);
+  const pBottom = inp.ullage + head;
+
+  // 1. Proof: MEOP at the bottom of the section (ullage + head at 3 g) times the proof factor. Check no yield
+  //    at proof (FS 1.0): the proof pressure already contains the proof factor, so no flight FS is applied.
+  const meop = pBottom;
+  const proofPressure = inp.proofFactor * meop;
+  const proof = thinWall(proofPressure, R, t);
+  const proofVm = vonMises(proof.axial, proof.hoop);
+  rows.push({
+    loadCase: "1. Proof pressure",
+    check: "No yield at proof (von Mises)",
+    applied: proofVm,
+    allowable: inp.yieldAllow,
+    fs: inp.fsProof,
+    ms: marginOfSafety(inp.yieldAllow, proofVm, inp.fsProof),
+  });
 
   // 2. Flight, pressurized: hoop from ullage + hydrostatic head at the bottom of the section; axial from
   //    ullage end load minus the applied compression (head ignored for axial, which is conservative).
-  const head = hydrostaticHead(inp.loxDensity, inp.loadFactor, inp.headHeight);
-  const pBottom = inp.ullage + head;
   const flightHoop = (pBottom * R) / t;
   const flightAxial = netAxialCompression(inp.flightAxial, inp.ullage, R, t);
   strength("2. Flight, pressurized", -flightAxial.stress, flightHoop);
-  bucklingRow("2. Flight, pressurized", flightAxial.stress);
+  const flightBuckling = bucklingRow("2. Flight, pressurized", inp.flightAxial, inp.ullage);
 
   // 3. Unpressurized handling: axial compression only.
   const handling = netAxialCompression(inp.handlingAxial, 0, R, t);
   strength("3. Handling, unpressurized", -handling.stress, 0);
-  bucklingRow("3. Handling, unpressurized", handling.stress);
+  bucklingRow("3. Handling, unpressurized", inp.handlingAxial, 0);
+
+  // 4. Stretch goal, max-Q bending: P_eq = P + 2M/R on the compression side, ullage pressure only (no head).
+  const maxQEquivalent = equivalentAxialLoad(inp.maxQAxial, inp.maxQMoment, R);
+  if (inp.includeMaxQ) {
+    const net = netAxialCompression(maxQEquivalent, inp.ullage, R, t);
+    strength("4. Max-Q bending (stretch)", -net.stress, (inp.ullage * R) / t);
+    bucklingRow("4. Max-Q bending (stretch)", maxQEquivalent, inp.ullage);
+  }
 
   const skinMass = (inp.density * 2 * Math.PI * R * t * inp.L) / 1e9;
   const frameMass = (inp.frames * inp.density * 2 * Math.PI * R * inp.frameArea) / 1e9;
@@ -220,9 +285,13 @@ export function capstone(inp: CapstoneInputs) {
     minMargin: Math.min(...rows.map((row) => row.ms)),
     head,
     pBottom,
+    meop,
+    proofPressure,
     buckle,
     flightAxial,
+    flightBuckling,
     handling,
+    maxQEquivalent,
     skinMass,
     frameMass,
     mass: skinMass + frameMass,

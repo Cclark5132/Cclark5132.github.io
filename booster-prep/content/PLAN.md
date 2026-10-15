@@ -236,7 +236,7 @@ Week 2 picks up where Fri Oct 23 left off. The hoop and axial derivations and th
 
 **CAD / FEA (Ansys)**
 - Ansys Workbench workflow: geometry, material, mesh, loads, supports, solve, results.
-- First model: a plate with a center hole in tension. Check that max stress ≈ 3 × nominal.
+- First model: a plate with a center hole in tension. Check that max stress ≈ 3 × nominal. For the 10 mm hole in a 100 mm plate (d/W = 0.1) the Lesson 4 Heywood fit gives K_tg ≈ 3.03 on gross stress, so about 303 MPa at 100 MPa nominal is the target.
 
 **Code (Python)**
 - pandas: load a CSV of fake strain-gauge data, convert strain to stress (σ = E × ε), and plot it.
@@ -414,18 +414,33 @@ You'll analyze a simplified stainless steel barrel section the way a structures 
 - Practice allowables: yield 500 MPa, ultimate 700 MPa
 
 **Load cases**
-1. **Proof pressure:** internal pressure 0.45 MPa
-2. **Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN
-3. **Unpressurized handling:** axial compression of 2 MN only (no pressure help)
+1. **Proof pressure:** a practice proof factor of 1.25 × MEOP. MEOP (maximum expected operating pressure) at the bottom of the section is the flight wall pressure:
 
-**Factors of safety (practice values):** 1.25 on yield, 1.4 on ultimate
+   MEOP = 0.35 + (1141 × 3 × 9.81 × 20) / 10⁶ ≈ 1.022 MPa
+   p_proof = 1.25 × 1.022 ≈ 1.277 MPa
+
+   Check **no yield at proof (FS = 1.0 on yield)**, using von Mises of the hoop stress pR/t and the axial stress pR/(2t). A proof test pressurizes the real tank above anything it will see in service, so surviving it screens out flaws. The proof pressure already contains the proof factor, so the flight factors of safety are not applied on top.
+2. **Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN (limit load)
+3. **Unpressurized handling:** axial compression of 2 MN only (limit load, no pressure help)
+4. **Stretch goal, max-Q bending:** practice axial load 25 MN plus a practice bending moment of 30 MN·m, combined as an equivalent axial load P_eq = P + 2M/R, with 0.35 MPa ullage pressure only.
+
+**Limit and ultimate load.** Limit load is the maximum load expected in service. Ultimate load is limit load × FS. The 30 MN and 2 MN axial loads are limit loads.
+
+**Factors of safety (practice values):** 1.25 on yield, 1.4 on ultimate, **1.4 on buckling** (applied to the destabilizing load only; relieving pressure at its minimum guaranteed value, unfactored), and 1.0 on yield at proof. For buckling:
+
+  P_net = FS × P − p_min × π × R²
+  P_allow = 2π × R × t × σ_design
+  MS = P_allow / P_net − 1   (net tension when P_net ≤ 0: not applicable)
 
 **Steps**
 1. **Hand calcs (Python):** hoop and axial stress, buckling with knockdown, and margins for every load case. Find the minimum wall thickness that gives MS ≥ 0 everywhere.
 2. **NX model:** barrel plus ring frames, built as a midsurface for shell meshing. Make a drawing.
 3. **Ansys static:** pressure cases, using shell elements and symmetry to stay under the student limit. Run a mesh convergence study.
-4. **Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare to your hand calcs and explain the gap.
-5. **Trade study:** plot mass and minimum margin vs. wall thickness (and vs. number of ring frames). Recommend a design.
+4. **Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare eigenvalue mode shapes and load factors for 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.
+5. **Trade study:** plot mass and minimum margin vs. wall thickness. Recommend a design.
+   - **Hand calc:** mass vs. frame count, and a statement that unstiffened axial buckling is insensitive to frame spacing at this Batdorf Z (about 40 even at 12 mm, far above the ≈ 2.85 where the long-cylinder formula applies).
+   - **FEA (Week 11):** compare eigenvalue buckling mode shapes and load factors for 0, 3 and 6 frames.
+   - **Stretch goal:** add stringers and check skin panels between stringers with the Lesson 5 plate formula, and stringers as columns between frames (Euler/Johnson with effective width). That's where frame count actually changes the margin.
 6. **Report:** 4 pages max (Summary, Assumptions, Hand Calcs, FEA, Comparison, Trade Study, Recommendation), plus a 5-slide deck.
 
 **What good looks like**

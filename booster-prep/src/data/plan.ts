@@ -597,8 +597,8 @@ export const baseWeeks: Week[] = [
     deliverable: "A 4-page report and a 5-slide deck.",
     selfChecks: [],
     tasks: [
-      "**Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare to your hand calcs and explain the gap.",
-      "**Trade study:** plot mass and minimum margin vs. wall thickness (and vs. number of ring frames). Recommend a design.",
+      "**Ansys buckling:** linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling), with 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.",
+      "**Trade study:** plot mass and minimum margin vs. wall thickness. Hand calc: mass vs. frame count, and why unstiffened buckling ignores frame spacing at this Batdorf Z. FEA: buckling load factors for 0, 3 and 6 frames. Stretch: stringers. Recommend a design.",
       "**Report:** 4 pages max (Summary, Assumptions, Hand Calcs, FEA, Comparison, Trade Study, Recommendation), plus a 5-slide deck.",
     ],
   },
@@ -667,16 +667,27 @@ export const capstoneSpec = {
   geometry: ["Diameter 9 m (R = 4.5 m), barrel length 6 m", "Wall thickness t is a design variable; start at 4 mm", "3 internal ring frames, evenly spaced (stretch goal: add stringers)"],
   materials: ["304L-like stainless steel: E = 193 GPa, ν = 0.29, density 8000 kg/m³", "Practice allowables: yield 500 MPa, ultimate 700 MPa"],
   loadCases: [
-    "**Proof pressure:** internal pressure 0.45 MPa",
-    "**Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN",
-    "**Unpressurized handling:** axial compression of 2 MN only (no pressure help)",
+    "**Proof pressure:** proof factor 1.25 × MEOP. MEOP (maximum expected operating pressure) at the bottom of the section is the flight wall pressure, $0.35 + 0.672 \\approx 1.022$ MPa, so proof is $\\approx 1.277$ MPa. Check **no yield at proof** (FS 1.0 on yield), using von Mises of the hoop stress and $pR/(2t)$.",
+    "**Flight, pressurized:** 0.35 MPa ullage pressure + LOX hydrostatic head at 3 g (assume 20 m of LOX above the bottom of the section) + axial compression of 30 MN (limit load)",
+    "**Unpressurized handling:** axial compression of 2 MN only (limit load, no pressure help)",
   ],
-  factors: "1.25 on yield, 1.4 on ultimate (practice values)",
+  proofNote:
+    "A proof test pressurizes the real tank above anything it will see in service, so surviving it screens out flaws. The proof pressure already contains the proof factor, so it is checked for no yield (FS 1.0), not with the flight factors of safety on top.",
+  limitNote:
+    "**Limit load** is the maximum load expected in service. **Ultimate load** is limit load × FS. The 30 MN and 2 MN axial loads are limit loads.",
+  factors: "1.25 on yield, 1.4 on ultimate, 1.4 on buckling (applied to the destabilizing load only; relieving pressure at its minimum guaranteed value, unfactored), 1.0 on yield at proof (practice values)",
   steps: [
     {
       title: "Hand calcs (Python)",
       body: "Hoop and axial stress, buckling with knockdown, and margins for every load case. Find the minimum wall thickness that gives MS ≥ 0 everywhere.",
-      checklist: ["Hoop and axial stress for each load case", "Hydrostatic head at 3 g at the bottom of the section", "Buckling with SP-8007 knockdown (with and without pressure)", "Margins table for every load case", "Minimum wall thickness with MS ≥ 0 everywhere"],
+      checklist: [
+        "Hoop and axial stress for each load case",
+        "Hydrostatic head at 3 g at the bottom of the section; MEOP and proof pressure",
+        "Buckling with SP-8007 knockdown (FS on the load only, minimum pressure unfactored)",
+        "Margins table for every load case",
+        "Minimum wall thickness with MS ≥ 0 everywhere",
+        "Enter your answers in the answer check on the Capstone page",
+      ],
     },
     {
       title: "NX model",
@@ -686,17 +697,30 @@ export const capstoneSpec = {
     {
       title: "Ansys static",
       body: "Pressure cases, using shell elements and symmetry to stay under the student limit. Run a mesh convergence study.",
-      checklist: ["Shell elements with thickness t", "Symmetry to stay under the node limit", "Proof and flight pressure cases", "Mesh convergence study (peak changes less than about 5%)"],
+      checklist: ["Shell elements with thickness t", "Symmetry to stay under the node limit", "Proof (1.25 × MEOP ≈ 1.277 MPa) and flight pressure cases", "Mesh convergence study (peak changes less than about 5%)"],
     },
     {
       title: "Ansys buckling",
-      body: "Linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare to your hand calcs and explain the gap.",
-      checklist: ["Linear buckling, handling case", "Prestressed buckling, flight case with pressure first", "Compare with hand calcs and explain the gap"],
+      body: "Linear buckling for the handling case, then the flight case with pressure applied first (prestressed buckling). Compare eigenvalue mode shapes and load factors for 0, 3 and 6 ring frames. Compare to your hand calcs and explain the gap.",
+      checklist: [
+        "Linear buckling, handling case",
+        "Prestressed buckling, flight case with pressure first",
+        "Mode shapes and load factors for 0, 3 and 6 ring frames",
+        "Compare with hand calcs and explain the gap",
+        "Stretch: nonlinear buckling with a seeded imperfection (w0 = 0.5t and 1.0t)",
+      ],
     },
     {
       title: "Trade study",
-      body: "Plot mass and minimum margin vs. wall thickness (and vs. number of ring frames). Recommend a design.",
-      checklist: ["Mass vs. thickness", "Minimum margin vs. thickness", "Effect of number of ring frames", "Recommended design"],
+      body:
+        "Plot mass and minimum margin vs. wall thickness. Hand calc: mass vs. frame count, and a statement that unstiffened axial buckling is insensitive to frame spacing at this Batdorf Z. FEA: the 0, 3 and 6 frame buckling runs. Stretch: add stringers, check skin panels between stringers with the Lesson 5 plate formula and stringers as columns between frames (Euler/Johnson with effective width); that's where frame count changes the margin. Recommend a design.",
+      checklist: [
+        "Mass and minimum margin vs. thickness",
+        "Mass vs. frame count, and why unstiffened buckling ignores frame spacing here",
+        "FEA buckling load factors for 0, 3 and 6 frames",
+        "Stretch: stringers, skin panels and stringer columns vs. frame count",
+        "Recommended design",
+      ],
     },
     {
       title: "Report",
