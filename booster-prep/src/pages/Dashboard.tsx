@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { SessionCheck } from "../components/Checks";
 import { CatchUpCard, HoursVsPlanCard } from "../components/CatchUp";
 import { Icon } from "../components/Icon";
+import { WeakTopicsCard } from "../components/WeakTopics";
 import { downloadProgress } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
 import { phaseColor, START_DATE, weeks } from "../data/plan";
@@ -250,6 +251,7 @@ export function Dashboard() {
               ))}
             </div>
           </section>
+          <WeakTopicsCard />
           <BackupCard />
         </div>
       </div>

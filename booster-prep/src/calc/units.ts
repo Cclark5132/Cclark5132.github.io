@@ -13,6 +13,9 @@ export const quantities = {
   bigForce: { si: "MN", us: "lbf", toSI: 4.448222e-6 },
   moment: { si: "MN·m", us: "in·lbf", toSI: 1.129848e-7 },
   runningLoad: { si: "N/mm", us: "lbf/in", toSI: 4.448222 / 25.4 }, // 1 lbf/in = 0.175127 N/mm
+  kiloForce: { si: "kN", us: "kip", toSI: 4.448222 },
+  stiffness: { si: "N/mm", us: "lbf/in", toSI: 4.448222 / 25.4 },
+  toughness: { si: "MPa·√m", us: "ksi·√in", toSI: 1.098843 },
   torque: { si: "N·m", us: "lbf·ft", toSI: 1.355818 },
   density: { si: "kg/m³", us: "lb/ft³", toSI: 16.018463 },
   deltaT: { si: "°C", us: "°F", toSI: 5 / 9 },

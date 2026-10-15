@@ -25,6 +25,15 @@ export function checkAnswer(text: string, ref: number, kind: "value" | "margin",
   return Math.abs(user / ref - 1) <= tol;
 }
 
+/** Practice checking: values within ±1%, margins within ±0.01. */
+export function checkPractice(text: string, ref: number, kind: "value" | "margin") {
+  const user = parseAnswer(text);
+  if (!Number.isFinite(user)) return false;
+  if (kind === "margin") return Math.abs(user - ref) <= 0.01 + 1e-9;
+  if (ref === 0) return Math.abs(user) <= 1e-9;
+  return Math.abs(user / ref - 1) <= 0.01 + 1e-12;
+}
+
 export const rowKey = (loadCase: string, check: string) =>
   `${loadCase} ${check}`
     .toLowerCase()

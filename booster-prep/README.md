@@ -4,7 +4,7 @@ A private study site for the 12-week Starship booster structures internship prep
 
 ## What's in it
 
-Mission dashboard (countdown, today's sessions, progress, streak, hours), roadmap, a page per week, eight structures lessons, tool tracks (NX, Ansys, Python, MATLAB, FEA best practices), calculators, the capstone with a hand-calc panel, an interactive booster anatomy page, flashcards with spaced repetition, resources, glossary, launch prep and global search (Ctrl K or /).
+Mission dashboard (countdown, today's sessions, progress, streak, hours), roadmap, a page per week, eight structures lessons, tool tracks (NX, Ansys, Python, MATLAB, FEA best practices), calculators, a Practice page with unlimited auto-checked problems in 15 topics, the capstone with a hand-calc panel, an interactive booster anatomy page, flashcards with spaced repetition, resources, glossary, launch prep and global search (Ctrl K or /).
 
 The plan runs October 15, 2026 to January 10, 2027: Week 0 is one 2-hour setup day (Thu Oct 15), Week 1 runs 10 days (Oct 16 – Oct 25, 20 hours), then nine normal 14-hour weeks and two light 7-hour weeks, for **162 hours** in total.
 

@@ -1929,3 +1929,18 @@ ol.bullets {
   0% { background: var(--accent-soft); }
   100% { background: transparent; }
 }
+
+/* Practice */
+.solution {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+.solution h3 {
+  margin: 0 0 4px;
+}
+.practice-card .seg button {
+  min-height: 40px;
+}

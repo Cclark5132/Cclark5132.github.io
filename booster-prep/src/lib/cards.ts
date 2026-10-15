@@ -2,6 +2,7 @@ import { parseVars, type Var } from "../components/Formula";
 import { glossary } from "../data/glossary";
 import { weeks, type Track } from "../data/plan";
 import { lessons } from "../lessons";
+import { topics } from "./practice";
 
 export interface Card {
   id: string;
@@ -69,6 +70,24 @@ function build(): Card[] {
 }
 
 export const deck = build();
+
+/** One card per practice topic. A card joins the deck when you add it after a wrong answer. */
+export const practiceCards: Card[] = topics.map((t) => ({
+  id: `p-${t.id}`,
+  kind: "formula",
+  week: t.week,
+  track: "structures",
+  front: `**Practice: ${t.title}**. Write the method and the formula.`,
+  back: t.card.method,
+  tex: t.card.tex,
+}));
+
+export const practiceCardCheck = (topic: string) => `pcard-${topic}`;
+
+/** The deck plus any practice cards you added. */
+export function activeDeck(checks: Record<string, boolean>) {
+  return [...deck, ...practiceCards.filter((c) => checks[practiceCardCheck(c.id.slice(2))])];
+}
 
 /** Simple spaced repetition: Again → today, Good → double the interval, Easy → triple it. */
 export function schedule(prev: { interval: number; reps: number } | undefined, grade: "again" | "good" | "easy") {

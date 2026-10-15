@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import * as S from "../src/calc/structures";
 import { fromSI, quantities, toSI } from "../src/calc/units";
 import {
   capstone,
@@ -296,5 +297,56 @@ describe("US-unit practice problems (3.7)", () => {
   it("Lesson 7 Practice 8: 30 ft·lbf on a 3/8 in bolt → 4800 lbf ≈ 21.35 kN", () => {
     expect((30 * 12) / (0.2 * 0.375)).toBeCloseTo(4800, 6);
     expect(preloadFromTorque(toSI(30, "torque", "US"), 0.2, toSI(0.375, "length", "US"))).toBeCloseTo(21_351, 0);
+  });
+});
+
+describe("formulas behind the practice generators (hand-checked values)", () => {
+  it("principal stresses: σx = 100, σy = 0, τ = 50 MPa", () => {
+    const p = S.principalStresses(100, 0, 50);
+    expect(p.center).toBe(50);
+    expect(p.radius).toBeCloseTo(70.71, 2);
+    expect(p.s1).toBeCloseTo(120.71, 2);
+    expect(p.s2).toBeCloseTo(-20.71, 2);
+  });
+
+  it("biaxial and spring-restrained thermal stress", () => {
+    expect(S.thermalStressBiaxial(193000, 1.73e-5, 100, 0.29)).toBeCloseTo(470.27, 2);
+    // EA/(kL) = 1 halves the fully restrained stress.
+    expect(S.thermalStressSpring(193000, 1.73e-5, 100, 100, 19300, 1000)).toBeCloseTo((193000 * 1.73e-5 * 100) / 2, 6);
+  });
+
+  it("T-section: 5 × 50 web under a 40 × 5 flange", () => {
+    const s = S.sectionProperties([
+      { b: 5, h: 50, y: 25 },
+      { b: 40, h: 5, y: 52.5 },
+    ]);
+    expect(s.A).toBe(450);
+    expect(s.ybar).toBeCloseTo(37.22, 2);
+    expect(s.I).toBeCloseTo(136528, 0);
+  });
+
+  it("plate buckling and effective width", () => {
+    const scr = S.plateBuckling(4, 193000, 0.3, 2, 200);
+    expect(scr).toBeCloseTo(69.77, 2);
+    expect(S.effectiveWidth(200, 2, scr, 150).be).toBeCloseTo(136.41, 2);
+    expect(S.effectiveWidth(200, 2, scr, 50).be).toBe(200); // not buckled yet: full width
+  });
+
+  it("bolted joint, fillet weld, Goodman and critical crack size", () => {
+    expect(S.boltJoint(20000, 1e5, 3e5, 10000)).toEqual({ C: 0.25, Fb: 22500, Fm: 12500, Psep: 20000 / 0.75 });
+    const w = S.filletWeld(30000, 6, 200);
+    expect(w.throat).toBeCloseTo(4.242, 3);
+    expect(w.tau).toBeCloseTo(35.36, 2);
+    const gm = S.goodman(100, 50, 200, 500);
+    expect(gm.nf).toBeCloseTo(1.6667, 4);
+    expect(gm.ms).toBeCloseTo(0.6667, 4);
+    expect(S.criticalCrackSize(100, 1, 200)).toBeCloseTo(0.0795775, 6);
+  });
+
+  it("new unit conversions", () => {
+    expect(toSI(1, "kiloForce", "US")).toBeCloseTo(4.448, 3); // 1 kip = 4.448 kN
+    expect(toSI(1, "toughness", "US")).toBeCloseTo(1.0988, 4); // 1 ksi·√in = 1.0988 MPa·√m
+    expect(toSI(1, "stiffness", "US")).toBeCloseTo(0.175127, 6); // 1 lbf/in = 0.175127 N/mm
+    expect(quantities.kiloForce.si).toBe("kN");
   });
 });

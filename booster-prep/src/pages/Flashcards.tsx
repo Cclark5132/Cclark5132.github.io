@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Formula } from "../components/Formula";
 import { Rich } from "../components/Tex";
 import { weeks } from "../data/plan";
-import { deck, schedule, type Card } from "../lib/cards";
+import { activeDeck, schedule, type Card } from "../lib/cards";
 import { addDays, localToday } from "../lib/schedule";
 import { setCard, useProgress } from "../lib/store";
 
@@ -25,9 +25,10 @@ export function Flashcards() {
   const [skipped, setSkipped] = useState<string[]>([]);
   const today = localToday();
 
+  const deck = useMemo(() => activeDeck(progress.checks), [progress.checks]);
   const filtered = useMemo(
     () => deck.filter((c) => (weekFilter === "all" || String(c.week) === weekFilter) && (track === "all" || c.track === track)),
-    [weekFilter, track],
+    [deck, weekFilter, track],
   );
   const isDue = (c: Card) => {
     const state = progress.cards[c.id];

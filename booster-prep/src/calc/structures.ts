@@ -164,6 +164,68 @@ export function minersDamage(blocks: { n: number; N: number }[]) {
   return blocks.reduce((sum, { n, N }) => sum + n / N, 0);
 }
 
+/** Principal stresses and Mohr's circle for a 2D stress state: center C, radius R, σ₁ = C + R, σ₂ = C − R. */
+export function principalStresses(sx: number, sy: number, txy = 0) {
+  const center = (sx + sy) / 2;
+  const radius = Math.sqrt(((sx - sy) / 2) ** 2 + txy * txy);
+  return { center, radius, s1: center + radius, s2: center - radius, tauMax: radius };
+}
+
+/** Thermal stress magnitude in a plate restrained in both directions: E α ΔT / (1 − ν). */
+export function thermalStressBiaxial(E: number, alpha: number, dT: number, nu: number) {
+  return (E * alpha * dT) / (1 - nu);
+}
+
+/** Thermal stress magnitude in a bar restrained by a spring of stiffness k (N/mm): E α ΔT / (1 + E A / (k L)). */
+export function thermalStressSpring(E: number, alpha: number, dT: number, A: number, k: number, L: number) {
+  return (E * alpha * dT) / (1 + (E * A) / (k * L));
+}
+
+/**
+ * Area, centroid and second moment of a section built from rectangles (b wide, h tall, centroid at height y
+ * from the reference line), about the horizontal centroidal axis. mm in, mm² / mm / mm⁴ out.
+ */
+export function sectionProperties(rects: { b: number; h: number; y: number }[]) {
+  const A = rects.reduce((sum, r) => sum + r.b * r.h, 0);
+  const ybar = rects.reduce((sum, r) => sum + r.b * r.h * r.y, 0) / A;
+  const I = rects.reduce((sum, r) => sum + (r.b * r.h ** 3) / 12 + r.b * r.h * (r.y - ybar) ** 2, 0);
+  return { A, ybar, I };
+}
+
+/** Flat-plate buckling stress σ_cr = k π² E / (12 (1 − ν²)) · (t/b)². */
+export function plateBuckling(k: number, E: number, nu: number, t: number, b: number) {
+  return ((k * Math.PI ** 2 * E) / (12 * (1 - nu * nu))) * (t / b) ** 2;
+}
+
+/** Effective width (von Kármán): b_e = b √(σ_cr / σ_max), never more than b. P_skin = b_e t σ_max (N). */
+export function effectiveWidth(b: number, t: number, sigmaCr: number, sigmaMax: number) {
+  const be = Math.min(b, b * Math.sqrt(sigmaCr / sigmaMax));
+  return { be, Pskin: be * t * sigmaMax };
+}
+
+/** Bolted joint under external tension P (N): C = k_b/(k_b + k_m), F_b = F_i + C P, F_m = F_i − (1 − C) P, P_sep = F_i/(1 − C). */
+export function boltJoint(Fi: number, kb: number, km: number, P = 0) {
+  const C = kb / (kb + km);
+  return { C, Fb: Fi + C * P, Fm: Fi - (1 - C) * P, Psep: Fi / (1 - C) };
+}
+
+/** Equal-leg 45° fillet weld: throat = 0.707 a, τ = F / (throat · L_w). N and mm → mm and MPa. */
+export function filletWeld(F: number, a: number, Lw: number) {
+  const throat = 0.707 * a;
+  return { throat, tau: F / (throat * Lw) };
+}
+
+/** Modified Goodman: 1/n_f = σ_a/S_e + σ_m/S_u, MS_f = n_f − 1. */
+export function goodman(sigmaA: number, sigmaM: number, Se: number, Su: number) {
+  const nf = 1 / (sigmaA / Se + sigmaM / Su);
+  return { nf, ms: nf - 1 };
+}
+
+/** Critical crack size a_c = (1/π) (K_Ic / (Y σ))², in m (K_Ic in MPa·√m, σ in MPa). */
+export function criticalCrackSize(KIc: number, Y: number, sigma: number) {
+  return (1 / Math.PI) * (KIc / (Y * sigma)) ** 2;
+}
+
 /* ---------- Capstone: booster-style LOX tank barrel section (practice values) ---------- */
 
 export interface CapstoneInputs {

@@ -157,6 +157,27 @@ export function addMinutes(id: string, minutes: number) {
   put("minutes", id, Math.round((view.minutes[id] ?? 0) + minutes));
 }
 
+/** A random id for this browser, so practice tallies from two devices add up instead of overwriting. */
+function deviceId() {
+  try {
+    let id = localStorage.getItem("booster-prep:device");
+    if (!id) {
+      id = Math.random().toString(36).slice(2, 10);
+      localStorage.setItem("booster-prep:device", id);
+    }
+    return id;
+  } catch {
+    return "this-device";
+  }
+}
+
+/** Counts one practice attempt for a topic. */
+export function recordPractice(topic: string, correct: boolean) {
+  const key = `${topic}|${deviceId()}`;
+  const prev = view.practice[key] ?? { attempts: 0, correct: 0 };
+  put("practice", key, { attempts: prev.attempts + 1, correct: prev.correct + (correct ? 1 : 0) });
+}
+
 export function exportProgress() {
   markExported();
   return JSON.stringify({ ...doc, exportedAt: nowIso() }, null, 2);

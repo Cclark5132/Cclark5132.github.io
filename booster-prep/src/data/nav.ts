@@ -5,6 +5,7 @@ export const nav: { to: string; label: string; icon: IconName }[] = [
   { to: "/roadmap", label: "Roadmap", icon: "roadmap" },
   { to: "/lessons", label: "Lessons", icon: "lessons" },
   { to: "/tools", label: "Tool tracks", icon: "tools" },
+  { to: "/practice", label: "Practice", icon: "target" },
   { to: "/calculators", label: "Calculators", icon: "calc" },
   { to: "/capstone", label: "Capstone", icon: "capstone" },
   { to: "/anatomy", label: "Booster Anatomy", icon: "anatomy" },

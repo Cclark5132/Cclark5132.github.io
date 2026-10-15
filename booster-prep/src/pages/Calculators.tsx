@@ -19,29 +19,9 @@ import {
 import { fmt, fromSI, signed, tex, unitOf, type Quantity, type System } from "../calc/units";
 import { LineChart } from "../components/Chart";
 import { Formula, type Var } from "../components/Formula";
-import { NumField, UnitToggle } from "../components/NumField";
+import { NumField, UnitToggle, useSystem } from "../components/NumField";
 import { Tex } from "../components/Tex";
 
-const SYSTEM_KEY = "booster-prep:units";
-
-function useSystem() {
-  const [system, setSystem] = useState<System>(() => {
-    try {
-      return localStorage.getItem(SYSTEM_KEY) === "US" ? "US" : "SI";
-    } catch {
-      return "SI";
-    }
-  });
-  const set = (s: System) => {
-    setSystem(s);
-    try {
-      localStorage.setItem(SYSTEM_KEY, s);
-    } catch {
-      // Not persisted.
-    }
-  };
-  return [system, set] as const;
-}
 
 /** A result value shown in the chosen system, with the SI value alongside when in US units. */
 function Out({ label, si, q = "none", system, digits = 4, tone }: { label: string; si: number; q?: Quantity; system: System; digits?: number; tone?: "pos" | "neg" }) {

@@ -13,6 +13,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | `#/week/:n` | Tracks, formulas, context, deliverable, day-by-day schedule, self-check, notes | `pages/WeekPage.tsx` |
 | `#/lessons`, `#/lessons/:slug` | Eight structures lessons | `pages/Lessons.tsx`, `lessons/*.mdx` |
 | `#/tools`, `#/tools/:tool` | NX, Ansys, Python, MATLAB paths, SolidWorks → NX, FEA best practices | `pages/Tools.tsx`, `data/tools.ts` |
+| `#/practice` | Infinite seeded practice problems in 15 topics (`?topic=…&seed=…`), checked to ±1% (margins ±0.01), with worked solutions, SI / US, accuracy per topic, mixed mode | `pages/Practice.tsx`, `lib/practice.ts` |
 | `#/calculators` | Eight live calculators with SI / US toggle | `pages/Calculators.tsx`, `calc/` |
 | `#/capstone` | Spec, hand-calc panel, trade plots, step checklists, report outline | `pages/Capstone.tsx` |
 | `#/anatomy` | Interactive simplified booster | `pages/Anatomy.tsx` |
@@ -30,6 +31,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 - `lessons/NN-slug.mdx`: `export const meta`, then MDX using `<Formula>`, `<Example>`, `<Problem>`/`<Solution>`, `<Callout>`, `<Figure>` with inline SVG using the `dg-*` theme classes.
 - `lib/schedule.ts` `sessionLink()`: maps each session to its material. Lesson `##` headings get stable ids from `lib/anchors.ts` (`sec-1b`, `practice-problems`), opened with `?section=`; tool steps use `?step=w<week>`. `tests/focus.test.tsx` checks every link resolves.
 - `lib/catchup.ts`: the catch-up queue, light slots for pushed sessions, and the hours-vs-plan series.
+- `lib/practice.ts`: one generator per topic. Inputs come from a seeded RNG (mulberry32); answers come from `calc/structures.ts`; solutions are written in SI with the conversion steps added for US. `tests/practice.test.tsx` recomputes every answer from the givens for 7 seeds per topic and checks the solution shows the same number.
 - `lib/cards.ts`: the flashcard deck, built from every lesson `<Formula>`, week formulas, self-checks and glossary terms.
 - `lib/search.ts`: global search over pages, lessons, weeks, glossary, flashcards and tool steps.
 
