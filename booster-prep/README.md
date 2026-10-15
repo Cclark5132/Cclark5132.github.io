@@ -10,7 +10,21 @@ The plan runs October 15, 2026 to January 10, 2027: Week 0 is one 2-hour setup d
 
 **Finals week.** Week 9 is the light finals week, Dec 14 – Dec 20 by default. If your exams land in a different week, set `FINALS_WEEK_START` in [`src/data/plan.ts`](src/data/plan.ts) to that week's Monday (`2026-11-30`, `2026-12-07`, `2026-12-14` or `2026-12-21`). The site moves Week 9 there and shifts Weeks 7–10 around it.
 
-Progress is stored in the browser's localStorage. Use **Export / Import** (sidebar or dashboard) to back it up or move it to another device.
+Progress is stored in the browser's localStorage (`booster-prep:progress:v2`; older v1 progress migrates automatically on first load). The site asks the browser for persistent storage and shows "Storage: protected / not protected" on the backup card. To keep a second copy:
+
+- **Export / Import** (sidebar, dashboard, or **Backup & Sync**). Import merges item by item, so the newer change wins and an old file never undoes newer work. **Replace everything** overwrites, after a confirmation.
+- **Daily backups**: the state at the start of each day you study is kept for 7 days. Restore one from **Backup & Sync**.
+- **Sync between devices** (optional) through a private GitHub Gist. Progress is encrypted with AES-GCM before upload, so GitHub only holds ciphertext.
+
+### Set up sync (five steps)
+
+1. On GitHub, go to **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**. Under **Account permissions**, set **Gists** to **Read and write**. Give it no other permissions.
+2. On your first device, unlock Booster Prep with **Remember on this device** checked. The sync key is derived from that remembered key. (Or pick **A separate sync passphrase** in step 3 and use the same passphrase everywhere.)
+3. Open **Backup & Sync**, paste the token, pick the encryption key, and click **Turn on sync**. It creates a private Gist named `booster-prep-sync.json`.
+4. On each other device, repeat steps 2 and 3 with the same token. Sync finds the existing Gist and merges.
+5. Check the "Last sync" line. Sync runs on load, about 10 seconds after each change, and when you switch tabs. **Sign out of sync** forgets the token on that device; **Lock** still only forgets the gate key.
+
+The token and passphrase stay in that browser's localStorage. They never go in the repo, the build or a URL.
 
 ## Run locally
 

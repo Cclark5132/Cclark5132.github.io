@@ -1,8 +1,15 @@
 import type { ReactNode } from "react";
 import type { Session } from "../lib/schedule";
 import { localToday } from "../lib/schedule";
-import { setCheck, toggleSession, useProgress } from "../lib/store";
+import { setCheck, setSession, toggleSession, useProgress } from "../lib/store";
 import { Rich } from "./Tex";
+import { showToast } from "./Toast";
+
+/** Checks or unchecks a session, with a 5-second Undo. */
+export function toggleWithUndo(id: string, title: string) {
+  const previous = toggleSession(id, localToday());
+  showToast(previous ? `Unchecked: ${title}` : `Checked off: ${title}`, { label: "Undo", run: () => setSession(id, previous) });
+}
 
 const kindLabel: Record<Session["kind"], string> = {
   structures: "Structures",
@@ -21,7 +28,7 @@ export function SessionCheck({ session, showDate = false }: { session: Session; 
   const done = Boolean(progress.sessions[session.id]);
   return (
     <label className={`check${done ? " done" : ""}`}>
-      <input type="checkbox" checked={done} onChange={() => toggleSession(session.id, localToday())} />
+      <input type="checkbox" checked={done} onChange={() => toggleWithUndo(session.id, session.title)} />
       <span className="check-text">
         <span className="check-meta">
           {showDate ? `${session.dayName} · ` : ""}Hour {session.slot} · {kindLabel[session.kind]}

@@ -13,4 +13,5 @@ export const nav: { to: string; label: string; icon: IconName }[] = [
   { to: "/glossary", label: "Glossary", icon: "glossary" },
   { to: "/reference", label: "Cheat Sheet", icon: "calc" },
   { to: "/launch", label: "Launch Prep", icon: "launch" },
+  { to: "/backup", label: "Backup & Sync", icon: "sync" },
 ];

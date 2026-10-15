@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SessionCheck } from "../components/Checks";
-import { ProgressIO } from "../components/ProgressIO";
+import { Icon } from "../components/Icon";
+import { downloadProgress } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
 import { phaseColor, START_DATE, weeks } from "../data/plan";
 import { stats, validSessions } from "../lib/progress";
 import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
+import { daysSince, lastExport } from "../lib/backup";
 import { studyStreak, useProgress } from "../lib/store";
+import { readSettings, useSyncStatus } from "../lib/sync";
+import { StorageLine } from "./Backup";
 
 // First day at Starbase, midnight Central Standard Time (UTC−6).
 const LAUNCH = Date.parse(`${START_DATE}T06:00:00Z`);
@@ -112,6 +116,44 @@ function TodayCard({ today }: { today: string }) {
   );
 }
 
+/** One-click export, a nudge when the last export is old, and the sync state. */
+function BackupCard() {
+  useProgress();
+  const sync = useSyncStatus();
+  const [exportedAt, setExportedAt] = useState(lastExport);
+  const syncing = Boolean(readSettings()?.token);
+  const days = daysSince(exportedAt);
+  const stale = !syncing && (days === undefined || days >= 7);
+  return (
+    <section className={`card${stale ? " nudge" : ""}`} aria-labelledby="dash-backup-h">
+      <div className="card-title">
+        <h2 id="dash-backup-h">Back up your progress</h2>
+        <Link to="/backup" className="eyebrow">
+          Backup &amp; sync
+        </Link>
+      </div>
+      <p style={{ color: "var(--ink-soft)", fontSize: "0.9rem", marginBottom: 10 }}>
+        {days === undefined ? "Last export: never." : `Last export: ${days === 0 ? "today" : `${days} ${days === 1 ? "day" : "days"} ago`}.`}
+        {stale ? " Export now." : ""}
+        {syncing && ` Sync: ${sync.error ? sync.error : sync.lastSync ? `last synced ${new Date(sync.lastSync).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}` : "waiting"}.`}
+      </p>
+      <div className="row">
+        <button
+          type="button"
+          className="btn small"
+          onClick={() => {
+            downloadProgress();
+            setExportedAt(lastExport());
+          }}
+        >
+          <Icon name="download" /> Export progress
+        </button>
+      </div>
+      <StorageLine />
+    </section>
+  );
+}
+
 export function Dashboard() {
   const progress = useProgress();
   const today = localToday(new Date(useNow(60_000)));
@@ -180,15 +222,7 @@ export function Dashboard() {
               ))}
             </div>
           </section>
-          <section className="card">
-            <div className="card-title">
-              <h2>Back up your progress</h2>
-            </div>
-            <p style={{ color: "var(--muted)", fontSize: "0.9rem", marginBottom: 10 }}>
-              Progress is saved in this browser only. Export it now and then, and import it on another device.
-            </p>
-            <ProgressIO />
-          </section>
+          <BackupCard />
         </div>
       </div>
     </div>

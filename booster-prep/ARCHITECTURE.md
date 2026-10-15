@@ -18,6 +18,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | `#/anatomy` | Interactive simplified booster | `pages/Anatomy.tsx` |
 | `#/flashcards` | Spaced repetition deck | `pages/Flashcards.tsx`, `lib/cards.ts` |
 | `#/resources`, `#/glossary`, `#/launch` | Reference table, glossary, launch prep | `pages/Reference.tsx` |
+| `#/backup` | Storage status, export / import (merge or replace), daily backups, Gist sync settings | `pages/Backup.tsx` |
 
 ## Content
 
@@ -31,7 +32,9 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 
 ## State
 
-`lib/store.ts`: one localStorage document (`booster-prep:progress:v1`) with session check-offs (and the date checked, for the streak), deliverables, notes, checklist items and flashcard schedules. Export / Import reads and writes the same JSON.
+`lib/progressDoc.ts`: progress schema v2. Every item (session check-off, check item, note, deliverable, card state, capstone entry, catch-up override, timer minutes, self-check grade, practice tally) is `{ value, updatedAt }`; a cleared item is a tombstone, not a deleted key. Pure functions: `migrateV1toV2`, `mergeDocs` (newest `updatedAt` wins per item), `replaceDoc`, `toView`.
+
+`lib/store.ts`: one localStorage document (`booster-prep:progress:v2`, migrated once from v1, which is left in place) exposed to pages as plain values through `useProgress()`. Export / Import reads and writes the same JSON; import merges. `lib/backup.ts` keeps 7 daily snapshots (`booster-prep:backups`). `lib/persist.ts` asks for `navigator.storage.persist()`. `lib/sync.ts` and `lib/syncController.ts` do the opt-in Gist sync: AES-GCM with a key from HKDF over the remembered gate key (or PBKDF2 over a sync passphrase), `fetch` to `api.github.com` only.
 
 ## Components
 

@@ -20,6 +20,7 @@ const paths: Record<string, string> = {
   arrow: "M5 12h14M12 5l7 7-7 7",
   back: "M19 12H5M12 19l-7-7 7-7",
   lock: "M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4",
+  sync: "M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M3 21v-5h5",
   copy: "M9 9h11v11H9zM5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1",
 };
 

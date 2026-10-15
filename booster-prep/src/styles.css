@@ -1829,3 +1829,37 @@ ol.bullets {
 .check-verdict { margin-top: 8px; font-size: 0.9rem; }
 .check-verdict.pos { color: var(--good); }
 .check-verdict.neg { color: var(--bad); }
+.pos-text { color: var(--good); }
+.neg-text { color: var(--bad); }
+
+/* Toast (Undo after a check-off) */
+.toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 60;
+  width: min(92vw, 480px);
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 10px 12px 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-3);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.3);
+}
+.toast span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nudge {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}

@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { baseWeeks, FINALS_SLOTS, FINALS_WEEK_START, placeFinalsWeek, weeks } from "../src/data/plan";
 import { stats, validSessions } from "../src/lib/progress";
 import { addDays, allSessions, locate, plannedHours, scheduleByWeek, weekEnd } from "../src/lib/schedule";
+import { emptyView } from "../src/lib/progressDoc";
 import { studyStreak, type Progress } from "../src/lib/store";
 
-const emptyProgress = (sessions: Record<string, string>): Progress => ({ version: 1, sessions, deliverables: {}, notes: {}, checks: {}, cards: {}, capstone: {} });
+const emptyProgress = (sessions: Record<string, string>): Progress => ({ ...emptyView(), sessions });
 
 describe("schedule", () => {
   it("every date from Oct 15 to Jan 10 falls in exactly one week, with no gaps or overlaps", () => {
