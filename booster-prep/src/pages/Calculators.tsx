@@ -121,7 +121,7 @@ function MarginCalc({ system }: { system: System }) {
       inputs={
         <>
           <NumField label="Allowable" q="stress" system={system} value={allow} onChange={setAllow} />
-          <NumField label="Applied" q="stress" system={system} value={applied} onChange={setApplied} />
+          <NumField label="Applied" q="stress" system={system} value={applied} onChange={setApplied} allowNegative />
           <NumField label="Factor of safety" system={system} value={fs} onChange={setFs} step={0.05} />
         </>
       }
@@ -392,7 +392,7 @@ function ThermalCalc({ system }: { system: System }) {
         <>
           <NumField label="E" q="modulus" system={system} value={E} onChange={setE} />
           <NumField label="α" q="alpha" system={system} value={alpha} onChange={setAlpha} />
-          <NumField label="ΔT" q="deltaT" system={system} value={dT} onChange={setDT} />
+          <NumField label="ΔT" q="deltaT" system={system} value={dT} onChange={setDT} allowNegative />
           <NumField label="Poisson's ratio ν" system={system} value={nu} onChange={setNu} step={0.01} />
           <div className="seg" role="group" aria-label="Constraint">
             <button type="button" aria-pressed={!biaxial} onClick={() => setBiaxial(false)}>

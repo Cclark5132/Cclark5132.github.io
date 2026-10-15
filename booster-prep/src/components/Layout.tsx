@@ -98,7 +98,15 @@ export function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="shell">
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(event) => {
+          // The router owns the URL hash, so focus the content instead of following the link.
+          event.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
         Skip to content
       </a>
       <aside className="sidebar" aria-label="Site">

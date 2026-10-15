@@ -40,7 +40,13 @@ export function Resources() {
               {list.map((r) => (
                 <tr key={r.name}>
                   <td style={{ minWidth: 180 }}>
-                    <Rich text={r.name} />
+                    {r.url ? (
+                      <a href={r.url} target="_blank" rel="noopener noreferrer">
+                        <Rich text={r.name} />
+                      </a>
+                    ) : (
+                      <Rich text={r.name} />
+                    )}
                   </td>
                   <td style={{ color: "var(--ink-soft)", minWidth: 160 }}>{r.use}</td>
                   <td>

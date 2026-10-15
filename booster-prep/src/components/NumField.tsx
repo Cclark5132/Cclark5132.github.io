@@ -10,6 +10,7 @@ export function NumField({
   system,
   step,
   min,
+  allowNegative = false,
 }: {
   label: string;
   value: number;
@@ -18,6 +19,8 @@ export function NumField({
   system: System;
   step?: number;
   min?: number;
+  /** Most inputs are physical sizes, so negatives are rejected unless the quantity can be signed. */
+  allowNegative?: boolean;
 }) {
   const id = useId();
   const show = (v: number) => String(Number(fromSI(v, q, system).toPrecision(6)));
@@ -25,6 +28,8 @@ export function NumField({
   // Re-display when the unit system changes or the value changes from outside (adjusting state during render).
   if (state.value !== value || state.system !== system) setState({ text: show(value), value, system });
   const unit = unitOf(q, system);
+  const typed = Number(state.text);
+  const invalid = state.text === "" || !Number.isFinite(typed) || (!allowNegative && typed < 0);
   return (
     <label className="field" htmlFor={id}>
       <span>
@@ -36,12 +41,13 @@ export function NumField({
         type="number"
         inputMode="decimal"
         step={step ?? "any"}
-        min={min}
+        min={min ?? (allowNegative ? undefined : 0)}
         value={state.text}
+        aria-invalid={invalid || undefined}
         onChange={(event) => {
           const text = event.target.value;
           const n = Number(text);
-          if (text !== "" && Number.isFinite(n)) {
+          if (text !== "" && Number.isFinite(n) && (allowNegative || n >= 0)) {
             const si = toSI(n, q, system);
             setState({ text, value: si, system });
             onChange(si);
@@ -50,6 +56,7 @@ export function NumField({
           }
         }}
       />
+      {invalid && <span className="field-error">{state.text === "" ? "Enter a number." : "Must be 0 or more."}</span>}
     </label>
   );
 }

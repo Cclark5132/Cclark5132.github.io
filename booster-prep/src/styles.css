@@ -1804,3 +1804,21 @@ ol.bullets {
 .mathline {
   max-width: 100%;
 }
+
+.error-box {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font: 0.85rem/1.5 var(--font-mono);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--bad, #ff6b6b);
+}
+.field-error {
+  color: var(--bad, #ff6b6b);
+  font-size: 0.8rem;
+}

@@ -11,5 +11,6 @@ export const nav: { to: string; label: string; icon: IconName }[] = [
   { to: "/flashcards", label: "Flashcards", icon: "cards" },
   { to: "/resources", label: "Resources", icon: "resources" },
   { to: "/glossary", label: "Glossary", icon: "glossary" },
+  { to: "/reference", label: "Cheat Sheet", icon: "calc" },
   { to: "/launch", label: "Launch Prep", icon: "launch" },
 ];
