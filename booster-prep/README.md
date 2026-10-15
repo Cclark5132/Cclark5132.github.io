@@ -26,6 +26,10 @@ Progress is stored in the browser's localStorage (`booster-prep:progress:v2`; ol
 
 The token and passphrase stay in that browser's localStorage. They never go in the repo, the build or a URL.
 
+### Offline and on your phone's home screen
+
+After you unlock the published site once while online, it also opens offline. A small service worker ([`public/booster-prep/sw.js`](../public/booster-prep/sw.js) in the portfolio) caches only the encrypted page, the manifest and the icon, so the cache holds ciphertext, never decrypted content. It fetches from the network first, so a new deploy shows up as soon as you're online. To open it offline without typing the password, check **Remember on this device**. To add it to your home screen, use **Add to Home Screen** (Safari) or **Install app** (Chrome).
+
 ## Run locally
 
 Requires Node.js 20+ and pnpm 10+.

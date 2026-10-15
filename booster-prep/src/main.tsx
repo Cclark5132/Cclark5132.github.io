@@ -4,9 +4,11 @@ import { HashRouter } from "react-router-dom";
 import "katex/dist/katex.min.css";
 import App from "./App";
 import { guardDomAgainstExtensions } from "./lib/domGuard";
+import { installOffline } from "./lib/offline";
 import "./styles.css";
 
 guardDomAgainstExtensions();
+installOffline();
 
 const root = document.getElementById("root")!;
 

@@ -43,6 +43,8 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 
 `lib/store.ts`: one localStorage document (`booster-prep:progress:v2`, migrated once from v1, which is left in place) exposed to pages as plain values through `useProgress()`. Export / Import reads and writes the same JSON; import merges. `lib/backup.ts` keeps 7 daily snapshots (`booster-prep:backups`). `lib/persist.ts` asks for `navigator.storage.persist()`. `lib/sync.ts` and `lib/syncController.ts` do the opt-in Gist sync: AES-GCM with a key from HKDF over the remembered gate key (or PBKDF2 over a sync passphrase), `fetch` to `api.github.com` only.
 
+`lib/offline.ts`: after unlock, on the published `/booster-prep/` page only, adds the manifest link and registers `/booster-prep/sw.js`. The worker and `manifest.webmanifest` live in the portfolio's `public/booster-prep/`, next to the encrypted page, and are copied into `dist` by the portfolio build; `scripts/encrypt.mjs`, `scripts/gate.html` and the encrypted page are unchanged. The worker handles GET requests for three same-origin paths only (the page, the manifest, the icon), network first with a cache fallback. `tests/offline.test.ts` runs it against a fake cache.
+
 ## Components
 
 `Layout` (sidebar, top bar, theme toggle, search, lock), `Formula`, `Tex`/`Rich`, `Checks` (`SessionCheck`, `CheckItem`), `ProgressRing`, `NumField` + `UnitToggle`, `LineChart`, `SearchDialog`, `ProgressIO`, `Icon`.

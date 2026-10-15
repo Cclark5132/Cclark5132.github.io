@@ -1,0 +1,14 @@
+{
+  "name": "Booster Prep",
+  "short_name": "Booster Prep",
+  "description": "Private study plan for the Super Heavy structures role.",
+  "start_url": "/booster-prep/",
+  "scope": "/booster-prep/",
+  "display": "standalone",
+  "background_color": "#0a1120",
+  "theme_color": "#0a1120",
+  "icons": [
+    { "src": "/booster-prep/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/booster-prep/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
