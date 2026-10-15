@@ -14,6 +14,7 @@ import { Flashcards } from "./pages/Flashcards";
 import { Focus } from "./pages/Focus";
 import { LessonPage, Lessons } from "./pages/Lessons";
 import { NotFound } from "./pages/NotFound";
+import { Notes } from "./pages/Notes";
 import { Practice } from "./pages/Practice";
 import { QuickRef } from "./pages/QuickRef";
 import { Glossary, LaunchPrep, Resources } from "./pages/Reference";
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/reference" element={<QuickRef />} />
           <Route path="/launch" element={<LaunchPrep />} />
           <Route path="/backup" element={<Backup />} />
+          <Route path="/notes" element={<Notes />} />
           <Route path="/focus/:id" element={<Focus />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

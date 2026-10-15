@@ -8,10 +8,10 @@ import { downloadProgress } from "../components/ProgressIO";
 import { ProgressRing } from "../components/ProgressRing";
 import { phaseColor, START_DATE, weeks } from "../data/plan";
 import { stats, validSessions } from "../lib/progress";
-import { addDays, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
+import { addDays, allSessions, formatDate, locate, localToday, plannedHoursThrough, scheduleByWeek } from "../lib/schedule";
 import { daysSince, lastExport } from "../lib/backup";
 import { cardsDueToday } from "../lib/cards";
-import { actualHours, movedTo } from "../lib/catchup";
+import { actualHours, behindQueue, movedTo } from "../lib/catchup";
 import { studyStreak, useProgress } from "../lib/store";
 import { readSettings, useSyncStatus } from "../lib/sync";
 import { StorageLine } from "./Backup";
@@ -86,6 +86,9 @@ function TodayCard({ today }: { today: string }) {
   const sessions = scheduleByWeek[week.n][dayIndex] ?? [];
   const moved = movedTo(progress, today);
   const tomorrow = addDays(today, 1);
+  const behind = behindQueue(progress, today).length;
+  const due = cardsDueToday(progress, today);
+  const tomorrowSessions = [...allSessions.filter((s) => s.date === tomorrow), ...movedTo(progress, tomorrow)];
   return (
     <section className="card">
       <div className="card-title">
@@ -113,6 +116,22 @@ function TodayCard({ today }: { today: string }) {
           ))}
         </div>
       )}
+      <div className="today-chips">
+        <a
+          className="chip"
+          href="#catchup-h"
+          onClick={(event) => {
+            event.preventDefault();
+            document.getElementById("catchup-h")?.scrollIntoView({ block: "start" });
+          }}
+          data-testid="today-catchup"
+        >
+          Catch up: <strong className="num">{behind}</strong>
+        </a>
+        <Link className="chip" to="/flashcards" data-testid="today-cards">
+          Cards due: <strong className="num">{due}</strong>
+        </Link>
+      </div>
       <div className="row" style={{ marginTop: 14 }}>
         <Link className="btn" to={`/week/${week.n}`}>
           Open Week {week.n}
@@ -122,10 +141,17 @@ function TodayCard({ today }: { today: string }) {
             This week's lesson
           </Link>
         )}
-        <span className="eyebrow" style={{ marginLeft: "auto" }}>
-          Tomorrow: {formatDate(tomorrow, { weekday: "short", month: "short", day: "numeric" })}
-        </span>
       </div>
+      {tomorrowSessions.length > 0 && (
+        <div className="tomorrow" data-testid="tomorrow">
+          <span className="eyebrow">Tomorrow · {formatDate(tomorrow, { weekday: "short", month: "short", day: "numeric" })}</span>
+          <ul>
+            {tomorrowSessions.map((s) => (
+              <li key={s.id}>{s.title}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 }
@@ -203,78 +229,80 @@ export function Dashboard() {
         <p className="lede">Two hours a day, twelve weeks, one goal: walk into the Super Heavy structures team on January 11 ready to contribute.</p>
       </header>
 
-      <div className="dash-grid">
-        <Countdown />
-        <section className="card stat-card">
-          <ProgressRing value={s.done / s.total} label="Overall progress" />
-          <div className="stack" style={{ gap: 10 }}>
-            <div>
-              <div className="eyebrow">Hours logged</div>
-              <div className="stat-pair">
-                <div>
-                  <div className="num stat-big">
-                    {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
+      <div className="dash-body">
+        <div className="dash-grid dash-top">
+          <Countdown />
+          <section className="card stat-card">
+            <ProgressRing value={s.done / s.total} label="Overall progress" />
+            <div className="stack" style={{ gap: 10 }}>
+              <div>
+                <div className="eyebrow">Hours logged</div>
+                <div className="stat-pair">
+                  <div>
+                    <div className="num stat-big">
+                      {s.loggedHours} <span className="stat-sub">/ {s.plannedHours} hrs</span>
+                    </div>
+                    <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                      planned sessions done
+                    </div>
                   </div>
-                  <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
-                    planned sessions done
-                  </div>
-                </div>
-                <div>
-                  <div className="num stat-big">
-                    {actual} <span className="stat-sub">hrs</span>
-                  </div>
-                  <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
-                    actual hours studied (timer)
-                  </div>
-                </div>
-              </div>
-              <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
-                {onPlan} {onPlan === 1 ? "hr" : "hrs"} scheduled through today
-              </div>
-            </div>
-            <div>
-              <div className="eyebrow">Study streak</div>
-              <div className="num stat-big">
-                {streak} <span className="stat-sub">{streak === 1 ? "day" : "days"}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div className="dash-grid wide-left" style={{ marginTop: 16 }}>
-        <TodayCard today={today} />
-        <div className="stack">
-          <section className="card">
-            <div className="card-title">
-              <h2>Tracks</h2>
-              <span className="eyebrow">sessions done</span>
-            </div>
-            <div className="stack" style={{ gap: 14 }}>
-              {trackRows.map(([label, t, color]) => (
-                <div key={label}>
-                  <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
-                    <span>{label}</span>
-                    <span className="num" style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
-                      {t.done} / {t.total}
-                    </span>
-                  </div>
-                  <div className="bar" role="progressbar" aria-label={`${label} progress`} aria-valuemin={0} aria-valuemax={t.total} aria-valuenow={t.done}>
-                    <span style={{ width: `${(t.done / Math.max(1, t.total)) * 100}%`, background: color }} />
+                  <div>
+                    <div className="num stat-big">
+                      {actual} <span className="stat-sub">hrs</span>
+                    </div>
+                    <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                      actual hours studied (timer)
+                    </div>
                   </div>
                 </div>
-              ))}
+                <div className="eyebrow" style={{ textTransform: "none", letterSpacing: 0 }}>
+                  {onPlan} {onPlan === 1 ? "hr" : "hrs"} scheduled through today
+                </div>
+              </div>
+              <div>
+                <div className="eyebrow">Study streak</div>
+                <div className="num stat-big">
+                  {streak} <span className="stat-sub">{streak === 1 ? "day" : "days"}</span>
+                </div>
+              </div>
             </div>
           </section>
-          <CardsDueTile today={today} />
-          <WeakTopicsCard />
-          <BackupCard />
         </div>
-      </div>
 
-      <div className="dash-grid wide-left" style={{ marginTop: 16 }}>
-        <HoursVsPlanCard today={today} />
-        <CatchUpCard today={today} />
+        <div className="dash-grid wide-left dash-today">
+          <TodayCard today={today} />
+          <div className="stack">
+            <section className="card">
+              <div className="card-title">
+                <h2>Tracks</h2>
+                <span className="eyebrow">sessions done</span>
+              </div>
+              <div className="stack" style={{ gap: 14 }}>
+                {trackRows.map(([label, t, color]) => (
+                  <div key={label}>
+                    <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
+                      <span>{label}</span>
+                      <span className="num" style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
+                        {t.done} / {t.total}
+                      </span>
+                    </div>
+                    <div className="bar" role="progressbar" aria-label={`${label} progress`} aria-valuemin={0} aria-valuemax={t.total} aria-valuenow={t.done}>
+                      <span style={{ width: `${(t.done / Math.max(1, t.total)) * 100}%`, background: color }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <CardsDueTile today={today} />
+            <WeakTopicsCard />
+            <BackupCard />
+          </div>
+        </div>
+
+        <div className="dash-grid wide-left">
+          <HoursVsPlanCard today={today} />
+          <CatchUpCard today={today} />
+        </div>
       </div>
     </div>
   );

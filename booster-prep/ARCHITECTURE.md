@@ -10,7 +10,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | --- | --- | --- |
 | `#/` | Mission Dashboard: countdown, today's sessions, progress ring, track bars, streak, hours | `pages/Dashboard.tsx` |
 | `#/roadmap` | Week 0–12 timeline, phases, light weeks | `pages/Roadmap.tsx` |
-| `#/week/:n` | Tracks, formulas, context, deliverable, day-by-day schedule, self-check, notes | `pages/WeekPage.tsx` |
+| `#/week/:n` | Tracks, formulas, context, deliverable, day-by-day schedule (today highlighted and scrolled to, finished past days collapsed), self-check, Markdown notes with preview | `pages/WeekPage.tsx`, `components/Markdown.tsx` |
 | `#/lessons`, `#/lessons/:slug` | Eight structures lessons | `pages/Lessons.tsx`, `lessons/*.mdx` |
 | `#/tools`, `#/tools/:tool` | NX, Ansys, Python, MATLAB paths, SolidWorks → NX, FEA best practices | `pages/Tools.tsx`, `data/tools.ts` |
 | `#/practice` | Infinite seeded practice problems in 15 topics (`?topic=…&seed=…`), checked to ±1% (margins ±0.01), with worked solutions, SI / US, accuracy per topic, mixed mode | `pages/Practice.tsx`, `lib/practice.ts` |
@@ -21,6 +21,7 @@ The spec asked for Astro; this site uses **Vite + React + TypeScript + Tailwind 
 | `#/resources`, `#/glossary`, `#/launch` | Reference table, glossary, launch prep | `pages/Reference.tsx` |
 | `#/focus/:id` | Focus mode for one session: link to the exact lesson section or tool step, 60-minute or 25/5 timer, Done logs minutes | `pages/Focus.tsx`, `lib/timer.ts` |
 | `#/reference` | Printable formula sheet (every lesson `<Formula>` by week, with symbols, units and a use-when note from `data/formulaNotes.ts`; print CSS fits two sides of US Letter), plus units, 304L and the ready-by checklist | `pages/QuickRef.tsx` |
+| `#/notes` | Every week's notes in one place, rendered as Markdown with KaTeX, with a search box. Notes are also in the site search | `pages/Notes.tsx`, `lib/search.ts` `noteItems()` |
 | `#/backup` | Storage status, export / import (merge or replace), daily backups, Gist sync settings | `pages/Backup.tsx` |
 
 ## Content

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { CheckItem, SessionCheck } from "../components/Checks";
 import { Formula } from "../components/Formula";
 import { SelfCheckItem } from "../components/SelfCheck";
 import { selfCheckScore } from "../lib/selfcheck";
 import { Icon } from "../components/Icon";
+import { Markdown } from "../components/Markdown";
 import { Rich } from "../components/Tex";
 import { phaseColor, rhythm, weekByNumber, weeks } from "../data/plan";
 import { lessonBySlug } from "../lessons";
 import { weekProgress } from "../lib/progress";
-import { formatDate, scheduleByWeek, weekEnd } from "../lib/schedule";
+import { formatDate, localToday, scheduleByWeek, weekEnd, type Session } from "../lib/schedule";
 import { setDeliverable, setNote, useProgress } from "../lib/store";
 import { useScrollToParam } from "../lib/anchors";
 import { NotFound } from "./NotFound";
@@ -17,6 +18,7 @@ import { NotFound } from "./NotFound";
 function Notes({ week }: { week: number }) {
   const progress = useProgress();
   const [text, setText] = useState(progress.notes[week] ?? "");
+  const [tab, setTab] = useState<"write" | "preview">("write");
   // Save shortly after typing stops.
   useEffect(() => {
     if (text === (progress.notes[week] ?? "")) return;
@@ -24,10 +26,55 @@ function Notes({ week }: { week: number }) {
     return () => window.clearTimeout(id);
   }, [text, week, progress.notes]);
   return (
-    <label className="field">
-      <span>Notes for this week (saved in this browser)</span>
-      <textarea className="textarea" value={text} onChange={(event) => setText(event.target.value)} placeholder="What clicked, what didn't, questions to ask…" />
-    </label>
+    <div className="stack" style={{ gap: 8 }}>
+      <div className="row" style={{ justifyContent: "space-between" }}>
+        <span className="field-label">Notes for this week (Markdown and $math$; synced with your progress)</span>
+        <div className="seg" role="tablist" aria-label="Notes view">
+          <button type="button" role="tab" aria-selected={tab === "write"} aria-pressed={tab === "write"} onClick={() => setTab("write")}>
+            Write
+          </button>
+          <button type="button" role="tab" aria-selected={tab === "preview"} aria-pressed={tab === "preview"} onClick={() => setTab("preview")}>
+            Preview
+          </button>
+        </div>
+      </div>
+      {tab === "write" ? (
+        <textarea className="textarea" aria-label={`Week ${week} notes`} value={text} onChange={(event) => setText(event.target.value)} placeholder={"What clicked, what didn't, questions to ask…\n\n- Hoop stress $\\sigma_h = pR/t$ is twice axial"} />
+      ) : (
+        <div className="notes-preview">{text.trim() ? <Markdown text={text} /> : <p className="hint">Nothing written yet.</p>}</div>
+      )}
+      <Link to="/notes" className="eyebrow">
+        All notes
+      </Link>
+    </div>
+  );
+}
+
+/** One day: progress bar, today highlighted, and past days that are fully done collapsed. */
+function DayCard({ sessions, today }: { sessions: Session[]; today: string }) {
+  const progress = useProgress();
+  const date = sessions[0].date;
+  const done = sessions.filter((s) => progress.sessions[s.id]).length;
+  const complete = done === sessions.length;
+  const isToday = date === today;
+  const [open, setOpen] = useState(!(complete && date < today));
+  return (
+    <article className={`card day${isToday ? " today" : ""}${open ? "" : " collapsed"}`} id={`day-${date}`} aria-current={isToday ? "date" : undefined}>
+      <button type="button" className="day-head" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <span className="num">{sessions[0].dayName}</span>
+        <span className="eyebrow">
+          {formatDate(date)}
+          {isToday ? " · today" : ""}
+        </span>
+        <span className="day-count num">
+          {done}/{sessions.length}
+        </span>
+      </button>
+      <div className="bar day-bar" role="progressbar" aria-label={`${sessions[0].dayName} progress`} aria-valuemin={0} aria-valuemax={sessions.length} aria-valuenow={done}>
+        <span style={{ width: `${(done / sessions.length) * 100}%` }} />
+      </div>
+      {open && sessions.map((session) => <SessionCheck key={session.id} session={session} />)}
+    </article>
   );
 }
 
@@ -73,6 +120,18 @@ export function WeekPage() {
   const { n } = useParams();
   const progress = useProgress();
   useScrollToParam("section");
+  const today = localToday();
+  const [params] = useSearchParams();
+  const jumpTo = params.get("section") ? undefined : `day-${today}`;
+  // Scroll to today's card when it's in this week. Braces: scrollIntoView's return value must not
+  // become the effect's cleanup. The timeout runs after the layout's scroll-to-top.
+  useEffect(() => {
+    if (!jumpTo) return;
+    const id = window.setTimeout(() => {
+      document.getElementById(jumpTo)?.scrollIntoView({ block: "center" });
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [jumpTo, n]);
   const week = weekByNumber(Number(n));
   if (!week) return <NotFound />;
   const days = scheduleByWeek[week.n];
@@ -207,15 +266,7 @@ export function WeekPage() {
           )}
           <div className="days">
             {days.map((sessions) => (
-              <article key={sessions[0].date} className="card day">
-                <div className="day-head">
-                  <span className="num">{sessions[0].dayName}</span>
-                  <span className="eyebrow">{formatDate(sessions[0].date)}</span>
-                </div>
-                {sessions.map((session) => (
-                  <SessionCheck key={session.id} session={session} />
-                ))}
-              </article>
+              <DayCard key={sessions[0].date} sessions={sessions} today={today} />
             ))}
           </div>
         </section>
@@ -236,7 +287,7 @@ export function WeekPage() {
           </section>
         )}
 
-        <section className="card">
+        <section className="card" id="notes">
           <Notes key={week.n} week={week.n} />
         </section>
 

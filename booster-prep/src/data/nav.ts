@@ -13,6 +13,7 @@ export const nav: { to: string; label: string; icon: IconName }[] = [
   { to: "/resources", label: "Resources", icon: "resources" },
   { to: "/glossary", label: "Glossary", icon: "glossary" },
   { to: "/reference", label: "Cheat Sheet", icon: "calc" },
+  { to: "/notes", label: "Notes", icon: "notes" },
   { to: "/launch", label: "Launch Prep", icon: "launch" },
   { to: "/backup", label: "Backup & Sync", icon: "sync" },
 ];

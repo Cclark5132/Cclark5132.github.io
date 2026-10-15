@@ -200,16 +200,22 @@ function planWeek(week: Week): Plan[] {
   const code = week.code?.items ?? [];
   const cadLabel = `CAD / FEA (${week.cad?.tool ?? "NX"})`;
   const codeLabel = `Code (${week.code?.tool ?? "Python"})`;
+  // Each session gets its own text: a week with fewer items continues or tests them instead of repeating.
+  const cadWed = cad[1] ?? (cad[0] ? `Continue and finish: ${cad[0]}` : "");
+  const codeThu = code[1] ?? (code[0] ? `Continue: ${code[0]}` : "");
+  const codeFri = code.length >= 3 ? code[code.length - 1] : undefined;
   return [
     [mondayH1, s(cadLabel, cad[0] ?? "", "cad", "cad")],
     [s(rhythm[1].h1, "Rework the lesson's worked examples, then practice problems 1–3.", "structures", "structures"), s(codeLabel, code[0] ?? "", "code", "code")],
-    [s(rhythm[2].h1, join(learnB.length ? learnB : learnA), "structures", "structures"), s(cadLabel, cad[1] ?? cad[0] ?? "", "cad", "cad")],
-    [s(rhythm[3].h1, "Finish the practice problems and answer the self-checks without notes.", "structures", "structures"), s(codeLabel, code[1] ?? code[0] ?? "", "code", "code")],
+    [s(rhythm[2].h1, join(learnB.length ? learnB : learnA), "structures", "structures"), s(cadLabel, cadWed, "cad", "cad")],
+    [s(rhythm[3].h1, "Finish the practice problems and answer the self-checks without notes.", "structures", "structures"), s(codeLabel, codeThu, "code", "code")],
     [
       s(cadLabel, "Finish this week's CAD / FEA work.", "cad", "cad"),
       week.pythonScript
         ? s("Code (Python): turn this week's hand calc into a script", week.pythonScript, "code", "code")
-        : s("Code: turn this week's hand calc into a script", code[code.length - 1] ?? "", "code", "code"),
+        : codeFri
+          ? s("Code: turn this week's hand calc into a script", codeFri, "code", "code")
+          : s("Code: finish and test", "Finish this week's code and test it: add tests that reproduce the lesson's worked examples, fix what fails, then push.", "code", "code"),
     ],
     [s(rhythm[5].h1, week.deliverable, "deliverable"), s(rhythm[5].h2, week.deliverable, "deliverable")],
     [

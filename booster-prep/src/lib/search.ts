@@ -47,12 +47,19 @@ export const searchIndex: SearchItem[] = [
   },
 ];
 
+/** Your notes are part of progress, not the static index, so they're searched live. */
+export function noteItems(notes: Record<string, string>): SearchItem[] {
+  return weeks
+    .filter((w) => (notes[w.n] ?? "").trim())
+    .map((w) => ({ title: `Notes: Week ${w.n}`, section: "Your notes", to: `/week/${w.n}?section=notes`, text: plain(notes[w.n]) }));
+}
+
 /** Ranks items: title matches first, then body matches. Every query word must appear. */
-export function search(query: string, limit = 30) {
+export function search(query: string, limit = 30, extra: SearchItem[] = []) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return [];
   const scored: { item: SearchItem; score: number; snippet: string }[] = [];
-  for (const item of searchIndex) {
+  for (const item of [...extra, ...searchIndex]) {
     const title = item.title.toLowerCase();
     const text = item.text.toLowerCase();
     if (!words.every((word) => title.includes(word) || text.includes(word))) continue;

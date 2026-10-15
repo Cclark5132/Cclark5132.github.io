@@ -110,3 +110,16 @@ describe("orphaned progress IDs", () => {
     expect(studyStreak(validSessions(sessions), "2026-10-15", addDays)).toBe(1);
   });
 });
+
+describe("no repeated session text within a week", () => {
+  it("Friday's code session never repeats Thursday's, and code and CAD sessions are all distinct", async () => {
+    const { scheduleByWeek } = await import("../src/lib/schedule");
+    for (const [n, days] of Object.entries(scheduleByWeek)) {
+      const all = days.flat();
+      for (const kind of ["code", "cad"] as const) {
+        const details = all.filter((s) => s.kind === kind).map((s) => s.detail);
+        expect(new Set(details).size, `Week ${n} ${kind}`).toBe(details.length);
+      }
+    }
+  });
+});
